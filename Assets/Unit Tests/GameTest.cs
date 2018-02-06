@@ -17,7 +17,7 @@ public class GameTest
         Setup();
 
         // ensure creation of 2 players is accurate
-        game.GetComponent<Game>().CreatePlayers(2);
+        game.GetComponent<Game>().CreatePlayers(2, false);
         Assert.IsTrue(game.GetComponent<Game>().players[0].IsHuman());
         Assert.IsTrue(game.GetComponent<Game>().players[1].IsHuman());
         Assert.IsFalse(game.GetComponent<Game>().players[2].IsHuman());
@@ -32,7 +32,7 @@ public class GameTest
         Setup();
 
         // ensure creation of 3 players is accurate
-        game.GetComponent<Game>().CreatePlayers(3);
+        game.GetComponent<Game>().CreatePlayers(3, false);
         Assert.IsTrue(game.GetComponent<Game>().players[0].IsHuman());
         Assert.IsTrue(game.GetComponent<Game>().players[1].IsHuman());
         Assert.IsTrue(game.GetComponent<Game>().players[2].IsHuman());
@@ -47,7 +47,7 @@ public class GameTest
         Setup();
 
         // ensure creation of 4 players is accurate
-        game.GetComponent<Game>().CreatePlayers(4);
+        game.GetComponent<Game>().CreatePlayers(4, false);
         Assert.IsTrue(game.GetComponent<Game>().players[0].IsHuman());
         Assert.IsTrue(game.GetComponent<Game>().players[1].IsHuman());
         Assert.IsTrue(game.GetComponent<Game>().players[2].IsHuman());
@@ -62,7 +62,7 @@ public class GameTest
         Setup();
 
         // ensure that at least 2 players are created no matter what
-        game.GetComponent<Game>().CreatePlayers(0);
+        game.GetComponent<Game>().CreatePlayers(0, false);
         Assert.IsTrue(game.GetComponent<Game>().players[0].IsHuman());
         Assert.IsTrue(game.GetComponent<Game>().players[1].IsHuman());
         Assert.IsFalse(game.GetComponent<Game>().players[2].IsHuman());
@@ -77,7 +77,7 @@ public class GameTest
         Setup();
 
         // ensure that at most 4 players are created no matter what
-        game.GetComponent<Game>().CreatePlayers(5);
+        game.GetComponent<Game>().CreatePlayers(5, false);
         Assert.IsTrue(game.GetComponent<Game>().players[0].IsHuman());
         Assert.IsTrue(game.GetComponent<Game>().players[1].IsHuman());
         Assert.IsTrue(game.GetComponent<Game>().players[2].IsHuman());

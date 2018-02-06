@@ -34,6 +34,9 @@ public class PlayerUI : MonoBehaviour {
 		header.text = "Player " + player_id.ToString();
 		headerHighlight.text = header.text;
 		headerHighlight.color = player.GetColor();
+
+        if (player.IsNeutral())
+            header.text = "Neutral";
 	
 	}
 

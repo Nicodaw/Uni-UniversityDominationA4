@@ -9,7 +9,17 @@ public class Sector : MonoBehaviour {
     [SerializeField] private Player owner;
     [SerializeField] private Sector[] adjacentSectors;
 	[SerializeField] private Landmark landmark;
+    [SerializeField] private bool VC = false;
+    
+    //added by Peter
+    public bool isVC() {
+        return VC;   
+    }
 
+    //added by Peter
+    public void setVC(bool VC) {
+        this.VC = VC;
+    }
 
     public Map GetMap() {
         return map;
@@ -62,7 +72,6 @@ public class Sector : MonoBehaviour {
     }
         
 	
-
 	public void Initialize() {
 
         // initialize the sector by setting its owner and unit to null
@@ -77,6 +86,8 @@ public class Sector : MonoBehaviour {
 
 		// get landmark (if any)
 		landmark = gameObject.GetComponentInChildren<Landmark>();
+
+
 
 	}
 

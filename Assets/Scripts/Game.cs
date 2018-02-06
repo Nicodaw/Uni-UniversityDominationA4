@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Game : MonoBehaviour {
@@ -35,8 +36,8 @@ public class Game : MonoBehaviour {
     }
 
 
-
-    public void CreatePlayers(int numberOfPlayers){
+    //Re-done by Peter
+    public void CreatePlayers(int numberOfPlayers, bool neutralPlayer){
 
         // ensure that the specified number of players
         // is at least 2 and does not exceed 4
@@ -47,21 +48,37 @@ public class Game : MonoBehaviour {
             numberOfPlayers = 4;
 
         // mark the specified number of players as human
-        for (int i = 0; i < numberOfPlayers; i++)
+        if (!neutralPlayer)
         {
-            players[i].SetHuman(true);
+            for (int i = 0; i < numberOfPlayers; i++)
+            {
+                players[i].SetHuman(true);
+            }
+            GameObject.Find("PlayerNeutralUI").SetActive(false);
+            players[numberOfPlayers + 1] = GameObject.Find("Player4").GetComponent<Player>();
+        }
+        else
+        {
+            for (int i = 0; i < (numberOfPlayers - 1); i++)
+            {
+                players[i].SetHuman(true);
+            }
+            players[numberOfPlayers + 1] = GameObject.Find("PlayerNeutral").GetComponent<Player>();
+            GameObject.Find("Player4UI").SetActive(false);
+            players[numberOfPlayers + 1].SetNeutral(true);
         }
 
+
         // give all players a reference to this game
-		// and initialize their GUIs
-		for (int i = 0; i < 4; i++)
+        // and initialize their GUIs
+        for (int i = 0; i < 4; i++)
 		{
 			players[i].SetGame(this);
 			players[i].GetGui().Initialize(players[i], i + 1);
 		}
 
     }
-
+    //Modified by Peter to randomly allocate the Vice Chancellor 
 	public void InitializeMap() {
 
         // initialize all sectors, allocate players to landmarks,
@@ -113,7 +130,20 @@ public class Game : MonoBehaviour {
             player.SpawnUnits();
         }
 
-	}
+        //set Vice Chancellor
+        int rand = Random.Range(0, sectors.Length);
+        while (sectors[rand].GetLandmark() != null)
+        {
+            if (sectors[rand].GetLandmark() == null)
+            {
+                sectors[rand].setVC(true);
+            }
+            else
+            {
+                rand = Random.Range(0, sectors.Length);
+            }
+        }
+    }
 
     private Sector[] GetLandmarkedSectors(Sector[] sectors) {
 
@@ -151,7 +181,7 @@ public class Game : MonoBehaviour {
         // otherwise, return true
         return true;
     }
-
+    //Modified by Peter
     public void NextPlayer() {
 
         // set the current player to the next player in the order
@@ -183,10 +213,26 @@ public class Game : MonoBehaviour {
                     currentPlayer = players[nextPlayerIndex];
                     players[nextPlayerIndex].SetActive(true);
 					players[nextPlayerIndex].GetGui().Activate();
+                    if (currentPlayer.IsNeutral()) {
+                        NeutralPlayerTurn();
+                        NeutralPlayerTurn(); //Horrible i know
+                    }
                     break;
                 }
             }
         }
+    }
+    //Created by Peter
+    public void NeutralPlayerTurn() {
+        NextTurnState();
+        List <Unit> units = currentPlayer.units;
+        Unit selectedUnit = units[Random.Range(0, units.Count)];
+        Sector[] adjacentSectors = selectedUnit.GetSector().GetAdjacentSectors();
+        for (int i = 0; i < adjacentSectors.Length; i++) {
+           if (adjacentSectors[i].GetUnit() != null)
+                adjacentSectors = adjacentSectors.Where(w => w != adjacentSectors[i]).ToArray();
+        }
+        selectedUnit.MoveTo(adjacentSectors[Random.Range(0, adjacentSectors.Length)]);
     }
        
     public void NextTurnState() {
@@ -266,14 +312,15 @@ public class Game : MonoBehaviour {
 		}
 	}
         
+    //Modified by Peter
     public void Initialize () {
         
         // initialize the game
 
 
         // create a specified number of human players
-        // *** currently hard-wired to 2 for testing ***
-        CreatePlayers(2);
+        // *** currently hard-wired to 3 for testing ***
+        CreatePlayers(3, true);
 
         // initialize the map and allocate players to landmarks
         InitializeMap();
