@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour {
 
@@ -162,6 +163,13 @@ public class Player : MonoBehaviour {
                     previousOwner.defence -= landmark.GetAmount();
             }
         }
+
+        if (sector.isVC())
+        {
+            // Save current states
+            SceneManager.LoadScene(2);
+        }
+
     }
 
     public void SpawnUnits() {

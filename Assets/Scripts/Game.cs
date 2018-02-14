@@ -176,6 +176,9 @@ public class Game : MonoBehaviour {
 			}
 		}
 
+
+
+
 		// spawn units for each player
         foreach (Player player in players)
         {
@@ -185,17 +188,9 @@ public class Game : MonoBehaviour {
         //set Vice Chancellor
         int rand = Random.Range(0, sectors.Length);
         while (sectors[rand].GetLandmark() != null)
-        {
-            if (sectors[rand].GetLandmark() == null)
-            {
-                sectors[rand].setVC(true);
-            }
-            else
-            {
-                rand = Random.Range(0, sectors.Length);
-            }
-        }
-
+             rand = Random.Range(0, sectors.Length);
+        sectors[rand].setVC(true);
+        Debug.Log(sectors[rand].name);
     }
 
     private Sector[] GetLandmarkedSectors(Sector[] sectors) {
@@ -437,6 +432,16 @@ public class Game : MonoBehaviour {
 
         // create a specified number of human players
         // *** currently hard-wired to 2 for testing ***
+
+
+        if (PlayerPrefs.GetInt("_mgInit", 0) == 1)
+        {
+            Debug.Log("Reopening game");
+            PlayerPrefs.SetInt("_mgInit", 0);
+            SavedGame.Load("/tmpSave");
+            return;
+        }
+
         CreatePlayers(true);
 
         // initialize the map and allocate players to landmarks
@@ -476,6 +481,16 @@ public class Game : MonoBehaviour {
         // update GUIs
         UpdateGUI();
         */
+
+
+        if (PlayerPrefs.GetInt("_mgInit", 0) == 1)
+        {
+            PlayerPrefs.SetInt("_mgInit", 0);
+            int score = PlayerPrefs.GetInt("_mgScore");
+            // Create dialog for bonus
+        }
+        
+
     }
 
     void Update () {

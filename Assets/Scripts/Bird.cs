@@ -51,7 +51,7 @@ public class Bird : MonoBehaviour
         {
             dx = speed;
         }*/
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
             yVel = -jumpForce;
             renderer.material = states[1];
