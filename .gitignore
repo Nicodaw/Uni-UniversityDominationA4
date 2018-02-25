@@ -45,3 +45,6 @@ ProjectVersion.txt
 
 # ignore save game test file
 SaveGame.bin
+
+# meta data
+.DS_Store
