@@ -157,7 +157,10 @@ PlayerSettings:
   resolutionScalingMode: 0
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
-  applicationIdentifier: {}
+  applicationIdentifier:
+    Android: com.devsprime.starmix.UniDominationA4
+    Standalone: com.devsprime.starmix.UniDominationA4
+    iOS: com.devsprime.starmix.UniDominationA4
   buildNumber: {}
   AndroidBundleVersionCode: 1
   AndroidMinSdkVersion: 16
@@ -560,7 +563,7 @@ PlayerSettings:
   scriptingBackend: {}
   incrementalIl2cppBuild: {}
   additionalIl2CppArgs: 
-  scriptingRuntimeVersion: 0
+  scriptingRuntimeVersion: 1
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
@@ -640,9 +643,9 @@ PlayerSettings:
     UNet: 1
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 2
-  cloudProjectId: f468566f-907e-45a4-a244-eb162b205e06
-  projectName: University Domination
-  organizationId: papakel
+  cloudProjectId: a28d8f89-4aa5-417f-94a0-8e9acdfd42b4
+  projectName: University Domination A4
+  organizationId: uni-sepr
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
