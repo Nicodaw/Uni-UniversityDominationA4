@@ -4,9 +4,6 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
-/// <summary>
-/// Handles saving and loading a game
-/// </summary>
 public static class SavedGame
 {
     /// <summary>
@@ -65,9 +62,7 @@ public static class SavedGame
     }
 
     /// <summary>
-    /// 
     /// returns if a save game exists to load
-    /// 
     /// </summary>
     /// <param name="fileName">save file name</param>
     /// <returns>true if game exists to load else false</returns>

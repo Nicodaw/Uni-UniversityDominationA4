@@ -4,22 +4,21 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
+    #region Private Fields
+    [SerializeField] Player owner;
+    [SerializeField] Sector sector;
+    [SerializeField] int level;
+    [SerializeField] Color color;
+    [SerializeField] bool selected = false;
 
-    [SerializeField] private Player owner;
-    [SerializeField] private Sector sector;
-    [SerializeField] private int level;
-    [SerializeField] private Color color;
-    [SerializeField] private bool selected = false;
-
-    [SerializeField] private Material level1Material;
-    [SerializeField] private Material level2Material;
-    [SerializeField] private Material level3Material;
-    [SerializeField] private Material level4Material;
-    [SerializeField] private Material level5Material;
-
+    [SerializeField] Material level1Material;
+    [SerializeField] Material level2Material;
+    [SerializeField] Material level3Material;
+    [SerializeField] Material level4Material;
+    [SerializeField] Material level5Material;
+    #endregion
 
     #region Public Properties
-
 
     /// <summary>
     /// Player that owns this unit
@@ -56,11 +55,9 @@ public class Unit : MonoBehaviour
 
 
     /// <summary>
-    /// 
     /// Initializes the unit on the passed sector and assigns it to the passed player
     /// The unit is set to level 1
     /// The unit's colour is set to the colour of the player that owns it
-    /// 
     /// </summary>
     /// <param name="player">The player the unit belongs to</param>
     /// <param name="sector">The sector the unit is on</param>

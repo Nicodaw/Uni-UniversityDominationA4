@@ -7,22 +7,21 @@ using UnityEngine.UI;
 // Class created by Jack (01/02/2018)
 public class Dialog : MonoBehaviour
 {
+    #region Unity Bindings
 
     public GameObject texture;
 
+    #endregion
+
+    #region Private fields
+
     private DialogType type;
 
-    public enum DialogType
-    {
-        EndGame, PlayerElimated, SaveQuit, ShowText
-    }
+    #endregion
 
     /// <summary>
-    /// 
     /// Sets up the dialog in the format of the passed dialog type
-    /// 
     /// </summary>
-    /// <param name="type">The type that this dialog should be set up in the form of</param>
     public void SetDialogType(DialogType type)
     {
         // Updates the dialog with the different buttons needed for each mode
@@ -70,9 +69,7 @@ public class Dialog : MonoBehaviour
     }
 
     /// <summary>
-    /// 
-    /// Sets the players name in this dialog
-    /// 
+    /// Sets the players name in this dialog 
     /// </summary>
     /// <param name="name">The player's name who this dialog refers to</param>
     public void SetDialogData(string data)
@@ -89,9 +86,7 @@ public class Dialog : MonoBehaviour
     }
 
     /// <summary>
-    /// 
     /// Creates a dialog with specific header and bidy text
-    /// 
     /// </summary>
     /// <param name="header">Header text</param>
     /// <param name="body">Body text</param>
@@ -106,10 +101,10 @@ public class Dialog : MonoBehaviour
         }
     }
 
+
+    #region Helper Methods
     /// <summary>
-    /// 
     /// Displays this dialog
-    /// 
     /// </summary>
     public void Show()
     {
@@ -117,9 +112,7 @@ public class Dialog : MonoBehaviour
     }
 
     /// <summary>
-    /// 
     /// Closes this dialog
-    /// 
     /// </summary>
     public void Close()
     {
@@ -128,9 +121,7 @@ public class Dialog : MonoBehaviour
     }
 
     /// <summary>
-    /// 
     /// Changes to the previous sce3ne
-    /// 
     /// </summary>
     public void Exit()
     {
@@ -138,13 +129,13 @@ public class Dialog : MonoBehaviour
     }
 
     /// <summary>
-    /// 
     /// Loads the main menu scene
-    /// 
     /// </summary>
     public void Restart()
     {
         SceneManager.LoadScene(0);
     }
+    #endregion
+
 
 }

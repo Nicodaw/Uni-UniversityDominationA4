@@ -3,17 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-/* GAME EXECUTABLE http://riskydevelopments.co.uk/ud/UniversityDominationAss3.zip */
-
 public class Initializer : MonoBehaviour {
 
     public Game game;
  
-    //Modified by Ryan
     /// <summary>
-    /// 
-    /// start the game
-    /// 
+    /// start the game 
     /// </summary>
     void Start()
     {

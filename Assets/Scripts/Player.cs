@@ -6,18 +6,26 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour {
 
+    #region Unity Bindings
+
     public List<Sector> ownedSectors;
     public List<Unit> units;
 
-    [SerializeField] private Game game;
-    [SerializeField] private GameObject unitPrefab;
-    [SerializeField] private PlayerUI gui;
-    [SerializeField] private int attack = 0;
-    [SerializeField] private int defence = 0;
-    [SerializeField] private Color color;
-    [SerializeField] private bool human;
-    [SerializeField] private bool neutral;
-    [SerializeField] private bool active = false;
+    #endregion
+
+
+    #region Private Fields
+    [SerializeField] Game game;
+    [SerializeField] GameObject unitPrefab;
+    [SerializeField] PlayerUI gui;
+    [SerializeField] int attack = 0;
+    [SerializeField] int defence = 0;
+    [SerializeField] Color color;
+    [SerializeField] bool human;
+    [SerializeField] bool neutral;
+    [SerializeField] bool active = false;
+    #endregion
+
 
     #region Public Properties
     /// <summary>
@@ -70,9 +78,7 @@ public class Player : MonoBehaviour {
 
 
     /// <summary>
-    /// 
     /// Store who controlls the player in the save game
-    /// 
     /// </summary>
     /// <returns>String "human"/"neutral"/"none" depending on the player properties</returns>
     public string GetController()
@@ -92,9 +98,7 @@ public class Player : MonoBehaviour {
     }
 
     /// <summary>
-    /// 
     /// sets how this player is controlled
-    /// 
     /// </summary>
     /// <param name="controller">'human' if player controlled by human; 'neutral' if player controlled by neutral AI; all other values have no contoller</param>
     public void SetController(String controller)
@@ -114,12 +118,10 @@ public class Player : MonoBehaviour {
         }
     }
 
-    #region Function which gives all owned sectors to the player who defeated this player (Added by Jack 01/02/2018)
+    #region Helper Methods
 
     /// <summary>
-    /// 
     /// called when this player is eliminated in order to pass all sectors owned by this player to the player that eliminated this player
-    /// 
     /// </summary>
     /// <param name="player">The player to recieve all of this player's sectors</param>
     public void Defeat(Player player)
@@ -132,15 +134,12 @@ public class Player : MonoBehaviour {
         }
     }
 
-    #endregion
 
 
     /// <summary>
-    /// 
     /// called when this player captures a sector 
     /// updates this players attack and defence bonuses
     /// sets the sectors owner and updates its colour
-    /// 
     /// </summary>
     /// <param name="sector">The sector that is being captured by this player</param>
     public void Capture(Sector sector) {
@@ -169,17 +168,17 @@ public class Player : MonoBehaviour {
 
             // remove the landmark's resource bonus from the previous
             // owner and add it to this player
-            if (landmark.GetResourceType() == Landmark.ResourceType.Attack)
+            if (landmark.Resource == ResourceType.Attack)
             {
-                this.attack += landmark.GetAmount();
+                this.attack += landmark.Amount;
                 if (previousOwner != null)
-                    previousOwner.attack -= landmark.GetAmount();
+                    previousOwner.attack -= landmark.Amount;
             }
-            else if (landmark.GetResourceType() == Landmark.ResourceType.Defence)
+            else if (landmark.Resource == ResourceType.Defence)
             {
-                this.defence += landmark.GetAmount();
+                this.defence += landmark.Amount;
                 if (previousOwner != null)
-                    previousOwner.defence -= landmark.GetAmount();
+                    previousOwner.defence -= landmark.Amount;
             }
         }
 
@@ -196,9 +195,7 @@ public class Player : MonoBehaviour {
     }
 
     /// <summary>
-    /// 
     /// spawns a unit at each unoccupied sector containing a landmark owned by this player
-    /// 
     /// </summary>
     public void SpawnUnits() {
         // scan through each owned sector
@@ -222,10 +219,8 @@ public class Player : MonoBehaviour {
 	}
 
     /// <summary>
-    /// 
     /// checks if the player has any units or if they own any landmarks
     /// if they have neither then they have been eliminated
-    /// 
     /// </summary>
     /// <returns>true if the player has no units and landmarks else false</returns>
     public bool IsEliminated() {
@@ -241,9 +236,7 @@ public class Player : MonoBehaviour {
     }
 
     /// <summary>
-    /// 
-    /// returns true if any of the sectors the player owns contains a landmark
-    /// 
+    /// returns true if any of the sectors the player owns contains a landmark 
     /// </summary>
     /// <returns>true if the player owns 1 or more landmarks else false</returns>
     private bool OwnsLandmark() {
@@ -259,5 +252,6 @@ public class Player : MonoBehaviour {
         // otherwise, return false
         return false;
     }
-    
+    #endregion
+
 }

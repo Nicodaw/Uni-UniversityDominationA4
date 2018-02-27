@@ -3,15 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/* GAME EXECUTABLE http://riskydevelopments.co.uk/ud/UniversityDominationAss3.zip */
-
-// Added by Gio
 public class Menu : MonoBehaviour {
     
     /// <summary>
-    /// 
     /// Starts a new game
-    /// 
     /// </summary>
     /// <param name="neutralPlayer">True if neutal player should be in the game, else false</param>
 	public void Play (bool neutralPlayer){
@@ -20,9 +15,7 @@ public class Menu : MonoBehaviour {
 	}
 
     /// <summary>
-    /// 
     /// Loads the saved game
-    /// 
     /// </summary>
     public void PlayLoad()
     {
@@ -32,9 +25,7 @@ public class Menu : MonoBehaviour {
     }
 
     /// <summary>
-    /// 
     /// Quits the application
-    /// 
     /// </summary>
 	public void Quit (){
 		Application.Quit();
