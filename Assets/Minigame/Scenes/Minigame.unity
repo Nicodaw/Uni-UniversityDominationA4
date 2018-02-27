@@ -312,7 +312,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 215160326}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c637e0a9c78a1fc4aae337b9908dd715, type: 3}
+  m_Script: {fileID: 11500000, guid: ab1bad8c00ad0b046b6c925e36c86cf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   birdPrefab: {fileID: 1562835215430058, guid: 37a0e503446968840a2ade55775d3d5d, type: 2}
