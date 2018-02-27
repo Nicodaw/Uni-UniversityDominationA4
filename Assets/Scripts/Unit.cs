@@ -70,7 +70,7 @@ public class Unit : MonoBehaviour
         // set the owner, level, and color of the unit
         owner = player;
         level = 1;
-        color = owner.GetColor();
+        color = owner.Color;
 
         // set the material color to the player color
         GetComponent<Renderer>().material.color = color;
@@ -143,15 +143,15 @@ public class Unit : MonoBehaviour
 
         // get the index of this unit's sector in the map's list of sectors
         int tempSectorIndex = -1;
-        for (int i = 0; i < this.owner.GetGame().gameMap.GetComponent<Map>().sectors.Length; i++)
+        for (int i = 0; i < this.owner.Game.gameMap.GetComponent<Map>().sectors.Length; i++)
         {
-            if (this.sector == this.owner.GetGame().gameMap.GetComponent<Map>().sectors[i])
+            if (this.sector == this.owner.Game.gameMap.GetComponent<Map>().sectors[i])
                 tempSectorIndex = i;
         }
 
         // swap the units' references to their sectors
         this.sector = otherUnit.sector;
-        otherUnit.sector = this.owner.GetGame().gameMap.GetComponent<Map>().sectors[tempSectorIndex];
+        otherUnit.sector = this.owner.Game.gameMap.GetComponent<Map>().sectors[tempSectorIndex];
 
         // realign transforms for each unit
         this.transform.SetParent(this.sector.transform.Find("Units").transform);

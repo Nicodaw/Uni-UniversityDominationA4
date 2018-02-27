@@ -15,7 +15,7 @@ public class GameTest
     private void Setup()
     {
         TestSetup t = new TestSetup();
-        this.game = t.GetGame();
+        this.game = t.Game;
         this.map = t.GetMap();
         this.players = t.GetPlayers();
         this.gui = t.GetPlayerUIs();
@@ -27,10 +27,10 @@ public class GameTest
         Setup();
         game.CreatePlayers(false);
         // ensure creation of 4 players is accurate
-        Assert.IsTrue(game.GetComponent<Game>().players[0].IsHuman());
-        Assert.IsTrue(game.GetComponent<Game>().players[1].IsHuman());
-        Assert.IsTrue(game.GetComponent<Game>().players[2].IsHuman());
-        Assert.IsTrue(game.GetComponent<Game>().players[3].IsHuman());
+        Assert.IsTrue(game.GetComponent<Game>().players[0].Human);
+        Assert.IsTrue(game.GetComponent<Game>().players[1].Human);
+        Assert.IsTrue(game.GetComponent<Game>().players[2].Human);
+        Assert.IsTrue(game.GetComponent<Game>().players[3].Human);
 
         yield return null;
     }
@@ -44,10 +44,10 @@ public class GameTest
 
         // ensure game with three players and one neutral is accurate
 
-        Assert.IsTrue(game.GetComponent<Game>().players[0].IsHuman());
-        Assert.IsTrue(game.GetComponent<Game>().players[1].IsHuman());
-        Assert.IsTrue(game.GetComponent<Game>().players[2].IsHuman());
-        Assert.IsTrue(game.GetComponent<Game>().players[3].IsNeutral());
+        Assert.IsTrue(game.GetComponent<Game>().players[0].Human);
+        Assert.IsTrue(game.GetComponent<Game>().players[1].Human);
+        Assert.IsTrue(game.GetComponent<Game>().players[2].Human);
+        Assert.IsTrue(game.GetComponent<Game>().players[3].Neutral);
 
         yield return null;
     }
@@ -126,35 +126,35 @@ public class GameTest
 
         // set the current player to the first player
         game.currentPlayer = playerA;
-        playerA.SetActive(true);
+        playerA.Active = true;
 
         // ensure that NextPlayer changes the current player
         // from player A to player B
         game.NextPlayer();
         Assert.IsTrue(game.currentPlayer == playerB);
-        Assert.IsFalse(playerA.IsActive());
-        Assert.IsTrue(playerB.IsActive());
+        Assert.IsFalse(playerA.Active);
+        Assert.IsTrue(playerB.Active);
 
         // ensure that NextPlayer changes the current player
         // from player B to player C
         game.NextPlayer();
         Assert.IsTrue(game.currentPlayer == playerC);
-        Assert.IsFalse(playerB.IsActive());
-        Assert.IsTrue(playerC.IsActive());
+        Assert.IsFalse(playerB.Active);
+        Assert.IsTrue(playerC.Active);
 
         // ensure that NextPlayer changes the current player
         // from player C to player D
         game.NextPlayer();
         Assert.IsTrue(game.currentPlayer == playerD);
-        Assert.IsFalse(playerC.IsActive());
-        Assert.IsTrue(playerD.IsActive());
+        Assert.IsFalse(playerC.Active);
+        Assert.IsTrue(playerD.Active);
 
         // ensure that NextPlayer changes the current player
         // from player D to player A
         game.NextPlayer();
         Assert.IsTrue(game.currentPlayer == playerA);
-        Assert.IsFalse(playerD.IsActive());
-        Assert.IsTrue(playerA.IsActive());
+        Assert.IsFalse(playerD.Active);
+        Assert.IsTrue(playerA.Active);
 
         yield return null;
     }
@@ -171,17 +171,17 @@ public class GameTest
 
         game.currentPlayer = playerA;
 
-        playerC.units.Add(MonoBehaviour.Instantiate(playerC.GetUnitPrefab()).GetComponent<Unit>()); // make player C not eliminated
-        playerD.units.Add(MonoBehaviour.Instantiate(playerD.GetUnitPrefab()).GetComponent<Unit>()); // make player D not eliminated
+        playerC.units.Add(MonoBehaviour.Instantiate(playerC.UnitPrefab).GetComponent<Unit>()); // make player C not eliminated
+        playerD.units.Add(MonoBehaviour.Instantiate(playerD.UnitPrefab).GetComponent<Unit>()); // make player D not eliminated
 
         game.SetTurnState(Game.TurnState.EndOfTurn);
         game.UpdateAccessible(); // removes players that should be eliminated (A and B)
 
         // ensure eliminated players are skipped
         Assert.IsTrue(game.currentPlayer == playerC);
-        Assert.IsFalse(playerA.IsActive());
-        Assert.IsFalse(playerB.IsActive());
-        Assert.IsTrue(playerC.IsActive());
+        Assert.IsFalse(playerA.Active);
+        Assert.IsFalse(playerB.Active);
+        Assert.IsTrue(playerC.Active);
 
         yield return null;
     }
@@ -198,7 +198,7 @@ public class GameTest
         List<Sector> possibleSectors = new List<Sector>();
         for (int i = 0; i < adjacentSectors.Length; i++)
         {
-            bool neutralOrEmpty = adjacentSectors[i].Owner == null || adjacentSectors[i].Owner.IsNeutral();
+            bool neutralOrEmpty = adjacentSectors[i].Owner == null || adjacentSectors[i].Owner.Neutral;
             if (neutralOrEmpty && !adjacentSectors[i].PVC)
                 possibleSectors.Add(adjacentSectors[i]);
         }
@@ -212,7 +212,7 @@ public class GameTest
         // Check that the neutral player is not moving to a sector containing the vice chancellor
         foreach (Sector sector in adjacentSectors)
         {
-            Assert.IsTrue(sector.Owner == null || sector.Owner.IsNeutral() && !sector.PVC);
+            Assert.IsTrue(sector.Owner == null || sector.Owner.Neutral && !sector.PVC);
         }
 
         yield return null;
@@ -266,7 +266,7 @@ public class GameTest
         // ensure winner is found if only 1 player owns a landmark
         ClearSectorsAndUnitsOfAllPlayers();
         playerA.ownedSectors.Add(landmark1);
-        playerA.units.Add(MonoBehaviour.Instantiate(playerA.GetUnitPrefab()).GetComponent<Unit>());
+        playerA.units.Add(MonoBehaviour.Instantiate(playerA.UnitPrefab).GetComponent<Unit>());
         Assert.IsNotNull(game.GetWinner());
 
         yield return null;
@@ -308,8 +308,8 @@ public class GameTest
 
         // ensure no winner is found if >1 players have a unit
         ClearSectorsAndUnitsOfAllPlayers();
-        playerA.units.Add(MonoBehaviour.Instantiate(playerA.GetUnitPrefab()).GetComponent<Unit>());
-        playerB.units.Add(MonoBehaviour.Instantiate(playerB.GetUnitPrefab()).GetComponent<Unit>());
+        playerA.units.Add(MonoBehaviour.Instantiate(playerA.UnitPrefab).GetComponent<Unit>());
+        playerB.units.Add(MonoBehaviour.Instantiate(playerB.UnitPrefab).GetComponent<Unit>());
         Assert.IsNull(game.GetWinner());
 
         yield return null;
@@ -333,7 +333,7 @@ public class GameTest
         // and another player has a unit
         ClearSectorsAndUnitsOfAllPlayers();
         playerA.ownedSectors.Add(landmark1);
-        playerB.units.Add(MonoBehaviour.Instantiate(playerB.GetUnitPrefab()).GetComponent<Unit>());
+        playerB.units.Add(MonoBehaviour.Instantiate(playerB.UnitPrefab).GetComponent<Unit>());
         Assert.IsNull(game.GetWinner());
 
         yield return null;
@@ -355,7 +355,7 @@ public class GameTest
 
         // ensure no players are active
         foreach (Player player in game.players)
-            Assert.IsFalse(player.IsActive());
+            Assert.IsFalse(player.Active);
 
         // ensure turn state is NULL
         Assert.IsTrue(game.GetTurnState() == Game.TurnState.NULL);

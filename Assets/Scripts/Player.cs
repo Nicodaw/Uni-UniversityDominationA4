@@ -6,163 +6,41 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour {
 
-	public List <Sector> ownedSectors;
-    public List <Unit> units;
+    public List<Sector> ownedSectors;
+    public List<Unit> units;
 
     [SerializeField] private Game game;
     [SerializeField] private GameObject unitPrefab;
-	[SerializeField] private PlayerUI gui;
+    [SerializeField] private PlayerUI gui;
     [SerializeField] private int attack = 0;
     [SerializeField] private int defence = 0;
     [SerializeField] private Color color;
     [SerializeField] private bool human;
-    [SerializeField] private bool neutral; //added by Peter
+    [SerializeField] private bool neutral;
     [SerializeField] private bool active = false;
 
-    public Game GetGame() {
-        return game;
-    }
+    #region Public Properties
+    public Game Game { get { return game; } set { game = value; } }
 
-    public void SetGame(Game game) {
-        this.game = game;
-    }
+    public GameObject UnitPrefab { get { return unitPrefab; } }
 
-    public GameObject GetUnitPrefab() {
-        return unitPrefab;
-    }
+    public PlayerUI Gui { get { return gui; } set { gui = value; } }
 
-	public PlayerUI GetGui() {
-		return gui;
-	}
+    public int AttackBonus { get { return attack; } set { attack = value; } }
 
-	public void SetGui(PlayerUI gui) {
-		this.gui = gui;
-	}
+    public int DefenceBonus { get { return defence; } set { defence = value; } }
 
-    /// <summary>
-    /// 
-    /// gets this player's attack bonus
-    /// 
-    /// </summary>
-    /// <returns>This player's attack bonus</returns>
-    public int GetAttack() {
-        return attack;
-    }
+    public Color Color { get { return color; } set { color = value; } }
 
-    /// <summary>
-    /// 
-    /// sets this players attack bonus
-    /// 
-    /// </summary>
-    /// <param name="attack">The player's attack bonus</param>
-    public void SetAttack(int attack) {
-        this.attack = attack;
-    }
+    public bool Human { get { return human; } set { human = value; } }
 
-    /// <summary>
-    /// 
-    /// gets this player's defence
-    /// 
-    /// </summary>
-    /// <returns>The player's defence bonus</returns>
-    public int GetDefence() {
-        return defence;
-    }
+    public bool Neutral { get { return neutral; } set { neutral = value; } }
 
-    /// <summary>
-    /// 
-    /// sets this players defence bonus
-    /// 
-    /// </summary>
-    /// <param name="defence">The player's defence bonus</param>
-    public void SetDefence(int defence) {
-        this.defence = defence;
-    }
-    
-    /// <summary>
-    /// 
-    /// gets the colour associated with this player
-    /// 
-    /// </summary>
-    /// <returns>The colour associated with this player</returns>
-    public Color GetColor() {
-        return color;
-    }
+    public bool Active { get { return active; } set { active = value; } }
+    #endregion
 
-    /// <summary>
-    /// 
-    /// sets the players colour to be used for sector colouring and setting the player's name colour
-    /// 
-    /// </summary>
-    /// <param name="color">The colour to be used for this player</param>
-    public void SetColor(Color color) {
-        this.color = color;
-    }
 
-    //added by Peter
-    /// <summary>
-    /// 
-    /// returns if this player is controlled by a human or not
-    /// 
-    /// </summary>
-    /// <returns>True if the player is controlled by a human else false</returns>
-    public bool IsHuman() {
-        return human;
-    }
 
-    //added by Peter
-    /// <summary>
-    /// 
-    /// sets if this player is to be controlled by a human
-    /// 
-    /// </summary>
-    /// <param name="human">True if the player is to be contolled by a human else false</param>
-    public void SetHuman(bool human) {
-        this.human = human;
-    }
-
-    /// <summary>
-    /// 
-    /// returns true if this player is neutral else false
-    /// 
-    /// </summary>
-    /// <returns>True if player is neutral else false</returns>
-    public bool IsNeutral()
-    {
-        return neutral;
-    }
-
-    /// <summary>
-    /// 
-    /// Sets if this player should be controlled by the neutral AI
-    /// 
-    /// </summary>
-    /// <param name="neutral">True if the player is neutral else false</param>
-    public void SetNeutral(bool neutral)
-    {
-        this.neutral = neutral;
-    }
-
-    /// <summary>
-    /// 
-    /// returns if the player is active or not
-    /// 
-    /// </summary>
-    /// <returns>True if player is active else false</returns>
-    public bool IsActive() {
-        return active;
-    }
-
-    /// <summary>
-    /// 
-    /// sets if this player is active
-    /// if it is a player's turn they are active else they are not
-    /// 
-    /// </summary>
-    /// <param name="active">True if player is active else false</param>
-    public void SetActive(bool active) {
-        this.active = active;
-    }
 
     /// <summary>
     /// 
@@ -172,11 +50,11 @@ public class Player : MonoBehaviour {
     /// <returns>String "human"/"neutral"/"none" depending on the player properties</returns>
     public string GetController()
     {
-        if (this.IsHuman())
+        if (this.Human)
         {
             return "human";
         }
-        else if (this.IsNeutral())
+        else if (this.Neutral)
         {
             return "neutral";
         }

@@ -118,110 +118,110 @@ public class GameData
     public void SetupGameData(Game game)
     {
         // Game properties
-        this.turnState = game.GetTurnState();
-        this.gameFinished = game.IsFinished();
-        this.testMode = game.GetTestMode();
-        this.currentPlayerID = game.GetPlayerID(game.GetCurrentPlayer());
+        turnState = game.GetTurnState();
+        gameFinished = game.IsFinished();
+        testMode = game.GetTestMode();
+        currentPlayerID = game.GetPlayerID(game.GetCurrentPlayer());
         
         // Player properties
         Player[] players = game.GetPlayers();
 
         // Attack
-        this.player1Attack = players[0].GetAttack();
-        this.player2Attack = players[1].GetAttack();
-        this.player3Attack = players[2].GetAttack();
-        this.player4Attack = players[3].GetAttack();
+        player1Attack = players[0].AttackBonus;
+        player2Attack = players[1].AttackBonus;
+        player3Attack = players[2].AttackBonus;
+        player4Attack = players[3].AttackBonus;
 
         // Defence
-        this.player1Defence = players[0].GetDefence();
-        this.player2Defence = players[1].GetDefence();
-        this.player3Defence = players[2].GetDefence();
-        this.player4Defence = players[3].GetDefence();
+        player1Defence = players[0].DefenceBonus;
+        player2Defence = players[1].DefenceBonus;
+        player3Defence = players[2].DefenceBonus;
+        player4Defence = players[3].DefenceBonus;
 
         // Color
-        this.player1Color = players[0].GetColor();
-        this.player2Color = players[1].GetColor();
-        this.player3Color = players[2].GetColor();
-        this.player4Color = players[3].GetColor();
+        player1Color = players[0].Color;
+        player2Color = players[1].Color;
+        player3Color = players[2].Color;
+        player4Color = players[3].Color;
 
         // Controller (Human, Neutral or None)
-        this.player1Controller = players[0].GetController();
-        this.player2Controller = players[1].GetController();
-        this.player3Controller = players[2].GetController();
-        this.player4Controller = players[3].GetController();
+        player1Controller = players[0].GetController();
+        player2Controller = players[1].GetController();
+        player3Controller = players[2].GetController();
+        player4Controller = players[3].GetController();
 
         // Sectors
         Sector[] sectors = game.GetSectors();
 
         // Owner
-        this.sector01Owner = game.GetPlayerID(sectors[0].Owner);
-        this.sector02Owner = game.GetPlayerID(sectors[1].Owner);
-        this.sector03Owner = game.GetPlayerID(sectors[2].Owner);
-        this.sector04Owner = game.GetPlayerID(sectors[3].Owner);
-        this.sector05Owner = game.GetPlayerID(sectors[4].Owner);
-        this.sector06Owner = game.GetPlayerID(sectors[5].Owner);
-        this.sector07Owner = game.GetPlayerID(sectors[6].Owner);
-        this.sector08Owner = game.GetPlayerID(sectors[7].Owner);
-        this.sector09Owner = game.GetPlayerID(sectors[8].Owner);
-        this.sector10Owner = game.GetPlayerID(sectors[9].Owner);
-        this.sector11Owner = game.GetPlayerID(sectors[10].Owner);
-        this.sector12Owner = game.GetPlayerID(sectors[11].Owner);
-        this.sector13Owner = game.GetPlayerID(sectors[12].Owner);
-        this.sector14Owner = game.GetPlayerID(sectors[13].Owner);
-        this.sector15Owner = game.GetPlayerID(sectors[14].Owner);
-        this.sector16Owner = game.GetPlayerID(sectors[15].Owner);
-        this.sector17Owner = game.GetPlayerID(sectors[16].Owner);
-        this.sector18Owner = game.GetPlayerID(sectors[17].Owner);
-        this.sector19Owner = game.GetPlayerID(sectors[18].Owner);
-        this.sector20Owner = game.GetPlayerID(sectors[19].Owner);
-        this.sector21Owner = game.GetPlayerID(sectors[20].Owner);
-        this.sector22Owner = game.GetPlayerID(sectors[21].Owner);
-        this.sector23Owner = game.GetPlayerID(sectors[22].Owner);
-        this.sector24Owner = game.GetPlayerID(sectors[23].Owner);
-        this.sector25Owner = game.GetPlayerID(sectors[24].Owner);
-        this.sector26Owner = game.GetPlayerID(sectors[25].Owner);
-        this.sector27Owner = game.GetPlayerID(sectors[26].Owner);
-        this.sector28Owner = game.GetPlayerID(sectors[27].Owner);
-        this.sector29Owner = game.GetPlayerID(sectors[28].Owner);
-        this.sector30Owner = game.GetPlayerID(sectors[29].Owner);
-        this.sector31Owner = game.GetPlayerID(sectors[30].Owner);
-        this.sector32Owner = game.GetPlayerID(sectors[31].Owner);
+        sector01Owner = game.GetPlayerID(sectors[0].Owner);
+        sector02Owner = game.GetPlayerID(sectors[1].Owner);
+        sector03Owner = game.GetPlayerID(sectors[2].Owner);
+        sector04Owner = game.GetPlayerID(sectors[3].Owner);
+        sector05Owner = game.GetPlayerID(sectors[4].Owner);
+        sector06Owner = game.GetPlayerID(sectors[5].Owner);
+        sector07Owner = game.GetPlayerID(sectors[6].Owner);
+        sector08Owner = game.GetPlayerID(sectors[7].Owner);
+        sector09Owner = game.GetPlayerID(sectors[8].Owner);
+        sector10Owner = game.GetPlayerID(sectors[9].Owner);
+        sector11Owner = game.GetPlayerID(sectors[10].Owner);
+        sector12Owner = game.GetPlayerID(sectors[11].Owner);
+        sector13Owner = game.GetPlayerID(sectors[12].Owner);
+        sector14Owner = game.GetPlayerID(sectors[13].Owner);
+        sector15Owner = game.GetPlayerID(sectors[14].Owner);
+        sector16Owner = game.GetPlayerID(sectors[15].Owner);
+        sector17Owner = game.GetPlayerID(sectors[16].Owner);
+        sector18Owner = game.GetPlayerID(sectors[17].Owner);
+        sector19Owner = game.GetPlayerID(sectors[18].Owner);
+        sector20Owner = game.GetPlayerID(sectors[19].Owner);
+        sector21Owner = game.GetPlayerID(sectors[20].Owner);
+        sector22Owner = game.GetPlayerID(sectors[21].Owner);
+        sector23Owner = game.GetPlayerID(sectors[22].Owner);
+        sector24Owner = game.GetPlayerID(sectors[23].Owner);
+        sector25Owner = game.GetPlayerID(sectors[24].Owner);
+        sector26Owner = game.GetPlayerID(sectors[25].Owner);
+        sector27Owner = game.GetPlayerID(sectors[26].Owner);
+        sector28Owner = game.GetPlayerID(sectors[27].Owner);
+        sector29Owner = game.GetPlayerID(sectors[28].Owner);
+        sector30Owner = game.GetPlayerID(sectors[29].Owner);
+        sector31Owner = game.GetPlayerID(sectors[30].Owner);
+        sector32Owner = game.GetPlayerID(sectors[31].Owner);
 
         // Level
-        this.sector01Level = sectors[0].GetLevel();
-        this.sector02Level = sectors[1].GetLevel();
-        this.sector03Level = sectors[2].GetLevel();
-        this.sector04Level = sectors[3].GetLevel();
-        this.sector05Level = sectors[4].GetLevel();
-        this.sector06Level = sectors[5].GetLevel();
-        this.sector07Level = sectors[6].GetLevel();
-        this.sector08Level = sectors[7].GetLevel();
-        this.sector09Level = sectors[8].GetLevel();
-        this.sector10Level = sectors[9].GetLevel();
-        this.sector11Level = sectors[10].GetLevel();
-        this.sector12Level = sectors[11].GetLevel();
-        this.sector13Level = sectors[12].GetLevel();
-        this.sector14Level = sectors[13].GetLevel();
-        this.sector15Level = sectors[14].GetLevel();
-        this.sector16Level = sectors[15].GetLevel();
-        this.sector17Level = sectors[16].GetLevel();
-        this.sector18Level = sectors[17].GetLevel();
-        this.sector19Level = sectors[18].GetLevel();
-        this.sector20Level = sectors[19].GetLevel();
-        this.sector21Level = sectors[20].GetLevel();
-        this.sector22Level = sectors[21].GetLevel();
-        this.sector23Level = sectors[22].GetLevel();
-        this.sector24Level = sectors[23].GetLevel();
-        this.sector25Level = sectors[24].GetLevel();
-        this.sector26Level = sectors[25].GetLevel();
-        this.sector27Level = sectors[26].GetLevel();
-        this.sector28Level = sectors[27].GetLevel();
-        this.sector29Level = sectors[28].GetLevel();
-        this.sector30Level = sectors[29].GetLevel();
-        this.sector31Level = sectors[30].GetLevel();
-        this.sector32Level = sectors[31].GetLevel();
+        sector01Level = sectors[0].GetLevel();
+        sector02Level = sectors[1].GetLevel();
+        sector03Level = sectors[2].GetLevel();
+        sector04Level = sectors[3].GetLevel();
+        sector05Level = sectors[4].GetLevel();
+        sector06Level = sectors[5].GetLevel();
+        sector07Level = sectors[6].GetLevel();
+        sector08Level = sectors[7].GetLevel();
+        sector09Level = sectors[8].GetLevel();
+        sector10Level = sectors[9].GetLevel();
+        sector11Level = sectors[10].GetLevel();
+        sector12Level = sectors[11].GetLevel();
+        sector13Level = sectors[12].GetLevel();
+        sector14Level = sectors[13].GetLevel();
+        sector15Level = sectors[14].GetLevel();
+        sector16Level = sectors[15].GetLevel();
+        sector17Level = sectors[16].GetLevel();
+        sector18Level = sectors[17].GetLevel();
+        sector19Level = sectors[18].GetLevel();
+        sector20Level = sectors[19].GetLevel();
+        sector21Level = sectors[20].GetLevel();
+        sector22Level = sectors[21].GetLevel();
+        sector23Level = sectors[22].GetLevel();
+        sector24Level = sectors[23].GetLevel();
+        sector25Level = sectors[24].GetLevel();
+        sector26Level = sectors[25].GetLevel();
+        sector27Level = sectors[26].GetLevel();
+        sector28Level = sectors[27].GetLevel();
+        sector29Level = sectors[28].GetLevel();
+        sector30Level = sectors[29].GetLevel();
+        sector31Level = sectors[30].GetLevel();
+        sector32Level = sectors[31].GetLevel();
 
         // Vice Chancelor
-        this.VCSector = game.GetVCSectorID();
+        VCSector = game.GetVCSectorID();
     }
 }

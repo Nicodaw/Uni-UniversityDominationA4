@@ -29,14 +29,14 @@ public class PlayerUI : MonoBehaviour {
 		percentOwned = transform.Find("PercentOwned_Value").GetComponent<UnityEngine.UI.Text>();
 		attack = transform.Find("ATK_Value").GetComponent<UnityEngine.UI.Text>();
 		defence = transform.Find("DEF_Value").GetComponent<UnityEngine.UI.Text>();
-		numberOfSectors = player.GetGame().gameMap.GetComponent<Map>().sectors.Length;
+		numberOfSectors = player.Game.gameMap.GetComponent<Map>().sectors.Length;
 
 		header.text = "Player " + player_id.ToString();
 		headerHighlight.text = header.text;
-		headerHighlight.color = player.GetColor();
+		headerHighlight.color = player.Color;
 
         //added by Peter
-        if (player.IsNeutral())
+        if (player.Neutral)
         {
             header.text = "Neutral";
             headerHighlight.text = header.text;
@@ -51,8 +51,8 @@ public class PlayerUI : MonoBehaviour {
 	public void UpdateDisplay() {
 
 		percentOwned.text = Mathf.Round(100 * player.ownedSectors.Count / numberOfSectors).ToString() + "%";
-		attack.text = player.GetAttack().ToString();
-		defence.text = player.GetDefence().ToString();
+		attack.text = player.AttackBonus.ToString();
+		defence.text = player.DefenceBonus.ToString();
 
 	}
 
@@ -62,7 +62,7 @@ public class PlayerUI : MonoBehaviour {
     /// 
     /// </summary>
 	public void Activate() {
-		header.color = player.GetColor();
+		header.color = player.Color;
 	}
 
     /// <summary>

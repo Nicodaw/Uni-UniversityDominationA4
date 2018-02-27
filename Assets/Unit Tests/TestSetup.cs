@@ -46,9 +46,9 @@ public class TestSetup
         yield return null;
     }
 
-    public Game GetGame()
+    public Game Game
     {
-        return this.game;
+        get { return game; }
     }
 
     public Map GetMap()
@@ -66,9 +66,6 @@ public class TestSetup
         return this.gui;
     }
 
-    public GameObject GetUnitPrefab()
-    {
-        return this.unitPrefab;
-    }
+    public GameObject UnitPrefab { get { return unitPrefab; } }
     
 }

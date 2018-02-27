@@ -13,7 +13,7 @@ public class SectorTest
     private void Setup()
     {
         TestSetup t = new TestSetup();
-        this.game = t.GetGame();
+        this.game = t.Game;
         this.map = t.GetMap();
         this.players = t.GetPlayers();
         this.gui = t.GetPlayerUIs();
@@ -30,7 +30,7 @@ public class SectorTest
 
         sector.Owner = player;
         Assert.AreSame(sector.Owner, player);
-        Assert.IsTrue(sector.gameObject.GetComponent<Renderer>().material.color.Equals(player.GetColor()));
+        Assert.IsTrue(sector.gameObject.GetComponent<Renderer>().material.color.Equals(player.Color));
 
         sector.Owner = null;
         Assert.IsNull(sector.Owner);
@@ -106,8 +106,8 @@ public class SectorTest
         Sector sectorC = map.sectors[2];
         Player playerA = players[0];
         Player playerB = players[1];
-        Unit unitA = MonoBehaviour.Instantiate(players[0].GetUnitPrefab()).GetComponent<Unit>();
-        Unit unitB = MonoBehaviour.Instantiate(players[0].GetUnitPrefab()).GetComponent<Unit>(); // *should this be players[1]?* ###########################################################################################
+        Unit unitA = MonoBehaviour.Instantiate(players[0].UnitPrefab).GetComponent<Unit>();
+        Unit unitB = MonoBehaviour.Instantiate(players[0].UnitPrefab).GetComponent<Unit>(); // *should this be players[1]?* ###########################################################################################
 
         // ensure sectors A & B are adjacent to each other
         Assert.Contains(sectorA, sectorB.AdjacentSectors);
@@ -136,7 +136,7 @@ public class SectorTest
 
         // test clicking a sector with a unit while the unit's owner
         // is active AND there are no units selected
-        playerA.SetActive(true);
+        playerA.Active = true;
         unitA.IsSelected = false;
         unitB.IsSelected =false;
 
@@ -150,7 +150,7 @@ public class SectorTest
 
         // test clicking a sector with a unit while there are no
         // units selected, but the unit's owner is NOT active
-        playerA.SetActive(false);
+        playerA.Active = false;
         unitA.IsSelected = false;
         unitB.IsSelected =false;
 
@@ -160,7 +160,7 @@ public class SectorTest
 
         // test clicking a sector with a unit while the unit's owner
         // is active, but there IS another unit selected
-        playerA.SetActive(true);
+        playerA.Active = true;
         unitA.IsSelected = false;
         unitB.IsSelected = true;
 
@@ -190,7 +190,7 @@ public class SectorTest
         Sector sectorA = map.sectors[0];
         Sector sectorB = map.sectors[1];
 
-        sectorA.Unit = MonoBehaviour.Instantiate(players[0].GetUnitPrefab()).GetComponent<Unit>();
+        sectorA.Unit = MonoBehaviour.Instantiate(players[0].UnitPrefab).GetComponent<Unit>();
         sectorA.Unit.Sector = sectorA;
         sectorB.Unit = null;
 
@@ -211,13 +211,13 @@ public class SectorTest
         Sector sectorA = map.sectors[0];
         Sector sectorB = map.sectors[1];
 
-        sectorA.Unit = MonoBehaviour.Instantiate(players[0].GetUnitPrefab()).GetComponent<Unit>();
+        sectorA.Unit = MonoBehaviour.Instantiate(players[0].UnitPrefab).GetComponent<Unit>();
         sectorA.Unit.Sector = sectorA;
         sectorA.Unit.Level = 5;
         sectorA.Unit.Owner = players[0];
         sectorA.Owner = players[0];
 
-        sectorB.Unit = MonoBehaviour.Instantiate(players[0].GetUnitPrefab()).GetComponent<Unit>();
+        sectorB.Unit = MonoBehaviour.Instantiate(players[0].UnitPrefab).GetComponent<Unit>();
         sectorB.Unit.Sector = sectorB;
         sectorB.Unit.Level = 1;
         sectorB.Unit.Owner = players[0];
@@ -245,8 +245,8 @@ public class SectorTest
 
         // setup units such that the attacking unit wins
         ResetSectors(sectorA, sectorB);
-        sectorA.Owner.SetAttack(99); // to ensure the sectorA unit will win any conflict (attacking)
-        sectorB.Owner.SetDefence(0);
+        sectorA.Owner.AttackBonus = 99; // to ensure the sectorA unit will win any conflict (attacking)
+        sectorB.Owner.DefenceBonus = 0;
 
         sectorB.MoveIntoHostileUnit(sectorA.Unit, sectorB.Unit);
         Assert.IsNull(sectorA.Unit); // attackingg unit moved out of sectorA
@@ -271,8 +271,8 @@ public class SectorTest
         // setup units such that the defending unit wins
         game.SetTurnState(Game.TurnState.Move1);
         ResetSectors(sectorA, sectorB);
-        sectorA.Owner.SetAttack(0);
-        sectorB.Owner.SetDefence(99); //to ensure the sectorB unit will win any conflict (defending)
+        sectorA.Owner.AttackBonus = 0;
+        sectorB.Owner.DefenceBonus = 99; //to ensure the sectorB unit will win any conflict (defending)
 
         sectorB.MoveIntoHostileUnit(sectorA.Unit, sectorB.Unit);
         Assert.IsNull(sectorA.Unit); // attacking unit destroyed
@@ -301,9 +301,9 @@ public class SectorTest
         game.SetTurnState(Game.TurnState.Move1);
         ResetSectors(sectorA, sectorB);
         sectorA.Unit.Level = -4;
-        sectorA.Owner.SetAttack(0);
+        sectorA.Owner.AttackBonus = 0;
         sectorB.Unit.Level = -4;
-        sectorB.Owner.SetDefence(0); // making both units equal
+        sectorB.Owner.DefenceBonus = 0; // making both units equal
 
         sectorB.MoveIntoHostileUnit(sectorA.Unit, sectorB.Unit);
         Assert.IsNull(sectorA.Unit); // attacking unit destroyed
@@ -329,7 +329,7 @@ public class SectorTest
         Assert.IsNull(sectorB.AdjacentSelectedUnit());
 
         // test with unselected unit in adjacent sector
-        sectorA.Unit = MonoBehaviour.Instantiate(players[0].GetUnitPrefab()).GetComponent<Unit>();
+        sectorA.Unit = MonoBehaviour.Instantiate(players[0].UnitPrefab).GetComponent<Unit>();
         sectorA.Unit.IsSelected = false;
         Assert.IsNull(sectorB.AdjacentSelectedUnit());
 
@@ -344,13 +344,13 @@ public class SectorTest
         
         // re-initialize sectors for in between test cases in MoveIntoHostileUnitTest
 
-        sectorA.Unit = MonoBehaviour.Instantiate(players[0].GetUnitPrefab()).GetComponent<Unit>();
+        sectorA.Unit = MonoBehaviour.Instantiate(players[0].UnitPrefab).GetComponent<Unit>();
         sectorA.Unit.Sector = sectorA;
         sectorA.Unit.Owner = players[0];
         sectorA.Owner = players[0];
         sectorA.Unit.Level = 1;
 
-        sectorB.Unit = MonoBehaviour.Instantiate(players[0].GetUnitPrefab()).GetComponent<Unit>();
+        sectorB.Unit = MonoBehaviour.Instantiate(players[0].UnitPrefab).GetComponent<Unit>();
         sectorB.Unit.Sector = sectorB;
         sectorB.Unit.Owner = players[1];
         sectorB.Owner = players[1];

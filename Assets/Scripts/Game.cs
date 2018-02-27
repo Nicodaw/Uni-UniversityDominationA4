@@ -60,8 +60,8 @@ public class Game : MonoBehaviour {
 
         // set Player 1 as the current player
         currentPlayer = players[0];
-        currentPlayer.GetGui().Activate();
-        players[0].SetActive(true);
+        currentPlayer.Gui.Activate();
+        players[0].Active = true;
 
         // update GUIs
         UpdateGUI();
@@ -227,7 +227,7 @@ public class Game : MonoBehaviour {
         {
             for (int i = 0; i < NUMBER_OF_PLAYERS; i++)
             {
-                players[i].SetHuman(true);
+                players[i].Human = true;
             }
             GameObject.Find("PlayerNeutralUI").SetActive(false);
             players[NUMBER_OF_PLAYERS - 1] = GameObject.Find("Player4").GetComponent<Player>();
@@ -236,11 +236,11 @@ public class Game : MonoBehaviour {
         {
             for (int i = 0; i < (NUMBER_OF_PLAYERS - 1); i++)
             {
-                players[i].SetHuman(true);
+                players[i].Human = true;
             }
             players[NUMBER_OF_PLAYERS - 1] = GameObject.Find("PlayerNeutral").GetComponent<Player>();
             GameObject.Find("Player4UI").SetActive(false);
-            players[NUMBER_OF_PLAYERS - 1].SetNeutral(true);
+            players[NUMBER_OF_PLAYERS - 1].Neutral = true;
         }
 
 
@@ -248,8 +248,8 @@ public class Game : MonoBehaviour {
         // and initialize their GUIs
         for (int i = 0; i < NUMBER_OF_PLAYERS; i++)
         {
-            players[i].SetGame(this);
-            players[i].GetGui().Initialize(players[i], i + 1);
+            players[i].Game = this;
+            players[i].Gui.Initialize(players[i], i + 1);
         }
 
         eliminatedPlayers = new bool[NUMBER_OF_PLAYERS]; // always 4 players in game
@@ -395,8 +395,8 @@ public class Game : MonoBehaviour {
 
 
         // deactivate the current player
-        currentPlayer.SetActive(false);
-        currentPlayer.GetGui().Deactivate();
+        currentPlayer.Active = false;
+        currentPlayer.Gui.Deactivate();
 
         // find the index of the current player
        
@@ -408,9 +408,9 @@ public class Game : MonoBehaviour {
                 int nextPlayerIndex = (i + 1) % NUMBER_OF_PLAYERS; // set index to next player, loop if end reached
                 
                 currentPlayer = players[nextPlayerIndex];
-                players[nextPlayerIndex].SetActive(true);
-                players[nextPlayerIndex].GetGui().Activate();
-                if (currentPlayer.IsNeutral() && !currentPlayer.IsEliminated())
+                players[nextPlayerIndex].Active = true;
+                players[nextPlayerIndex].Gui.Activate();
+                if (currentPlayer.Neutral && !currentPlayer.IsEliminated())
                 {
                     NeutralPlayerTurn();
                     NeutralPlayerTurn(); 
@@ -436,7 +436,7 @@ public class Game : MonoBehaviour {
         List<Sector> possibleSectors = new List<Sector>();
         for (int i = 0; i < adjacentSectors.Length; i++)
         {
-            bool neutralOrEmpty = adjacentSectors[i].Owner == null || adjacentSectors[i].Owner.IsNeutral();
+            bool neutralOrEmpty = adjacentSectors[i].Owner == null || adjacentSectors[i].Owner.Neutral;
             if (neutralOrEmpty && !adjacentSectors[i].PVC)
                 possibleSectors.Add(adjacentSectors[i]);
         }
@@ -611,7 +611,7 @@ public class Game : MonoBehaviour {
 
         #endregion
 
-        currentPlayer.SetActive(false);
+        currentPlayer.Active = false;
         currentPlayer = null;
         turnState = TurnState.NULL;
         Debug.Log("GAME FINISHED");
@@ -626,7 +626,7 @@ public class Game : MonoBehaviour {
 
 		// update all players' GUIs
 		for (int i = 0; i < 4; i++) {
-			players [i].GetGui ().UpdateDisplay();
+			players [i].Gui.UpdateDisplay();
 		}
         UpdateActionsRemainingLabel();
 	}
@@ -661,26 +661,26 @@ public class Game : MonoBehaviour {
         this.gameFinished = savedGame.gameFinished;
         this.testMode = savedGame.testMode;
         this.currentPlayer = players[savedGame.currentPlayerID];
-        currentPlayer.GetGui().Activate();
-        players[savedGame.currentPlayerID].SetActive(true);
+        currentPlayer.Gui.Activate();
+        players[savedGame.currentPlayerID].Active = true;
 
         // set player attack bonus
-        players[0].SetAttack(savedGame.player1Attack);
-        players[1].SetAttack(savedGame.player2Attack);
-        players[2].SetAttack(savedGame.player3Attack);
-        players[3].SetAttack(savedGame.player4Attack);
+        players[0].AttackBonus = savedGame.player1Attack;
+        players[1].AttackBonus = savedGame.player2Attack;
+        players[2].AttackBonus = savedGame.player3Attack;
+        players[3].AttackBonus = savedGame.player4Attack;
 
         // set player defence bonus
-        players[0].SetDefence(savedGame.player1Defence);
-        players[1].SetDefence(savedGame.player2Defence);
-        players[2].SetDefence(savedGame.player3Defence);
-        players[3].SetDefence(savedGame.player4Defence);
+        players[0].DefenceBonus = savedGame.player1Defence;
+        players[1].DefenceBonus = savedGame.player2Defence;
+        players[2].DefenceBonus = savedGame.player3Defence;
+        players[3].DefenceBonus = savedGame.player4Defence;
 
         // set player colour
-        players[0].SetColor(savedGame.player1Color);
-        players[1].SetColor(savedGame.player2Color);
-        players[2].SetColor(savedGame.player3Color);
-        players[3].SetColor(savedGame.player4Color);
+        players[0].Color = savedGame.player1Color;
+        players[1].Color = savedGame.player2Color;
+        players[2].Color = savedGame.player3Color;
+        players[3].Color = savedGame.player4Color;
 
         // set player colour
         players[0].SetController(savedGame.player1Controller);
@@ -804,7 +804,7 @@ public class Game : MonoBehaviour {
         {
             return;
         }
-        Unit unit = Instantiate(sectors[sectorIndex].Owner.GetUnitPrefab()).GetComponent<Unit>();
+        Unit unit = Instantiate(sectors[sectorIndex].Owner.UnitPrefab).GetComponent<Unit>();
         unit.Initialize(sectors[sectorIndex].Owner, sectors[sectorIndex]);
         unit.Level = level;
         unit.UpdateUnitMaterial();
@@ -876,13 +876,9 @@ public class Game : MonoBehaviour {
     {
         int rewardLevel = PlayerPrefs.GetInt("_mgScore");
         // REWARD TO BE ADDED TO PLAYER
-        int bonus = 1; 
-        if (rewardLevel == 10)
-        {
-            bonus = 4;
-        }
-        currentPlayer.SetAttack(currentPlayer.GetAttack() + bonus);
-        currentPlayer.SetDefence(currentPlayer.GetDefence() + bonus);
+        int bonus = (int)Math.Floor((double)(rewardLevel+1)/2); 
+        currentPlayer.AttackBonus = currentPlayer.AttackBonus + bonus;
+        currentPlayer.DefenceBonus = currentPlayer.DefenceBonus + bonus;
 
         dialog.SetDialogType(Dialog.DialogType.ShowText);
 

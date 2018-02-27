@@ -13,7 +13,7 @@ public class PlayerTest
     private void Setup()
     {
         TestSetup t = new TestSetup();
-        this.game = t.GetGame();
+        this.game = t.Game;
         this.map = t.GetMap();
         this.players = t.GetPlayers();
         this.gui = t.GetPlayerUIs();
@@ -62,8 +62,8 @@ public class PlayerTest
         landmark.SetResourceType(Landmark.ResourceType.Attack);
 
         // get beer amounts for each player before capture
-        int attackerBeerBeforeCapture = playerA.GetAttack();
-        int defenderBeerBeforeCapture = playerB.GetAttack();
+        int attackerBeerBeforeCapture = playerA.AttackBonus;
+        int defenderBeerBeforeCapture = playerB.AttackBonus;
         Player previousOwner = landmarkedSector.Owner;
 
         playerA.Capture(landmarkedSector);
@@ -73,8 +73,8 @@ public class PlayerTest
         Assert.IsTrue(playerA.ownedSectors.Contains(landmarkedSector));
 
         // ensure resources are transferred correctly
-        Assert.IsTrue(attackerBeerBeforeCapture + landmark.GetAmount() == playerA.GetAttack());
-        Assert.IsTrue(defenderBeerBeforeCapture - landmark.GetAmount() == previousOwner.GetAttack());
+        Assert.IsTrue(attackerBeerBeforeCapture + landmark.GetAmount() == playerA.AttackBonus);
+        Assert.IsTrue(defenderBeerBeforeCapture - landmark.GetAmount() == previousOwner.AttackBonus);
 
         yield return null;
     }
@@ -97,8 +97,8 @@ public class PlayerTest
         landmark.SetResourceType(Landmark.ResourceType.Defence);
 
         // get knowledge amounts for each player before capture
-        int attackerKnowledgeBeforeCapture = playerA.GetDefence();
-        int defenderKnowledgeBeforeCapture = playerB.GetDefence();
+        int attackerKnowledgeBeforeCapture = playerA.DefenceBonus;
+        int defenderKnowledgeBeforeCapture = playerB.DefenceBonus;
         Player previousOwner = landmarkedSector.Owner;
 
         playerA.Capture(landmarkedSector);
@@ -108,8 +108,8 @@ public class PlayerTest
         Assert.IsTrue(playerA.ownedSectors.Contains(landmarkedSector));
 
         // ensure resources are transferred correctly
-        Assert.IsTrue(attackerKnowledgeBeforeCapture + landmark.GetAmount() == playerA.GetDefence());
-        Assert.IsTrue(defenderKnowledgeBeforeCapture - landmark.GetAmount() == previousOwner.GetDefence());
+        Assert.IsTrue(attackerKnowledgeBeforeCapture + landmark.GetAmount() == playerA.DefenceBonus);
+        Assert.IsTrue(defenderKnowledgeBeforeCapture - landmark.GetAmount() == previousOwner.DefenceBonus);
 
         yield return null;
     }
@@ -130,7 +130,7 @@ public class PlayerTest
         landmark.SetResourceType(Landmark.ResourceType.Attack);
 
         // get player beer amount before capture
-        int oldBeer = playerA.GetAttack();
+        int oldBeer = playerA.AttackBonus;
 
         playerA.Capture(landmarkedSector);
 
@@ -139,7 +139,7 @@ public class PlayerTest
         Assert.IsTrue(playerA.ownedSectors.Contains(landmarkedSector));
 
         // ensure resources are gained correctly
-        Assert.IsTrue(playerA.GetAttack() - oldBeer == landmark.GetAmount());
+        Assert.IsTrue(playerA.AttackBonus - oldBeer == landmark.GetAmount());
         
         yield return null;
     }
@@ -160,7 +160,7 @@ public class PlayerTest
         landmark.SetResourceType(Landmark.ResourceType.Defence);
 
         // get player knowledge amount before capture
-        int oldKnowledge = playerA.GetDefence();
+        int oldKnowledge = playerA.DefenceBonus;
 
         playerA.Capture(landmarkedSector);
 
@@ -169,7 +169,7 @@ public class PlayerTest
         Assert.IsTrue(playerA.ownedSectors.Contains(landmarkedSector));
 
         // ensure resources are gained correctly
-        Assert.IsTrue(playerA.GetDefence() - oldKnowledge == landmark.GetAmount());
+        Assert.IsTrue(playerA.DefenceBonus - oldKnowledge == landmark.GetAmount());
 
         yield return null;
     }
@@ -206,7 +206,7 @@ public class PlayerTest
 
         // ensure that 'landmarkedSector' is a landmark and contains a Level 5 unit
         landmarkedSector.Initialize();
-        landmarkedSector.Unit = MonoBehaviour.Instantiate(playerA.GetUnitPrefab()).GetComponent<Unit>();
+        landmarkedSector.Unit = MonoBehaviour.Instantiate(playerA.UnitPrefab).GetComponent<Unit>();
         landmarkedSector.Unit.Level = 5;
         landmarkedSector.Unit.Owner = playerA;
         Assert.IsNotNull(landmarkedSector.Landmark);

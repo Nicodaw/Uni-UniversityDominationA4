@@ -16,11 +16,11 @@ public class SaveGameTest
     private void Setup()
     {
         TestSetup t = new TestSetup();
-        this.game = t.GetGame();
+        this.game = t.Game;
         this.map = t.GetMap();
         this.players = t.GetPlayers();
         this.gui = t.GetPlayerUIs();
-        this.unitPrefab = t.GetUnitPrefab();
+        this.unitPrefab = t.UnitPrefab;
     }
 
     /// <summary>

@@ -39,7 +39,7 @@ public class Sector : MonoBehaviour
             if (owner == null)
                 gameObject.GetComponent<Renderer>().material.color = Color.gray;
             else
-                gameObject.GetComponent<Renderer>().material.color = owner.GetColor();
+                gameObject.GetComponent<Renderer>().material.color = owner.Color;
         }
     }
 
@@ -187,7 +187,7 @@ public class Sector : MonoBehaviour
 
         // if this sector contains a unit and belongs to the
         // current active player, and if no unit is selected
-        if (unit != null && owner.IsActive() && map.game.NoUnitSelected())
+        if (unit != null && owner.Active && map.game.NoUnitSelected())
         {
             // select this sector's unit
             unit.Select();
@@ -323,14 +323,14 @@ public class Sector : MonoBehaviour
         // return 'true' if attacking unit wins;
         // return 'false' if defending unit wins
 
-        int attackingUnitRoll = Random.Range(1, (5 + attackingUnit.Level)) + attackingUnit.Owner.GetAttack();
-        int defendingUnitRoll = Random.Range(1, (5 + defendingUnit.Level)) + defendingUnit.Owner.GetDefence();
+        int attackingUnitRoll = Random.Range(1, (5 + attackingUnit.Level)) + attackingUnit.Owner.AttackBonus;
+        int defendingUnitRoll = Random.Range(1, (5 + defendingUnit.Level)) + defendingUnit.Owner.DefenceBonus;
 
         #region conflict resolution algorithm updated to make more fair (Modified by Dom 13/02/2018)
 
         // diff = +ve attacker advantage 
         // diff = -ve defender advantage
-        int diff = (attackingUnit.Level + attackingUnit.Owner.GetAttack() + 1) - (defendingUnit.Level + defendingUnit.Owner.GetDefence());
+        int diff = (attackingUnit.Level + attackingUnit.Owner.AttackBonus + 1) - (defendingUnit.Level + defendingUnit.Owner.DefenceBonus);
 
         // determine uncertaincy in combat
         // small diff in troops small uncertaincy level
