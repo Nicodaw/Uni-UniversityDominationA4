@@ -1,106 +1,48 @@
 ﻿using UnityEngine;
 
-public class Sector : MonoBehaviour {
+public class Sector : MonoBehaviour
+{
 
     [SerializeField] private Map map;
     [SerializeField] private Unit unit;
     [SerializeField] private Player owner;
     [SerializeField] private Sector[] adjacentSectors;
-	[SerializeField] private Landmark landmark;
-    [SerializeField] private bool VC = false; //added by Peter
+    [SerializeField] private Landmark landmark;
+    [SerializeField] private bool pvc = false;
 
 
-    //added by Peter
+    #region Public properties
+
     /// <summary>
-    /// 
-    /// Returns if this sector contains the vice chancelor
-    /// 
+    /// The PVC contained in this sector
     /// </summary>
-    /// <returns>True if sector contains vice chancellor else false</returns>
-    public bool IsVC()
+    public bool PVC { get { return pvc; } set { pvc = value; } }
+
+    /// <summary>
+    /// The Unit occupying this sector
+    /// </summary>
+    public Unit Unit { get { return unit; } set { unit = value; } }
+    #endregion
+
+    /// <summary>
+    /// The player who owns the sector
+    /// </summary>
+    public Player Owner
     {
-        return VC;
-    }
+        get { return owner; }
+        set
+        {
+            owner = value;
 
-    //added by Peter
-    /// <summary>
-    /// 
-    /// Sets if this sector contains the vice chancellor
-    /// 
-    /// </summary>
-    /// <param name="VC">True if this sector should contain the VC else false</param>
-    public void SetVC(bool VC)
-    {
-        this.VC = VC;
-    }
-    
-    // removed get and set map as never used (Modifed by Dom (13/02/2018))
-    
-    /// <summary>
-    /// 
-    /// fetches the unit object on this sector
-    /// </summary>
-    /// 
-    /// <returns>The unit on this sector</returns>
-    public Unit GetUnit() {
-        return unit;
-    }
-
-    /// <summary>
-    /// 
-    /// Sets the unit on this sector
-    /// 
-    /// </summary>
-    /// <param name="unit">The unit that is to be put on this sector</param>
-    public void SetUnit(Unit unit) {
-        this.unit = unit;
-    }
-
-    /// <summary>
-    /// 
-    /// fetches the Player object for the player that owns this sector
-    /// 
-    /// </summary>
-    /// <returns>The Player object of the player that owns this sector</returns>
-    public Player GetOwner() {
-        return owner;
-    }
-
-    /// <summary>
-    /// 
-    /// sets the owner of this sector to the passed player
-    /// updates the colour of the sector to that of the player
-    /// 
-    /// if passed player is null resets the sector colour back to grey
-    /// 
-    /// </summary>
-    /// <param name="owner">Player object of the new owner of this sector or null if there is no owner</param
-    public void SetOwner (Player owner) {
-        
-        // set sector owner to the given player
-        this.owner = owner;
-
-        // set sector color to the color of the given player
-        // or gray if null
-        if (owner == null) {
-            gameObject.GetComponent<Renderer> ().material.color = Color.gray;
-        } else {
-            gameObject.GetComponent<Renderer> ().material.color = owner.GetColor();
+            // set sector color to the color of the given player
+            // or gray if null
+            if (owner == null)
+                gameObject.GetComponent<Renderer>().material.color = Color.gray;
+            else
+                gameObject.GetComponent<Renderer>().material.color = owner.GetColor();
         }
     }
 
-    /// <summary>
-    /// 
-    /// sets the owner of this sector to the passed player without updating the colour
-    /// for testing only
-    /// 
-    /// </summary>
-    /// <param name="owner">Player object of the new owner of this sector or null if there is no owner</param
-    public void SetOwnerNoColour(Player owner)
-    {
-        this.owner = owner;
-    }
-    
     /// <summary>
     /// Get the level of the unit on the sector
     /// </summary>
@@ -114,39 +56,20 @@ public class Sector : MonoBehaviour {
         else
         {
             return this.unit.GetLevel();
-        } 
+        }
     }
 
     /// <summary>
-    /// 
-    /// returns an array of sectors that are adjacent to this one
-    /// 
+    /// The neighbouring sectors
     /// </summary>
-    /// <returns>Array of sectors that are adjacent to this sector</returns>
-    public Sector[] GetAdjacentSectors() {
-        return adjacentSectors;
-    }
+    public Sector[] AdjacentSectors { get { return adjacentSectors; } }
 
     /// <summary>
-    /// 
-    /// returns the landmark of this sector or null if it does not have one
-    /// 
+    /// The landmark on this sector
     /// </summary>
-    /// <returns>The landmark object for this sector; May return null if sector does not have a landmark</returns>
-	public Landmark GetLandmark() {
-        return landmark;
-    }
+    public Landmark Landmark { get { return landmark; } set { landmark = value; } }
 
-    /// <summary>
-    /// 
-    /// Sets the landmark object of this sector to the passed landmark
-    /// 
-    /// </summary>
-    /// <param name="landmark">Landmark object to be set on this sector</param>
-	public void SetLandmark(Landmark landmark) {
-        this.landmark = landmark;
-    }	
-
+    #region Initialization
     /// <summary>
     /// 
     /// initializes a sector
@@ -154,18 +77,22 @@ public class Sector : MonoBehaviour {
     /// sets owner and unit to null
     /// 
     /// </summary>
-	public void Initialize() {
+    public void Initialize()
+    {
 
-		// set no owner
-		SetOwner(null);
+        // set no owner
+        Owner = null;
 
-		// clear unit
-		unit = null;
+        // clear unit
+        unit = null;
 
-		// get landmark (if any)
-		landmark = gameObject.GetComponentInChildren<Landmark>();
+        // get landmark (if any)
+        Landmark = gameObject.GetComponentInChildren<Landmark>();
 
-	}
+    }
+    #endregion
+
+    #region Helper Methods
 
     /// <summary>
     /// 
@@ -173,7 +100,8 @@ public class Sector : MonoBehaviour {
     /// 
     /// </summary>
     /// <param name="amount"></param>
-    public void ApplyHighlight(float amount) {
+    public void ApplyHighlight(float amount)
+    {
 
 
         Renderer renderer = GetComponent<Renderer>();
@@ -190,8 +118,9 @@ public class Sector : MonoBehaviour {
     /// 
     /// </summary>
     /// <param name="amount"></param>
-    public void RevertHighlight(float amount) {
-        
+    public void RevertHighlight(float amount)
+    {
+
         Renderer renderer = GetComponent<Renderer>();
         Color currentColor = renderer.material.color;
         Color offset = new Vector4(amount, amount, amount, 1);
@@ -205,7 +134,8 @@ public class Sector : MonoBehaviour {
     /// highlight each sector adjacent to this one
     /// 
     /// </summary>
-    public void ApplyHighlightAdjacent() {
+    public void ApplyHighlightAdjacent()
+    {
         foreach (Sector adjacentSector in adjacentSectors)
         {
             adjacentSector.ApplyHighlight(0.2f);
@@ -217,7 +147,8 @@ public class Sector : MonoBehaviour {
     /// unhighlight each sector adjacent to this one
     /// 
     /// </summary>
-    public void RevertHighlightAdjacent() {
+    public void RevertHighlightAdjacent()
+    {
         foreach (Sector adjacentSector in adjacentSectors)
         {
             adjacentSector.RevertHighlight(0.2f);
@@ -229,22 +160,25 @@ public class Sector : MonoBehaviour {
     /// clear this sector of any unit
     /// 
     /// </summary>
-    public void ClearUnit() {
+    public void ClearUnit()
+    {
 
 
         unit = null;
     }
 
-    void OnMouseUpAsButton () {
+    void OnMouseUpAsButton()
+    {
 
         // when this sector is clicked, determine the context
         // and act accordingly
 
-		OnMouseUpAsButtonAccessible();
+        OnMouseUpAsButtonAccessible();
 
     }
-    
-    public void OnMouseUpAsButtonAccessible() {
+
+    public void OnMouseUpAsButtonAccessible()
+    {
 
         // a method of OnMouseUpAsButton that is 
         // accessible to other objects for testing
@@ -280,13 +214,13 @@ public class Sector : MonoBehaviour {
                 MoveIntoUnoccupiedSector(selectedUnit);
 
             // if the sector is occupied by a friendly unit
-            else if (unit.GetOwner() == selectedUnit.GetOwner())
+            else if (unit.Owner == selectedUnit.Owner)
                 MoveIntoFriendlyUnit(selectedUnit);
 
             // if the sector is occupied by a hostile unit
-            else if (unit.GetOwner() != selectedUnit.GetOwner())
+            else if (unit.Owner != selectedUnit.Owner)
                 MoveIntoHostileUnit(selectedUnit, this.unit);
-            
+
             map.game.NextTurnState(); // adavance to next turn phase when action take (Modified by Dom 13/02/2018)
         }
     }
@@ -298,8 +232,9 @@ public class Sector : MonoBehaviour {
     /// 
     /// </summary>
     /// <param name="unit">The unit to be moved onto this sector</param>
-    public void MoveIntoUnoccupiedSector(Unit unit) {
-        
+    public void MoveIntoUnoccupiedSector(Unit unit)
+    {
+
         // move the selected unit into this sector
         unit.MoveTo(this);
     }
@@ -310,7 +245,8 @@ public class Sector : MonoBehaviour {
     /// 
     /// </summary>
     /// <param name="otherUnit">Unit object of the unit on the adjacent sector to be switched onto this sector</param>
-    public void MoveIntoFriendlyUnit(Unit otherUnit) {
+    public void MoveIntoFriendlyUnit(Unit otherUnit)
+    {
 
         // swap the two units
         this.unit.SwapPlacesWith(otherUnit);
@@ -325,8 +261,9 @@ public class Sector : MonoBehaviour {
     /// </summary>
     /// <param name="attackingUnit"></param>
     /// <param name="defendingUnit"></param>
-    public void MoveIntoHostileUnit(Unit attackingUnit, Unit defendingUnit) {
-        
+    public void MoveIntoHostileUnit(Unit attackingUnit, Unit defendingUnit)
+    {
+
         // if the attacking unit wins
         if (Conflict(attackingUnit, defendingUnit))
         {
@@ -342,12 +279,13 @@ public class Sector : MonoBehaviour {
         {
             // destroy attacking unit
             attackingUnit.DestroySelf();
-        }      
-        
+        }
+
         // removed automatically end turn after attacking (Modified by Dom 13/02/18)
     }
-       
-    public Unit AdjacentSelectedUnit() {
+
+    public Unit AdjacentSelectedUnit()
+    {
 
         // return the selected unit if it is adjacent to this sector
         // return null otherwise
@@ -378,19 +316,20 @@ public class Sector : MonoBehaviour {
     /// <param name="attackingUnit">Unit object of the attacking unit</param>
     /// <param name="defendingUnit">Unit object of the defending unit</param>
     /// <returns>'true' if attacking unit wins or 'false' if defending unit wins</returns>
-    private bool Conflict(Unit attackingUnit, Unit defendingUnit) {
+    private bool Conflict(Unit attackingUnit, Unit defendingUnit)
+    {
 
         // return 'true' if attacking unit wins;
         // return 'false' if defending unit wins
-        
-        int attackingUnitRoll = Random.Range(1, (5 + attackingUnit.GetLevel())) + attackingUnit.GetOwner().GetAttack();
-        int defendingUnitRoll = Random.Range(1, (5 + defendingUnit.GetLevel())) + defendingUnit.GetOwner().GetDefence();
+
+        int attackingUnitRoll = Random.Range(1, (5 + attackingUnit.GetLevel())) + attackingUnit.Owner.GetAttack();
+        int defendingUnitRoll = Random.Range(1, (5 + defendingUnit.GetLevel())) + defendingUnit.Owner.GetDefence();
 
         #region conflict resolution algorithm updated to make more fair (Modified by Dom 13/02/2018)
 
         // diff = +ve attacker advantage 
         // diff = -ve defender advantage
-        int diff = (attackingUnit.GetLevel() + attackingUnit.GetOwner().GetAttack() + 1) - (defendingUnit.GetLevel() + defendingUnit.GetOwner().GetDefence());
+        int diff = (attackingUnit.GetLevel() + attackingUnit.Owner.GetAttack() + 1) - (defendingUnit.GetLevel() + defendingUnit.Owner.GetDefence());
 
         // determine uncertaincy in combat
         // small diff in troops small uncertaincy level
@@ -405,11 +344,13 @@ public class Sector : MonoBehaviour {
             if (diff < 0)
             {
                 return false;
-            } else
+            }
+            else
             {
                 return true;
             }
-        } else
+        }
+        else
         {
             if (diff < 0)
             {
@@ -422,5 +363,6 @@ public class Sector : MonoBehaviour {
         }
         #endregion
     }
+    #endregion
 
 }

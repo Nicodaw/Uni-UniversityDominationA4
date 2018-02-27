@@ -223,7 +223,7 @@ public class Player : MonoBehaviour {
             return; // Incase the player hasn't lost
         foreach (Sector sector in ownedSectors)
         {
-            sector.SetOwner(player); // Reset all the sectors
+            sector.Owner = player; // Reset all the sectors
         }
     }
 
@@ -244,7 +244,7 @@ public class Player : MonoBehaviour {
 
 
         // store a copy of the sector's previous owner
-        Player previousOwner = sector.GetOwner();
+        Player previousOwner = sector.Owner;
 
         // add the sector to the list of owned sectors
         ownedSectors.Add(sector);
@@ -255,12 +255,12 @@ public class Player : MonoBehaviour {
             previousOwner.ownedSectors.Remove(sector);
 
         // set the sector's owner to this player
-        sector.SetOwner(this);
+        sector.Owner = this;
 
         // if the sector contains a landmark
-        if (sector.GetLandmark() != null)
+        if (sector.Landmark != null)
         {
-            Landmark landmark = sector.GetLandmark();
+            Landmark landmark = sector.Landmark;
 
             // remove the landmark's resource bonus from the previous
             // owner and add it to this player
@@ -278,10 +278,10 @@ public class Player : MonoBehaviour {
             }
         }
 
-        if (sector.IsVC())
+        if (sector.PVC)
         {
             game.NextTurnState(); // update turn mode before game is saved
-            sector.SetVC(false); // set VC to false so game can only be triggered once
+            sector.PVC = false; // set VC to false so game can only be triggered once
             SavedGame.Save("_tmp", game);
             SceneManager.LoadScene(2); 
 
@@ -300,7 +300,7 @@ public class Player : MonoBehaviour {
 		foreach (Sector sector in ownedSectors) 
 		{
             // if the sector contains a landmark and is unoccupied
-            if (sector.GetLandmark() != null && sector.GetUnit() == null)
+            if (sector.Landmark != null && sector.Unit == null)
             {
                 // instantiate a new unit at the sector
                 Unit newUnit = Instantiate(unitPrefab).GetComponent<Unit>();
@@ -311,7 +311,7 @@ public class Player : MonoBehaviour {
                 // add the new unit to the player's list of units and 
                 // the sector's unit parameters
                 units.Add(newUnit);
-                sector.SetUnit(newUnit);
+                sector.Unit = newUnit;
             }
 		}
 	}
@@ -347,7 +347,7 @@ public class Player : MonoBehaviour {
         foreach (Sector sector in ownedSectors)
         {
             // if a landmarked sector is found, return true
-            if (sector.GetLandmark() != null)
+            if (sector.Landmark != null)
                 return true;
         }
 

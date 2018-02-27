@@ -32,13 +32,13 @@ public class UnitTest
 
         // test moving from null
         unit.SetSector(null);
-        sectorA.SetUnit(null);
-        unit.SetOwner(playerA);
-        sectorA.SetOwner(playerA);
+        sectorA.Unit = null;
+        unit.Owner = playerA;
+        sectorA.Owner = playerA;
 
         unit.MoveTo(sectorA);
         Assert.IsTrue(unit.GetSector() == sectorA);
-        Assert.IsTrue(sectorA.GetUnit() == unit);
+        Assert.IsTrue(sectorA.Unit == unit);
 
         yield return null;
     }
@@ -55,16 +55,16 @@ public class UnitTest
 
         // test moving from one sector to another
         unit.SetSector(sectorA);
-        unit.SetOwner(playerA);
-        sectorA.SetUnit(unit);
-        sectorB.SetUnit(null);
-        sectorA.SetOwner(playerA);
-        sectorB.SetOwner(playerA);
+        unit.Owner = playerA;
+        sectorA.Unit = unit;
+        sectorB.Unit = null;
+        sectorA.Owner = playerA;
+        sectorB.Owner = playerA;
 
         unit.MoveTo(sectorB);
         Assert.IsTrue(unit.GetSector() == sectorB);
-        Assert.IsTrue(sectorB.GetUnit() == unit);
-        Assert.IsNull(sectorA.GetUnit());
+        Assert.IsTrue(sectorB.Unit == unit);
+        Assert.IsNull(sectorA.Unit);
 
         yield return null;
     }
@@ -81,9 +81,9 @@ public class UnitTest
         // test moving into a friendly sector (no level up)
         unit.SetLevel(1);
         unit.SetSector(null);
-        sectorA.SetUnit(null);
-        unit.SetOwner(playerA);
-        sectorA.SetOwner(playerA);
+        sectorA.Unit = null;
+        unit.Owner = playerA;
+        sectorA.Owner = playerA;
 
         unit.MoveTo(sectorA);
         Assert.IsTrue(unit.GetLevel() == 1);
@@ -103,13 +103,13 @@ public class UnitTest
         // test moving into a non-friendly sector (level up)
         unit.SetLevel(1);
         unit.SetSector(null);
-        sectorA.SetUnit(null);
-        unit.SetOwner(playerA);
-        sectorA.SetOwner(playerB);
+        sectorA.Unit = null;
+        unit.Owner = playerA;
+        sectorA.Owner = playerB;
 
         unit.MoveTo(sectorA);
         Assert.IsTrue(unit.GetLevel() == 2);
-        Assert.IsTrue(sectorA.GetOwner() == unit.GetOwner());
+        Assert.IsTrue(sectorA.Owner == unit.Owner);
 
         yield return null;
     }
@@ -119,8 +119,8 @@ public class UnitTest
 
         Setup();
 
-        Unit unitA = map.sectors[0].GetUnit();
-        Unit unitB = map.sectors[1].GetUnit();
+        Unit unitA = map.sectors[0].Unit;
+        Unit unitB = map.sectors[1].Unit;
         
         Sector sectorA = map.sectors[0];
         Sector sectorB = map.sectors[1];
@@ -129,9 +129,9 @@ public class UnitTest
 
         unitA.SwapPlacesWith(unitB);
         Assert.IsTrue(unitA.GetSector() == sectorB); // unitA in sectorB
-        Assert.IsTrue(sectorB.GetUnit() == unitA); // sectorB has unitA
+        Assert.IsTrue(sectorB.Unit == unitA); // sectorB has unitA
         Assert.IsTrue(unitB.GetSector() == sectorA); // unitB in sectorA
-        Assert.IsTrue(sectorA.GetUnit() == unitB); // sectorA has unitB
+        Assert.IsTrue(sectorA.Unit == unitB); // sectorA has unitB
 
         yield return null;
     }
@@ -197,14 +197,14 @@ public class UnitTest
         Player player = players[0];
 
         unit.SetSector(sector);
-        sector.SetUnit(unit);
+        sector.Unit = unit;
 
-        unit.SetOwner(player);
+        unit.Owner = player;
         player.units.Add(unit);
 
         unit.DestroySelf();
 
-        Assert.IsNull(sector.GetUnit()); // unit not on sector 
+        Assert.IsNull(sector.Unit); // unit not on sector 
         Assert.IsFalse(player.units.Contains(unit)); // unit not in list of players units
 
         yield return null;

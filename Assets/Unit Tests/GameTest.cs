@@ -65,7 +65,7 @@ public class GameTest
         foreach (Player player in players)
         {
             Assert.IsTrue(player.ownedSectors.Count == 1);
-            Assert.IsNotNull(player.ownedSectors[0].GetLandmark());
+            Assert.IsNotNull(player.ownedSectors[0].Landmark);
             Assert.IsTrue(player.units.Count == 1);
 
             Assert.AreSame(player.ownedSectors[0], player.units[0].GetSector());
@@ -76,7 +76,7 @@ public class GameTest
 
         foreach (Sector sector in map.sectors)
         {
-            if (sector.GetOwner() != null && !listOfAllocatedSectors.Contains(sector)) // any sector that has an owner but is not in the allocated sectors from above
+            if (sector.Owner != null && !listOfAllocatedSectors.Contains(sector)) // any sector that has an owner but is not in the allocated sectors from above
             {
                 Assert.Fail(); // must be an error as only sectors owned should be landmarks from above
             }
@@ -194,12 +194,12 @@ public class GameTest
 
         List<Unit> units = game.currentPlayer.units;
         Unit selectedUnit = units[UnityEngine.Random.Range(0, units.Count)];
-        Sector[] adjacentSectors = selectedUnit.GetSector().GetAdjacentSectors();
+        Sector[] adjacentSectors = selectedUnit.GetSector().AdjacentSectors;
         List<Sector> possibleSectors = new List<Sector>();
         for (int i = 0; i < adjacentSectors.Length; i++)
         {
-            bool neutralOrEmpty = adjacentSectors[i].GetOwner() == null || adjacentSectors[i].GetOwner().IsNeutral();
-            if (neutralOrEmpty && !adjacentSectors[i].IsVC())
+            bool neutralOrEmpty = adjacentSectors[i].Owner == null || adjacentSectors[i].Owner.IsNeutral();
+            if (neutralOrEmpty && !adjacentSectors[i].PVC)
                 possibleSectors.Add(adjacentSectors[i]);
         }
         if (possibleSectors.Count > 0)
@@ -212,7 +212,7 @@ public class GameTest
         // Check that the neutral player is not moving to a sector containing the vice chancellor
         foreach (Sector sector in adjacentSectors)
         {
-            Assert.IsTrue(sector.GetOwner() == null || sector.GetOwner().IsNeutral() && !sector.IsVC());
+            Assert.IsTrue(sector.Owner == null || sector.Owner.IsNeutral() && !sector.PVC);
         }
 
         yield return null;
@@ -261,7 +261,7 @@ public class GameTest
 
         // ensure 'landmark1' is a landmark
         landmark1.Initialize();
-        Assert.IsNotNull(landmark1.GetLandmark());
+        Assert.IsNotNull(landmark1.Landmark);
 
         // ensure winner is found if only 1 player owns a landmark
         ClearSectorsAndUnitsOfAllPlayers();
@@ -286,8 +286,8 @@ public class GameTest
         // ensure'landmark1' and 'landmark2' are landmarks
         landmark1.Initialize();
         landmark2.Initialize();
-        Assert.IsNotNull(landmark1.GetLandmark());
-        Assert.IsNotNull(landmark2.GetLandmark());
+        Assert.IsNotNull(landmark1.Landmark);
+        Assert.IsNotNull(landmark2.Landmark);
 
         // ensure no winner is found if >1 players own a landmark
         ClearSectorsAndUnitsOfAllPlayers();
@@ -327,7 +327,7 @@ public class GameTest
 
         // ensure 'landmark1' is a landmark
         landmark1.Initialize();
-        Assert.IsNotNull(landmark1.GetLandmark());
+        Assert.IsNotNull(landmark1.Landmark);
 
         // ensure no winner is found if 1 player has a landmark
         // and another player has a unit

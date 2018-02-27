@@ -203,7 +203,7 @@ public class Game : MonoBehaviour {
     {
         foreach (Sector sector in sectors)
         {
-            if (sector.IsVC())
+            if (sector.PVC)
             {
                 return Array.IndexOf(sectors, sector);
             }
@@ -296,7 +296,7 @@ public class Game : MonoBehaviour {
                 int randomIndex = UnityEngine.Random.Range (0, landmarkedSectors.Length);
 				
                 // if the sector is not yet allocated, allocate the player
-                if (((Sector) landmarkedSectors[randomIndex]).GetOwner() == null)
+                if (((Sector) landmarkedSectors[randomIndex]).Owner == null)
 				{
                     player.Capture(landmarkedSectors[randomIndex]);
 					playerAllocated = true;
@@ -314,9 +314,9 @@ public class Game : MonoBehaviour {
 
         //set Vice Chancellor
         int rand = UnityEngine.Random.Range(0, sectors.Length);
-        while (sectors[rand].GetLandmark() != null)
+        while (sectors[rand].Landmark != null)
             rand = UnityEngine.Random.Range(0, sectors.Length);
-        sectors[rand].SetVC(true);
+        sectors[rand].PVC = true;
         Debug.Log(sectors[rand].name);
     }
 
@@ -334,7 +334,7 @@ public class Game : MonoBehaviour {
         List<Sector> landmarkedSectors = new List<Sector>();
         foreach (Sector sector in sectors)
         {
-            if (sector.GetLandmark() != null)
+            if (sector.Landmark != null)
             {
                 landmarkedSectors.Add(sector);
             }
@@ -432,12 +432,12 @@ public class Game : MonoBehaviour {
         NextTurnState();
         List<Unit> units = currentPlayer.units;
         Unit selectedUnit = units[UnityEngine.Random.Range(0, units.Count)];
-        Sector[] adjacentSectors = selectedUnit.GetSector().GetAdjacentSectors();
+        Sector[] adjacentSectors = selectedUnit.GetSector().AdjacentSectors;
         List<Sector> possibleSectors = new List<Sector>();
         for (int i = 0; i < adjacentSectors.Length; i++)
         {
-            bool neutralOrEmpty = adjacentSectors[i].GetOwner() == null || adjacentSectors[i].GetOwner().IsNeutral();
-            if (neutralOrEmpty && !adjacentSectors[i].IsVC())
+            bool neutralOrEmpty = adjacentSectors[i].Owner == null || adjacentSectors[i].Owner.IsNeutral();
+            if (neutralOrEmpty && !adjacentSectors[i].PVC)
                 possibleSectors.Add(adjacentSectors[i]);
         }
         if (possibleSectors.Count > 0)
@@ -766,7 +766,7 @@ public class Game : MonoBehaviour {
         SetupUnit(31, savedGame.sector32Level);
 
         //set VC sector
-        if (savedGame.VCSector != -1) sectors[savedGame.VCSector].SetVC(true);
+        if (savedGame.VCSector != -1) sectors[savedGame.VCSector].PVC = true;
 
         UpdateGUI();
 
@@ -787,7 +787,7 @@ public class Game : MonoBehaviour {
             return;
         }
         Player p = players[ownerId];
-        sectors[sectorId].SetOwner(p);
+        sectors[sectorId].Owner = p;
         p.ownedSectors.Add(sectors[sectorId]);
     }
     //Added by Dom
@@ -804,12 +804,12 @@ public class Game : MonoBehaviour {
         {
             return;
         }
-        Unit unit = Instantiate(sectors[sectorIndex].GetOwner().GetUnitPrefab()).GetComponent<Unit>();
-        unit.Initialize(sectors[sectorIndex].GetOwner(), sectors[sectorIndex]);
+        Unit unit = Instantiate(sectors[sectorIndex].Owner.GetUnitPrefab()).GetComponent<Unit>();
+        unit.Initialize(sectors[sectorIndex].Owner, sectors[sectorIndex]);
         unit.SetLevel(level);
         unit.UpdateUnitMaterial();
         unit.MoveTo(sectors[sectorIndex]);
-        sectors[sectorIndex].GetOwner().units.Add(unit);
+        sectors[sectorIndex].Owner.units.Add(unit);
     }
 
     /// <summary>

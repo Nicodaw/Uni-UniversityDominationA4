@@ -47,19 +47,8 @@ public class Unit : MonoBehaviour {
     /// 
     /// </summary>
     /// <returns>The player that owns this unit</returns>
-    public Player GetOwner() {
-        return owner;
-    }
+    public Player Owner { get { return owner; } set { owner = value; } }
 
-    /// <summary>
-    /// 
-    /// Sets the player that owns this unit
-    /// 
-    /// </summary>
-    /// <param name="owner">The player that owns this unit</param>
-    public void SetOwner(Player owner) {
-        this.owner = owner;
-    }
 
     /// <summary>
     /// 
@@ -159,7 +148,7 @@ public class Unit : MonoBehaviour {
         // set the unit's sector to the target sector
         // and the target sector's unit to the unit
         this.sector = targetSector;
-        targetSector.SetUnit(this);
+        targetSector.Unit = this;
 		Transform targetTransform = targetSector.transform.Find ("Units").transform;
 
         // set the unit's transform to be a child of
@@ -172,7 +161,7 @@ public class Unit : MonoBehaviour {
 
         // if the target sector belonged to a different 
         // player than the unit, capture it and level up
-        if (targetSector.GetOwner() != this.owner)
+        if (targetSector.Owner != this.owner)
         {
             // level up
             LevelUp();
@@ -192,8 +181,8 @@ public class Unit : MonoBehaviour {
     public void SwapPlacesWith(Unit otherUnit) {
         
         // swap the sectors' references to the units
-        this.sector.SetUnit(otherUnit);
-        otherUnit.sector.SetUnit(this);
+        this.sector.Unit = otherUnit;
+        otherUnit.sector.Unit = this;
 
 
         // get the index of this unit's sector in the map's list of sectors
