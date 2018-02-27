@@ -207,7 +207,7 @@ public class PlayerTest
         // ensure that 'landmarkedSector' is a landmark and contains a Level 5 unit
         landmarkedSector.Initialize();
         landmarkedSector.Unit = MonoBehaviour.Instantiate(playerA.GetUnitPrefab()).GetComponent<Unit>();
-        landmarkedSector.Unit.SetLevel(5);
+        landmarkedSector.Unit.Level = 5;
         landmarkedSector.Unit.Owner = playerA;
         Assert.IsNotNull(landmarkedSector.Landmark);
 
@@ -215,7 +215,7 @@ public class PlayerTest
         playerA.SpawnUnits();
 
         // ensure a Level 1 unit has not spawned over the Level 5 unit already in landmarkedSector
-        Assert.IsTrue(landmarkedSector.Unit.GetLevel() == 5);
+        Assert.IsTrue(landmarkedSector.Unit.Level == 5);
 
         yield return null;
     }

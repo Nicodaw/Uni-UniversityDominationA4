@@ -373,7 +373,7 @@ public class Game : MonoBehaviour {
             foreach (Unit unit in player.units)
             {
                 // if a selected unit is found, return false
-                if (unit.IsSelected() == true)
+                if (unit.IsSelected == true)
                     return false;
             }
         }
@@ -432,7 +432,7 @@ public class Game : MonoBehaviour {
         NextTurnState();
         List<Unit> units = currentPlayer.units;
         Unit selectedUnit = units[UnityEngine.Random.Range(0, units.Count)];
-        Sector[] adjacentSectors = selectedUnit.GetSector().AdjacentSectors;
+        Sector[] adjacentSectors = selectedUnit.Sector.AdjacentSectors;
         List<Sector> possibleSectors = new List<Sector>();
         for (int i = 0; i < adjacentSectors.Length; i++)
         {
@@ -806,7 +806,7 @@ public class Game : MonoBehaviour {
         }
         Unit unit = Instantiate(sectors[sectorIndex].Owner.GetUnitPrefab()).GetComponent<Unit>();
         unit.Initialize(sectors[sectorIndex].Owner, sectors[sectorIndex]);
-        unit.SetLevel(level);
+        unit.Level = level;
         unit.UpdateUnitMaterial();
         unit.MoveTo(sectors[sectorIndex]);
         sectors[sectorIndex].Owner.units.Add(unit);

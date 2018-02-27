@@ -47,6 +47,7 @@ public class Sector : MonoBehaviour
     /// Get the level of the unit on the sector
     /// </summary>
     /// <returns>Int value for the id of the sector</returns>
+    
     public int GetLevel()
     {
         if (this.unit == null)
@@ -55,7 +56,7 @@ public class Sector : MonoBehaviour
         }
         else
         {
-            return this.unit.GetLevel();
+            return this.unit.Level;
         }
     }
 
@@ -193,7 +194,7 @@ public class Sector : MonoBehaviour
         }
 
         // if this sector's unit is already selected
-        else if (unit != null && unit.IsSelected())
+        else if (unit != null && unit.IsSelected)
         {
             // deselect this sector's unit           
             unit.Deselect();
@@ -296,7 +297,7 @@ public class Sector : MonoBehaviour
         {
             // if the adjacent sector contains the selected unit,
             // return the selected unit
-            if (adjacentSector.unit != null && adjacentSector.unit.IsSelected())
+            if (adjacentSector.unit != null && adjacentSector.unit.IsSelected)
                 return adjacentSector.unit;
         }
 
@@ -322,14 +323,14 @@ public class Sector : MonoBehaviour
         // return 'true' if attacking unit wins;
         // return 'false' if defending unit wins
 
-        int attackingUnitRoll = Random.Range(1, (5 + attackingUnit.GetLevel())) + attackingUnit.Owner.GetAttack();
-        int defendingUnitRoll = Random.Range(1, (5 + defendingUnit.GetLevel())) + defendingUnit.Owner.GetDefence();
+        int attackingUnitRoll = Random.Range(1, (5 + attackingUnit.Level)) + attackingUnit.Owner.GetAttack();
+        int defendingUnitRoll = Random.Range(1, (5 + defendingUnit.Level)) + defendingUnit.Owner.GetDefence();
 
         #region conflict resolution algorithm updated to make more fair (Modified by Dom 13/02/2018)
 
         // diff = +ve attacker advantage 
         // diff = -ve defender advantage
-        int diff = (attackingUnit.GetLevel() + attackingUnit.Owner.GetAttack() + 1) - (defendingUnit.GetLevel() + defendingUnit.Owner.GetDefence());
+        int diff = (attackingUnit.Level + attackingUnit.Owner.GetAttack() + 1) - (defendingUnit.Level + defendingUnit.Owner.GetDefence());
 
         // determine uncertaincy in combat
         // small diff in troops small uncertaincy level

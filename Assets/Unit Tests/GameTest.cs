@@ -68,7 +68,7 @@ public class GameTest
             Assert.IsNotNull(player.ownedSectors[0].Landmark);
             Assert.IsTrue(player.units.Count == 1);
 
-            Assert.AreSame(player.ownedSectors[0], player.units[0].GetSector());
+            Assert.AreSame(player.ownedSectors[0], player.units[0].Sector);
 
             listOfAllocatedSectors.Add(player.ownedSectors[0]);
         }
@@ -96,7 +96,7 @@ public class GameTest
         {
             foreach (Unit unit in player.units)
             {
-                unit.SetSelected(false);
+                unit.IsSelected = false;
             }
         }
 
@@ -104,7 +104,7 @@ public class GameTest
         Assert.IsTrue(game.NoUnitSelected());
 
         // select a unit
-        players[0].units[0].SetSelected(true);
+        players[0].units[0].IsSelected = true;
 
         // assert that NoUnitSelected returns false
         Assert.IsFalse(game.NoUnitSelected());
@@ -194,7 +194,7 @@ public class GameTest
 
         List<Unit> units = game.currentPlayer.units;
         Unit selectedUnit = units[UnityEngine.Random.Range(0, units.Count)];
-        Sector[] adjacentSectors = selectedUnit.GetSector().AdjacentSectors;
+        Sector[] adjacentSectors = selectedUnit.Sector.AdjacentSectors;
         List<Sector> possibleSectors = new List<Sector>();
         for (int i = 0; i < adjacentSectors.Length; i++)
         {

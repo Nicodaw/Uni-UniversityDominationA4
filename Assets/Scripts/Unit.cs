@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Unit : MonoBehaviour {
+public class Unit : MonoBehaviour
+{
 
     [SerializeField] private Player owner;
     [SerializeField] private Sector sector;
@@ -10,12 +11,50 @@ public class Unit : MonoBehaviour {
     [SerializeField] private Color color;
     [SerializeField] private bool selected = false;
 
-	[SerializeField] private Material level1Material;
-	[SerializeField] private Material level2Material;
-	[SerializeField] private Material level3Material;
-	[SerializeField] private Material level4Material;
-	[SerializeField] private Material level5Material;
-    
+    [SerializeField] private Material level1Material;
+    [SerializeField] private Material level2Material;
+    [SerializeField] private Material level3Material;
+    [SerializeField] private Material level4Material;
+    [SerializeField] private Material level5Material;
+
+
+    #region Public Properties
+
+
+    /// <summary>
+    /// Player that owns this unit
+    /// </summary>
+    public Player Owner { get { return owner; } set { owner = value; } }
+
+    /// <summary>
+    /// The Sector the unit is occupying
+    /// </summary>
+    public Sector Sector { get { return sector; } set { sector = value; } }
+
+    /// <summary>
+    /// The unit's level
+    /// </summary>
+    public int Level
+    {
+        get { return (this == null) ? -1 : level; }
+        set { level = value; }
+    }
+
+    /// <summary>
+    /// The colour of the unit
+    /// </summary>
+    public Color Color { get { return color; } set { color = value; } }
+
+    /// <summary>
+    /// Whether the unit is currently selected.
+    /// </summary>
+    public bool IsSelected { get { return selected; } set { selected = value; } }
+
+    #endregion
+
+    #region Initialization
+
+
     /// <summary>
     /// 
     /// Initializes the unit on the passed sector and assigns it to the passed player
@@ -40,96 +79,11 @@ public class Unit : MonoBehaviour {
         MoveTo(sector);
 
     }
+    #endregion
 
-    /// <summary>
-    /// 
-    /// returns the player that owns this unit
-    /// 
-    /// </summary>
-    /// <returns>The player that owns this unit</returns>
-    public Player Owner { get { return owner; } set { owner = value; } }
+    #region Helper Methods
 
 
-    /// <summary>
-    /// 
-    /// returns the sector that this unit is in
-    /// 
-    /// </summary>
-    /// <returns>The sector that this unit is in</returns>
-    public Sector GetSector() {
-        return sector;
-    }
-
-    /// <summary>
-    /// 
-    /// sets the sector that this unit is in
-    /// 
-    /// </summary>
-    /// <param name="sector">The sector that this unit is on</param>
-    public void SetSector(Sector sector) {
-        this.sector = sector;
-    }
-
-    /// <summary>
-    /// 
-    /// Returns this unit's level
-    /// 
-    /// </summary>
-    /// <returns>This unit's level</returns>
-    public int GetLevel() {
-        return level;
-    }
-
-    /// <summary>
-    /// 
-    /// Sets this units level
-    /// 
-    /// </summary>
-    /// <param name="level">This units level</param>
-    public void SetLevel(int level) {
-        this.level = level;
-    }
-
-    /// <summary>
-    /// 
-    /// Returns this units colour
-    /// 
-    /// </summary>
-    /// <returns>This units colour</returns>
-    public Color GetColor() {
-        return color;
-    }
-
-    /// <summary>
-    /// 
-    /// Sets this unit's colour
-    /// 
-    /// </summary>
-    /// <param name="color">This units colour</param>
-    public void SetColor(Color color) {
-        this.color = color;
-    }
-
-    /// <summary>
-    /// 
-    /// Returns if this unit has been selected
-    /// 
-    /// </summary>
-    /// <returns>True if this unit is selected and false otherwise</returns>
-    public bool IsSelected() {
-        return selected;
-    }
-
-    /// <summary>
-    /// 
-    /// sets if this unit is currently selected
-    /// 
-    /// </summary>
-    /// <param name="selected">True if unit is seclected else false</param>
-    public void SetSelected(bool selected) {
-        this.selected = selected;
-    }
-    
     /// <summary>
     /// 
     /// Moves this unit to the passed sector
@@ -137,19 +91,20 @@ public class Unit : MonoBehaviour {
     /// 
     /// </summary>
     /// <param name="targetSector">The sector to move this unit to</param>
-    public void MoveTo(Sector targetSector) {
-        
+    public void MoveTo(Sector targetSector)
+    {
+
         // clear the unit's current sector
         if (this.sector != null)
         {
             this.sector.ClearUnit();
-        }   
+        }
 
         // set the unit's sector to the target sector
         // and the target sector's unit to the unit
         this.sector = targetSector;
         targetSector.Unit = this;
-		Transform targetTransform = targetSector.transform.Find ("Units").transform;
+        Transform targetTransform = targetSector.transform.Find("Units").transform;
 
         // set the unit's transform to be a child of
         // the target sector's transform
@@ -178,8 +133,9 @@ public class Unit : MonoBehaviour {
     /// 
     /// </summary>
     /// <param name="otherUnit">The unit to be swapped with this one</param>
-    public void SwapPlacesWith(Unit otherUnit) {
-        
+    public void SwapPlacesWith(Unit otherUnit)
+    {
+
         // swap the sectors' references to the units
         this.sector.Unit = otherUnit;
         otherUnit.sector.Unit = this;
@@ -195,15 +151,15 @@ public class Unit : MonoBehaviour {
 
         // swap the units' references to their sectors
         this.sector = otherUnit.sector;
-        otherUnit.sector = this.owner.GetGame().gameMap.GetComponent<Map>().sectors[tempSectorIndex] ;
-                
-        // realign transforms for each unit
-		this.transform.SetParent(this.sector.transform.Find("Units").transform);
-		this.transform.position = this.sector.transform.Find("Units").position;
+        otherUnit.sector = this.owner.GetGame().gameMap.GetComponent<Map>().sectors[tempSectorIndex];
 
-		otherUnit.transform.SetParent(otherUnit.sector.transform.Find("Units").transform);
-		otherUnit.transform.position = otherUnit.sector.transform.Find("Units").position;
-        
+        // realign transforms for each unit
+        this.transform.SetParent(this.sector.transform.Find("Units").transform);
+        this.transform.position = this.sector.transform.Find("Units").position;
+
+        otherUnit.transform.SetParent(otherUnit.sector.transform.Find("Units").transform);
+        otherUnit.transform.position = otherUnit.sector.transform.Find("Units").position;
+
     }
 
     /// <summary>
@@ -212,18 +168,20 @@ public class Unit : MonoBehaviour {
     /// levelling up is capped at level 5
     /// 
     /// </summary>
-	public void LevelUp() {
+	public void LevelUp()
+    {
 
         // level up the unit, capping at Level 5
 
-		if (level < 5) {
+        if (level < 5)
+        {
 
-			// increase level
-			level++;
+            // increase level
+            level++;
             UpdateUnitMaterial();
-		}
-		
-	}
+        }
+
+    }
 
     public void UpdateUnitMaterial()
     {
@@ -255,8 +213,9 @@ public class Unit : MonoBehaviour {
     /// select the unit and highlight the sectors adjacent to it
     /// 
     /// </summary>
-    public void Select() {
-        
+    public void Select()
+    {
+
         selected = true;
         sector.ApplyHighlightAdjacent();
     }
@@ -266,8 +225,9 @@ public class Unit : MonoBehaviour {
     /// deselect the unit and unhighlight the sectors adjacent to it
     /// 
     /// </summary>
-    public void Deselect() {
-        
+    public void Deselect()
+    {
+
         selected = false;
         sector.RevertHighlightAdjacent();
     }
@@ -277,10 +237,12 @@ public class Unit : MonoBehaviour {
     /// safely destroy the unit by removing it from its owner's list of units before destroying
     /// 
     /// </summary>
-    public void DestroySelf() { 
+    public void DestroySelf()
+    {
         sector.ClearUnit();
         owner.units.Remove(this);
         Destroy(this.gameObject);
     }
-        
+    #endregion
 }
+

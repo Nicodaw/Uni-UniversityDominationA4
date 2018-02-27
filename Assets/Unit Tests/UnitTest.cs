@@ -31,13 +31,13 @@ public class UnitTest
         Player playerA = players[0];
 
         // test moving from null
-        unit.SetSector(null);
+        unit.Sector = null;
         sectorA.Unit = null;
         unit.Owner = playerA;
         sectorA.Owner = playerA;
 
         unit.MoveTo(sectorA);
-        Assert.IsTrue(unit.GetSector() == sectorA);
+        Assert.IsTrue(unit.Sector == sectorA);
         Assert.IsTrue(sectorA.Unit == unit);
 
         yield return null;
@@ -54,7 +54,7 @@ public class UnitTest
         Player playerA = players[0];
 
         // test moving from one sector to another
-        unit.SetSector(sectorA);
+        unit.Sector = sectorA;
         unit.Owner = playerA;
         sectorA.Unit = unit;
         sectorB.Unit = null;
@@ -62,7 +62,7 @@ public class UnitTest
         sectorB.Owner = playerA;
 
         unit.MoveTo(sectorB);
-        Assert.IsTrue(unit.GetSector() == sectorB);
+        Assert.IsTrue(unit.Sector == sectorB);
         Assert.IsTrue(sectorB.Unit == unit);
         Assert.IsNull(sectorA.Unit);
 
@@ -79,14 +79,14 @@ public class UnitTest
         Player playerA = players[0];
 
         // test moving into a friendly sector (no level up)
-        unit.SetLevel(1);
-        unit.SetSector(null);
+        unit.Level = 1;
+        unit.Sector = null;
         sectorA.Unit = null;
         unit.Owner = playerA;
         sectorA.Owner = playerA;
 
         unit.MoveTo(sectorA);
-        Assert.IsTrue(unit.GetLevel() == 1);
+        Assert.IsTrue(unit.Level == 1);
 
         yield return null;
     }
@@ -101,14 +101,14 @@ public class UnitTest
         Player playerB = players[1];
 
         // test moving into a non-friendly sector (level up)
-        unit.SetLevel(1);
-        unit.SetSector(null);
+        unit.Level = 1;
+        unit.Sector = null;
         sectorA.Unit = null;
         unit.Owner = playerA;
         sectorA.Owner = playerB;
 
         unit.MoveTo(sectorA);
-        Assert.IsTrue(unit.GetLevel() == 2);
+        Assert.IsTrue(unit.Level == 2);
         Assert.IsTrue(sectorA.Owner == unit.Owner);
 
         yield return null;
@@ -128,9 +128,9 @@ public class UnitTest
         yield return null;
 
         unitA.SwapPlacesWith(unitB);
-        Assert.IsTrue(unitA.GetSector() == sectorB); // unitA in sectorB
+        Assert.IsTrue(unitA.Sector == sectorB); // unitA in sectorB
         Assert.IsTrue(sectorB.Unit == unitA); // sectorB has unitA
-        Assert.IsTrue(unitB.GetSector() == sectorA); // unitB in sectorA
+        Assert.IsTrue(unitB.Sector == sectorA); // unitB in sectorA
         Assert.IsTrue(sectorA.Unit == unitB); // sectorA has unitB
 
         yield return null;
@@ -144,9 +144,9 @@ public class UnitTest
         Unit unit = MonoBehaviour.Instantiate(unitPrefab).GetComponent<Unit>();
 
         // ensure LevelUp increments level as expected
-        unit.SetLevel(1);
+        unit.Level = 1;
         unit.LevelUp();
-        Assert.IsTrue(unit.GetLevel() == 2);
+        Assert.IsTrue(unit.Level == 2);
 
         yield return null;
     }
@@ -159,9 +159,9 @@ public class UnitTest
         Unit unit = MonoBehaviour.Instantiate(unitPrefab).GetComponent<Unit>();
 
         // ensure LevelUp does not increment past 5
-        unit.SetLevel(5);
+        unit.Level = 5;
         unit.LevelUp();
-        Assert.IsTrue(unit.GetLevel() == 5);
+        Assert.IsTrue(unit.Level == 5);
 
         yield return null;
     }
@@ -174,14 +174,14 @@ public class UnitTest
         Unit unit = MonoBehaviour.Instantiate(unitPrefab).GetComponent<Unit>();
         Sector sector = map.sectors[0];
 
-        unit.SetSector(sector);
-        unit.SetSelected(false);
+        unit.Sector = sector;
+        unit.IsSelected = false;
 
         unit.Select();
-        Assert.IsTrue(unit.IsSelected());
+        Assert.IsTrue(unit.IsSelected);
 
         unit.Deselect();
-        Assert.IsFalse(unit.IsSelected());
+        Assert.IsFalse(unit.IsSelected);
 
         yield return null;
     }
@@ -196,7 +196,7 @@ public class UnitTest
         Sector sector = map.sectors[0];
         Player player = players[0];
 
-        unit.SetSector(sector);
+        unit.Sector = sector;
         sector.Unit = unit;
 
         unit.Owner = player;

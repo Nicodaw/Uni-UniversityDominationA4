@@ -124,7 +124,7 @@ public class SectorTest
         }
 
         sectorA.Unit = unitA;
-        unitA.SetSector(sectorA);
+        unitA.Sector = sectorA;
 
         sectorA.Owner = playerA;
         unitA.Owner = playerA;
@@ -137,43 +137,43 @@ public class SectorTest
         // test clicking a sector with a unit while the unit's owner
         // is active AND there are no units selected
         playerA.SetActive(true);
-        unitA.SetSelected(false);
-        unitB.SetSelected(false);
+        unitA.IsSelected = false;
+        unitB.IsSelected =false;
 
         sectorA.OnMouseUpAsButtonAccessible();
-        Assert.IsTrue(unitA.IsSelected());
+        Assert.IsTrue(unitA.IsSelected);
 
         // test clicking on the sector containing the selected unit
         sectorA.OnMouseUpAsButtonAccessible();
-        Assert.IsFalse(unitA.IsSelected());
+        Assert.IsFalse(unitA.IsSelected);
 
 
         // test clicking a sector with a unit while there are no
         // units selected, but the unit's owner is NOT active
         playerA.SetActive(false);
-        unitA.SetSelected(false);
-        unitB.SetSelected(false);
+        unitA.IsSelected = false;
+        unitB.IsSelected =false;
 
         sectorA.OnMouseUpAsButtonAccessible();
-        Assert.IsFalse(unitA.IsSelected());
+        Assert.IsFalse(unitA.IsSelected);
 
 
         // test clicking a sector with a unit while the unit's owner
         // is active, but there IS another unit selected
         playerA.SetActive(true);
-        unitA.SetSelected(false);
-        unitB.SetSelected(true);
+        unitA.IsSelected = false;
+        unitB.IsSelected = true;
 
         sectorA.OnMouseUpAsButtonAccessible();
-        Assert.IsFalse(unitA.IsSelected());
+        Assert.IsFalse(unitA.IsSelected);
 
 
         // test clicking on a sector adjacent to a selected unit
-        unitA.SetSelected(true);
-        unitB.SetSelected(false);
+        unitA.IsSelected = true;
+        unitB.IsSelected = false;
 
         sectorB.OnMouseUpAsButtonAccessible();
-        Assert.IsFalse(unitA.IsSelected());
+        Assert.IsFalse(unitA.IsSelected);
 
         // only need to test deselection;
         // other interactions covered in smaller tests below
@@ -191,7 +191,7 @@ public class SectorTest
         Sector sectorB = map.sectors[1];
 
         sectorA.Unit = MonoBehaviour.Instantiate(players[0].GetUnitPrefab()).GetComponent<Unit>();
-        sectorA.Unit.SetSector(sectorA);
+        sectorA.Unit.Sector = sectorA;
         sectorB.Unit = null;
 
         sectorB.MoveIntoUnoccupiedSector(sectorA.Unit);
@@ -212,20 +212,20 @@ public class SectorTest
         Sector sectorB = map.sectors[1];
 
         sectorA.Unit = MonoBehaviour.Instantiate(players[0].GetUnitPrefab()).GetComponent<Unit>();
-        sectorA.Unit.SetSector(sectorA);
-        sectorA.Unit.SetLevel(5);
+        sectorA.Unit.Sector = sectorA;
+        sectorA.Unit.Level = 5;
         sectorA.Unit.Owner = players[0];
         sectorA.Owner = players[0];
 
         sectorB.Unit = MonoBehaviour.Instantiate(players[0].GetUnitPrefab()).GetComponent<Unit>();
-        sectorB.Unit.SetSector(sectorB);
-        sectorB.Unit.SetLevel(1);
+        sectorB.Unit.Sector = sectorB;
+        sectorB.Unit.Level = 1;
         sectorB.Unit.Owner = players[0];
         sectorB.Owner = players[0];
 
         sectorB.MoveIntoFriendlyUnit(sectorA.Unit);
-        Assert.IsTrue(sectorA.Unit.GetLevel() == 1); // level 1 unit now in sectorA
-        Assert.IsTrue(sectorB.Unit.GetLevel() == 5); // level 2 unit now in sectorB => units have swapped locations
+        Assert.IsTrue(sectorA.Unit.Level == 1); // level 1 unit now in sectorA
+        Assert.IsTrue(sectorB.Unit.Level == 5); // level 2 unit now in sectorB => units have swapped locations
         Assert.IsTrue(game.GetTurnState() == Game.TurnState.Move2);
 
         yield return null;
@@ -250,7 +250,7 @@ public class SectorTest
 
         sectorB.MoveIntoHostileUnit(sectorA.Unit, sectorB.Unit);
         Assert.IsNull(sectorA.Unit); // attackingg unit moved out of sectorA
-        Assert.IsTrue(sectorB.Unit.GetLevel() == 2); // attacking unit that moved to sectorB gained a level (the unit won the conflict)
+        Assert.IsTrue(sectorB.GetLevel() == 2); // attacking unit that moved to sectorB gained a level (the unit won the conflict)
         Assert.IsTrue(game.GetTurnState() == Game.TurnState.EndOfTurn);
 
         yield return null;
@@ -276,7 +276,7 @@ public class SectorTest
 
         sectorB.MoveIntoHostileUnit(sectorA.Unit, sectorB.Unit);
         Assert.IsNull(sectorA.Unit); // attacking unit destroyed
-        Assert.IsTrue(sectorB.Unit.GetLevel() == 1); // defending unit did not gain a level following defence
+        Assert.IsTrue(sectorB.Unit.Level == 1); // defending unit did not gain a level following defence
         Assert.IsTrue(game.GetTurnState() == Game.TurnState.EndOfTurn);
 
         yield return null;
@@ -300,14 +300,14 @@ public class SectorTest
 
         game.SetTurnState(Game.TurnState.Move1);
         ResetSectors(sectorA, sectorB);
-        sectorA.Unit.SetLevel(-4);
+        sectorA.Unit.Level = -4;
         sectorA.Owner.SetAttack(0);
-        sectorB.Unit.SetLevel(-4);
+        sectorB.Unit.Level = -4;
         sectorB.Owner.SetDefence(0); // making both units equal
 
         sectorB.MoveIntoHostileUnit(sectorA.Unit, sectorB.Unit);
         Assert.IsNull(sectorA.Unit); // attacking unit destroyed
-        Assert.IsTrue(sectorB.Unit.GetLevel() == -4); // defending unit did not gain a level following defence
+        Assert.IsTrue(sectorB.Unit.Level == -4); // defending unit did not gain a level following defence
         Assert.IsTrue(game.GetTurnState() == Game.TurnState.EndOfTurn);
 
         yield return null;
@@ -330,11 +330,11 @@ public class SectorTest
 
         // test with unselected unit in adjacent sector
         sectorA.Unit = MonoBehaviour.Instantiate(players[0].GetUnitPrefab()).GetComponent<Unit>();
-        sectorA.Unit.SetSelected(false);
+        sectorA.Unit.IsSelected = false;
         Assert.IsNull(sectorB.AdjacentSelectedUnit());
 
         // test with selected unit in adjacent sectors
-        sectorA.Unit.SetSelected(true);
+        sectorA.Unit.IsSelected = true;
         Assert.IsNotNull(sectorB.AdjacentSelectedUnit());
 
         yield return null;
@@ -345,15 +345,15 @@ public class SectorTest
         // re-initialize sectors for in between test cases in MoveIntoHostileUnitTest
 
         sectorA.Unit = MonoBehaviour.Instantiate(players[0].GetUnitPrefab()).GetComponent<Unit>();
-        sectorA.Unit.SetSector(sectorA);
+        sectorA.Unit.Sector = sectorA;
         sectorA.Unit.Owner = players[0];
         sectorA.Owner = players[0];
-        sectorA.Unit.SetLevel(1);
+        sectorA.Unit.Level = 1;
 
         sectorB.Unit = MonoBehaviour.Instantiate(players[0].GetUnitPrefab()).GetComponent<Unit>();
-        sectorB.Unit.SetSector(sectorB);
+        sectorB.Unit.Sector = sectorB;
         sectorB.Unit.Owner = players[1];
         sectorB.Owner = players[1];
-        sectorB.Unit.SetLevel(1);
+        sectorB.Unit.Level = 1;
     }
 }
