@@ -17,7 +17,7 @@ public class GameTest
         TestSetup t = new TestSetup();
         this.game = t.Game;
         this.map = t.GetMap();
-        this.players = t.GetPlayers();
+        this.players = t.Players;
         this.gui = t.GetPlayerUIs();
     }
 
@@ -174,7 +174,7 @@ public class GameTest
         playerC.units.Add(MonoBehaviour.Instantiate(playerC.UnitPrefab).GetComponent<Unit>()); // make player C not eliminated
         playerD.units.Add(MonoBehaviour.Instantiate(playerD.UnitPrefab).GetComponent<Unit>()); // make player D not eliminated
 
-        game.SetTurnState(Game.TurnState.EndOfTurn);
+        game.TurnState = TurnState.EndOfTurn;
         game.UpdateAccessible(); // removes players that should be eliminated (A and B)
 
         // ensure eliminated players are skipped
@@ -224,28 +224,28 @@ public class GameTest
         Setup();
 
         // initialize turn state to Move1
-        game.SetTurnState(Game.TurnState.Move1);
+        game.TurnState = TurnState.Move1;
 
         // ensure NextTurnState changes the turn state
         // from Move1 to Move2
         game.NextTurnState();
-        Assert.IsTrue(game.GetTurnState() == Game.TurnState.Move2);
+        Assert.IsTrue(game.TurnState == TurnState.Move2);
 
         // ensure NextTurnState changes the turn state
         // from Move2 to EndOfTurn
         game.NextTurnState();
-        Assert.IsTrue(game.GetTurnState() == Game.TurnState.EndOfTurn);
+        Assert.IsTrue(game.TurnState == TurnState.EndOfTurn);
 
         // ensure NextTurnState changes the turn state
         // from EndOfTurn to Move1
         game.NextTurnState();
-        Assert.IsTrue(game.GetTurnState() == Game.TurnState.Move1);
+        Assert.IsTrue(game.TurnState == TurnState.Move1);
 
         // ensure NextTurnState does not change turn state
         // if the current turn state is NULL
-        game.SetTurnState(Game.TurnState.NULL);
+        game.TurnState = TurnState.NULL;
         game.NextTurnState();
-        Assert.IsTrue(game.GetTurnState() == Game.TurnState.NULL);
+        Assert.IsTrue(game.TurnState == TurnState.NULL);
 
         yield return null;
     }
@@ -348,7 +348,7 @@ public class GameTest
         game.EndGame();
 
         // ensure the game is marked as finished
-        Assert.IsTrue(game.IsFinished());
+        Assert.IsTrue(game.IsFinished);
 
         // ensure the current player is null
         Assert.IsNull(game.currentPlayer);
@@ -358,7 +358,7 @@ public class GameTest
             Assert.IsFalse(player.Active);
 
         // ensure turn state is NULL
-        Assert.IsTrue(game.GetTurnState() == Game.TurnState.NULL);
+        Assert.IsTrue(game.TurnState == TurnState.NULL);
 
         yield return null;
     }

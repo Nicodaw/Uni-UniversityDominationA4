@@ -56,9 +56,9 @@ public class TestSetup
         return this.map;
     }
 
-    public Player[] GetPlayers()
+    public Player[] Players
     {
-        return this.players;
+        get { return players; }
     }
 
     public PlayerUI[] GetPlayerUIs()

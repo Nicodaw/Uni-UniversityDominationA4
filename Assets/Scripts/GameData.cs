@@ -8,7 +8,7 @@ public class GameData
 {
     // Define all properties that are needed to instantiate a Game
     // Must be public
-    public Game.TurnState turnState;
+    public TurnState turnState;
     public bool gameFinished;
     public bool testMode;
     public int currentPlayerID; // Index from 0
@@ -118,13 +118,13 @@ public class GameData
     public void SetupGameData(Game game)
     {
         // Game properties
-        turnState = game.GetTurnState();
-        gameFinished = game.IsFinished();
-        testMode = game.GetTestMode();
-        currentPlayerID = game.GetPlayerID(game.GetCurrentPlayer());
+        turnState = game.TurnState;
+        gameFinished = game.IsFinished;
+        testMode = game.TestModeEnabled;
+        currentPlayerID = game.GetPlayerID(game.CurrentPlayer);
         
         // Player properties
-        Player[] players = game.GetPlayers();
+        Player[] players = game.Players;
 
         // Attack
         player1Attack = players[0].AttackBonus;
@@ -151,7 +151,7 @@ public class GameData
         player4Controller = players[3].GetController();
 
         // Sectors
-        Sector[] sectors = game.GetSectors();
+        Sector[] sectors = game.Sectors;
 
         // Owner
         sector01Owner = game.GetPlayerID(sectors[0].Owner);
@@ -222,6 +222,6 @@ public class GameData
         sector32Level = sectors[31].GetLevel();
 
         // Vice Chancelor
-        VCSector = game.GetVCSectorID();
+        VCSector = game.PVCSectorID;
     }
 }

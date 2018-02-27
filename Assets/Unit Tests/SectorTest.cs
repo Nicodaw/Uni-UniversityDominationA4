@@ -15,7 +15,7 @@ public class SectorTest
         TestSetup t = new TestSetup();
         this.game = t.Game;
         this.map = t.GetMap();
-        this.players = t.GetPlayers();
+        this.players = t.Players;
         this.gui = t.GetPlayerUIs();
     }
 
@@ -186,7 +186,7 @@ public class SectorTest
         
         Setup();
 
-        game.SetTurnState(Game.TurnState.Move1);
+        game.TurnState = TurnState.Move1;
         Sector sectorA = map.sectors[0];
         Sector sectorB = map.sectors[1];
 
@@ -197,7 +197,7 @@ public class SectorTest
         sectorB.MoveIntoUnoccupiedSector(sectorA.Unit);
         Assert.IsNotNull(sectorB.Unit);
         Assert.IsNull(sectorA.Unit);
-        Assert.IsTrue(game.GetTurnState() == Game.TurnState.Move2);
+        Assert.IsTrue(game.TurnState == TurnState.Move2);
 
         yield return null;
     }
@@ -207,7 +207,7 @@ public class SectorTest
         
         Setup();
 
-        game.SetTurnState(Game.TurnState.Move1);
+        game.TurnState = TurnState.Move1;
         Sector sectorA = map.sectors[0];
         Sector sectorB = map.sectors[1];
 
@@ -226,7 +226,7 @@ public class SectorTest
         sectorB.MoveIntoFriendlyUnit(sectorA.Unit);
         Assert.IsTrue(sectorA.Unit.Level == 1); // level 1 unit now in sectorA
         Assert.IsTrue(sectorB.Unit.Level == 5); // level 2 unit now in sectorB => units have swapped locations
-        Assert.IsTrue(game.GetTurnState() == Game.TurnState.Move2);
+        Assert.IsTrue(game.TurnState == TurnState.Move2);
 
         yield return null;
     }
@@ -236,7 +236,7 @@ public class SectorTest
         
         Setup();
 
-        game.SetTurnState(Game.TurnState.Move1);
+        game.TurnState = TurnState.Move1;
         Sector sectorA = map.sectors[0];
         Sector sectorB = map.sectors[1];
 
@@ -251,7 +251,7 @@ public class SectorTest
         sectorB.MoveIntoHostileUnit(sectorA.Unit, sectorB.Unit);
         Assert.IsNull(sectorA.Unit); // attackingg unit moved out of sectorA
         Assert.IsTrue(sectorB.GetLevel() == 2); // attacking unit that moved to sectorB gained a level (the unit won the conflict)
-        Assert.IsTrue(game.GetTurnState() == Game.TurnState.EndOfTurn);
+        Assert.IsTrue(game.TurnState == TurnState.EndOfTurn);
 
         yield return null;
     }
@@ -261,7 +261,7 @@ public class SectorTest
         
         Setup();
 
-        game.SetTurnState(Game.TurnState.Move1);
+        game.TurnState = TurnState.Move1;
         Sector sectorA = map.sectors[0];
         Sector sectorB = map.sectors[1];
 
@@ -269,7 +269,7 @@ public class SectorTest
         // and sectorB's unit will be the defending unit
 
         // setup units such that the defending unit wins
-        game.SetTurnState(Game.TurnState.Move1);
+        game.TurnState = TurnState.Move1;
         ResetSectors(sectorA, sectorB);
         sectorA.Owner.AttackBonus = 0;
         sectorB.Owner.DefenceBonus = 99; //to ensure the sectorB unit will win any conflict (defending)
@@ -277,7 +277,7 @@ public class SectorTest
         sectorB.MoveIntoHostileUnit(sectorA.Unit, sectorB.Unit);
         Assert.IsNull(sectorA.Unit); // attacking unit destroyed
         Assert.IsTrue(sectorB.Unit.Level == 1); // defending unit did not gain a level following defence
-        Assert.IsTrue(game.GetTurnState() == Game.TurnState.EndOfTurn);
+        Assert.IsTrue(game.TurnState == TurnState.EndOfTurn);
 
         yield return null;
     }
@@ -287,7 +287,7 @@ public class SectorTest
         
         Setup();
 
-        game.SetTurnState(Game.TurnState.Move1);
+        game.TurnState = TurnState.Move1;
         Sector sectorA = map.sectors[0];
         Sector sectorB = map.sectors[1];
 
@@ -298,7 +298,7 @@ public class SectorTest
 
         // *** UNITCONTROLLER DESTROYSELF METHOD NEEDS TO CLEAR UNIT ***
 
-        game.SetTurnState(Game.TurnState.Move1);
+        game.TurnState = TurnState.Move1;
         ResetSectors(sectorA, sectorB);
         sectorA.Unit.Level = -4;
         sectorA.Owner.AttackBonus = 0;
@@ -308,7 +308,7 @@ public class SectorTest
         sectorB.MoveIntoHostileUnit(sectorA.Unit, sectorB.Unit);
         Assert.IsNull(sectorA.Unit); // attacking unit destroyed
         Assert.IsTrue(sectorB.Unit.Level == -4); // defending unit did not gain a level following defence
-        Assert.IsTrue(game.GetTurnState() == Game.TurnState.EndOfTurn);
+        Assert.IsTrue(game.TurnState == TurnState.EndOfTurn);
 
         yield return null;
     }

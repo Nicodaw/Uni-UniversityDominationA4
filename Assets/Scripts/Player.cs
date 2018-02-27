@@ -20,22 +20,49 @@ public class Player : MonoBehaviour {
     [SerializeField] private bool active = false;
 
     #region Public Properties
+    /// <summary>
+    /// The reference to the current <see cref="Game"/> object.
+    /// </summary>
     public Game Game { get { return game; } set { game = value; } }
 
+    /// <summary>
+    /// The <see cref="Unit"/> prefab object attached to this player.
+    /// </summary>
     public GameObject UnitPrefab { get { return unitPrefab; } }
 
+    /// <summary>
+    /// The <see cref="PlayerUI"/> object attached to this player.
+    /// </summary>
     public PlayerUI Gui { get { return gui; } set { gui = value; } }
 
+    /// <summary>
+    /// The amount of Attack bonus the player currently has.
+    /// </summary>
     public int AttackBonus { get { return attack; } set { attack = value; } }
 
+    /// <summary>
+    /// The amount of Defence bonus the player currently has.
+    /// </summary>
     public int DefenceBonus { get { return defence; } set { defence = value; } }
 
+    /// <summary>
+    /// The player's color.
+    /// </summary>
     public Color Color { get { return color; } set { color = value; } }
 
+    /// <summary>
+    /// Whether this player is human or AI.
+    /// </summary>
     public bool Human { get { return human; } set { human = value; } }
 
+    /// <summary>
+    /// Whether the neutral player is enabled
+    /// </summary>
     public bool Neutral { get { return neutral; } set { neutral = value; } }
 
+    /// <summary>
+    /// Whether the player is currently active.
+    /// </summary>
     public bool Active { get { return active; } set { active = value; } }
     #endregion
 
@@ -50,11 +77,11 @@ public class Player : MonoBehaviour {
     /// <returns>String "human"/"neutral"/"none" depending on the player properties</returns>
     public string GetController()
     {
-        if (this.Human)
+        if (Human)
         {
             return "human";
         }
-        else if (this.Neutral)
+        else if (Neutral)
         {
             return "neutral";
         }

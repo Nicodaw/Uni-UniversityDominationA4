@@ -18,7 +18,7 @@ public class SaveGameTest
         TestSetup t = new TestSetup();
         this.game = t.Game;
         this.map = t.GetMap();
-        this.players = t.GetPlayers();
+        this.players = t.Players;
         this.gui = t.GetPlayerUIs();
         this.unitPrefab = t.UnitPrefab;
     }

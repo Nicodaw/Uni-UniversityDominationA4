@@ -8,14 +8,12 @@ using UnityEngine;
 [System.Serializable]
 public class Game : MonoBehaviour {
 
-    public Player[] players; 
-	public GameObject gameMap;
+    public Player[] players;
+    public GameObject gameMap;
     public Player currentPlayer;
     public Sector[] sectors;
 
     public const int NUMBER_OF_PLAYERS = 4;
-    
-    public enum TurnState { Move1, Move2, EndOfTurn, NULL };
     [SerializeField] private TurnState turnState;
     [SerializeField] private bool gameFinished = false;
     [SerializeField] private bool testMode = false;
@@ -29,12 +27,60 @@ public class Game : MonoBehaviour {
     public bool triggerDialog = false;
 
     public bool[] eliminatedPlayers;
-        
-    //modified by Peter
+
+
+    #region Public Properties
+    public TurnState TurnState { get { return turnState; } set { turnState = value; } }
+
     /// <summary>
-    /// 
+    /// Returns if the game is finished
+    /// </summary>
+    public bool IsFinished { get { return IsFinished; } }
+
+    public bool TestModeEnabled { get { return testMode; } set { testMode = value; } }
+
+    public Player[] Players { get { return players; } set { players = value; } }
+
+    public Player CurrentPlayer { get { return currentPlayer; } }
+
+    public Sector[] Sectors { get { return sectors; } }
+
+    public int PVCSectorID { get
+        {
+            foreach (Sector sector in sectors)
+            {
+                if (sector.PVC)
+                {
+                    return Array.IndexOf(sectors, sector);
+                }
+            }
+            return -1;
+        } }
+
+
+    #endregion
+
+
+
+    /// <summary>
+    /// Triggers the Save and quit dialog
+    /// </summary>
+    public void OpenSaveQuitMenu()
+    {
+        if (isSaveQuitMenuOpen)
+        {
+            dialog.Close();
+            isSaveQuitMenuOpen = false;
+            return;
+        }
+        isSaveQuitMenuOpen = true;
+        dialog.SetDialogType(Dialog.DialogType.SaveQuit);
+        dialog.Show();
+    }
+
+
+    /// <summary>
     /// Initializes a new game
-    /// 
     /// </summary>
     public void Initialize(bool neutralPlayer)
     {
@@ -67,150 +113,6 @@ public class Game : MonoBehaviour {
         UpdateGUI();
 
     }
-
-    /// <summary>
-    /// 
-    /// Returns the current turn state
-    /// 
-    /// </summary>
-    /// <returns>The current turn state</returns>
-    public TurnState GetTurnState() {
-        return turnState;
-    }
-
-    /// <summary>
-    /// 
-    /// Sets the current turn state
-    /// 
-    /// </summary>
-    /// <param name="turnState">The state the current turn state should be set to</param>
-    public void SetTurnState(TurnState turnState) {
-        this.turnState = turnState;
-    }
-
-    /// <summary>
-    /// 
-    /// Returns if the game is finished
-    /// 
-    /// </summary>
-    /// <returns>True if game is finished else false</returns>
-    public bool IsFinished() {
-        return gameFinished;
-    }
-
-    /// <summary>
-    /// 
-    /// Sets testmode to on
-    /// 
-    /// </summary>
-    public void EnableTestMode() {
-        testMode = true;
-    }
-
-    /// <summary>
-    /// 
-    /// Turns off test mode
-    /// 
-    /// </summary>
-    public void DisableTestMode() {
-        testMode = false;
-    }
-
-    /// <summary>
-    /// 
-    /// Returns an array of the players in this game
-    /// 
-    /// </summary>
-    /// <returns>Array of players in this game</returns>
-    public Player[] GetPlayers()
-    {
-        return players;
-    }
-
-    /// <summary>
-    /// 
-    /// Returns the array of sectors used in this game
-    /// 
-    /// </summary>
-    /// <returns>Array of sectors used in this game</returns>
-    public Sector[] GetSectors()
-    {
-        return sectors;
-    }
-
-    /// <summary>
-    /// 
-    /// Gets the object of the current player
-    /// 
-    /// </summary>
-    /// <returns></returns>
-    public Player GetCurrentPlayer()
-    {
-        return currentPlayer;
-    }
-
-    /// <summary>
-    /// 
-    /// Gets if this game is in testmode or not
-    /// 
-    /// </summary>
-    /// <returns>True if in testmode else false</returns>
-    public bool GetTestMode()
-    {
-        return testMode;
-    }
-
-    /// <summary>
-    /// 
-    /// Gets the index of the passed player object in the players array
-    /// 
-    /// </summary>
-    /// <param name="player">The player to find the index of</param>
-    /// <returns>The player objects index in players</returns>
-    public int GetPlayerID(Player player)
-    {
-        return System.Array.IndexOf(players, player);
-    }
-
-    public void SetPlayers(Player[] players)
-    {
-        this.players = players;
-    }
-
-    /// <summary>
-    /// 
-    /// Triggers the Save and quit dialog
-    /// 
-    /// </summary>
-    public void OpenSaveQuitMenu()
-    {
-        if (isSaveQuitMenuOpen)
-        {
-            dialog.Close();
-            isSaveQuitMenuOpen = false;
-            return;
-        }
-        isSaveQuitMenuOpen = true;
-        dialog.SetDialogType(Dialog.DialogType.SaveQuit);
-        dialog.Show();
-    }
-
-    /// <summary>
-    /// Finds the sector the VC is assigned to
-    /// </summary>
-    /// <returns>The id of the sector, or -1 if not set</returns>
-    public int GetVCSectorID()
-    {
-        foreach (Sector sector in sectors)
-        {
-            if (sector.PVC)
-            {
-                return Array.IndexOf(sectors, sector);
-            }
-        }
-        return -1;
-    }
-
     //Re-done by Peter
     /// <summary>
     /// 
@@ -380,6 +282,16 @@ public class Game : MonoBehaviour {
 
         // otherwise, return true
         return true;
+    }
+
+    /// <summary>
+    /// Gets the index of the passed player object in the players array
+    /// </summary>
+    /// <param name="player">The player to find the index of</param>
+    /// <returns>The player objects index in players</returns>
+    public int GetPlayerID(Player player)
+    {
+        return System.Array.IndexOf(players, player);
     }
 
     /// <summary>
