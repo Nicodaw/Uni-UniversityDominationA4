@@ -3,6 +3,6 @@
 /// </summary>
 public enum ResourceType
 {
-    Attack, // AKA beer
-    Defence // AKA knowledge
+    Attack,
+    Defence
 };

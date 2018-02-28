@@ -37,9 +37,8 @@ GameObject:
   - component: {fileID: 4981882738438084}
   - component: {fileID: 114167196417003754}
   - component: {fileID: 114582630190278122}
-  - component: {fileID: 114483287272996658}
   m_Layer: 0
-  m_Name: GameManager 1
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72,7 +71,7 @@ GameObject:
   - component: {fileID: 114440070140598474}
   m_Layer: 0
   m_Name: PlayerNeutral
-  m_TagString: PlayerNeutral
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -208,33 +207,11 @@ MonoBehaviour:
   - {fileID: 114833906439526722}
   - {fileID: 114874954980118012}
   - {fileID: 114912479347063014}
-  gameMap: {fileID: 1632274046267084, guid: aee31a61dbe2b1b408bf78ee082c7565, type: 2}
+  neutralPlayer: {fileID: 114440070140598474}
+  gameMap: {fileID: 0}
   currentPlayer: {fileID: 114364557242802902}
-  sectors:
-  - {fileID: 114029855346448078, guid: aee31a61dbe2b1b408bf78ee082c7565, type: 2}
-  - {fileID: 114886276247771082, guid: aee31a61dbe2b1b408bf78ee082c7565, type: 2}
-  - {fileID: 114895395897393718, guid: aee31a61dbe2b1b408bf78ee082c7565, type: 2}
-  - {fileID: 114436011707245158, guid: aee31a61dbe2b1b408bf78ee082c7565, type: 2}
-  - {fileID: 114665030986723544, guid: aee31a61dbe2b1b408bf78ee082c7565, type: 2}
-  - {fileID: 114920288857084320, guid: aee31a61dbe2b1b408bf78ee082c7565, type: 2}
-  - {fileID: 114476896922194230, guid: aee31a61dbe2b1b408bf78ee082c7565, type: 2}
-  - {fileID: 114867916002122490, guid: aee31a61dbe2b1b408bf78ee082c7565, type: 2}
-  - {fileID: 114261363771395876, guid: aee31a61dbe2b1b408bf78ee082c7565, type: 2}
-  - {fileID: 114658496149058122, guid: aee31a61dbe2b1b408bf78ee082c7565, type: 2}
-  - {fileID: 114715279834650784, guid: aee31a61dbe2b1b408bf78ee082c7565, type: 2}
-  - {fileID: 114998117523669652, guid: aee31a61dbe2b1b408bf78ee082c7565, type: 2}
-  - {fileID: 114306746581217884, guid: aee31a61dbe2b1b408bf78ee082c7565, type: 2}
-  - {fileID: 114722738138329058, guid: aee31a61dbe2b1b408bf78ee082c7565, type: 2}
-  - {fileID: 114424898871260696, guid: aee31a61dbe2b1b408bf78ee082c7565, type: 2}
-  - {fileID: 114406848537272084, guid: aee31a61dbe2b1b408bf78ee082c7565, type: 2}
-  turnState: 0
-  gameFinished: 0
-  testMode: 1
-  saveFilePath: 
+  dialog: {fileID: 0}
   actionsRemaining: {fileID: 0}
-  dialog: {fileID: 114483287272996658}
-  triggerDialog: 0
-  eliminatedPlayers: 00000000
 --- !u!114 &114364557242802902
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -246,21 +223,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6fe4d8b41ec0b9418be61d4379ca3ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ownedSectors:
-  - {fileID: 114029855346448078, guid: aee31a61dbe2b1b408bf78ee082c7565, type: 2}
-  - {fileID: 114886276247771082, guid: aee31a61dbe2b1b408bf78ee082c7565, type: 2}
-  units:
-  - {fileID: 114082502706938668, guid: a7ffd9bdae595be41a8f9294461ddee6, type: 2}
-  - {fileID: 114082502706938668, guid: a7ffd9bdae595be41a8f9294461ddee6, type: 2}
   game: {fileID: 114167196417003754}
-  unitPrefab: {fileID: 1005237642776706, guid: a7ffd9bdae595be41a8f9294461ddee6, type: 2}
-  gui: {fileID: 114934405882500740, guid: 2234cd75cdbdb5c4b89f1d9defba62d8, type: 2}
-  attack: 0
-  defence: 0
+  unitPrefab: {fileID: 1005237642776706, guid: e44a5fa07bc4cf145a4771f52385f525, type: 2}
+  gui: {fileID: 0}
   color: {r: 0.8039216, g: 0, b: 0, a: 1}
-  human: 1
-  neutral: 0
-  active: 0
 --- !u!114 &114440070140598474
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -272,29 +238,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6fe4d8b41ec0b9418be61d4379ca3ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ownedSectors: []
-  units: []
   game: {fileID: 114167196417003754}
-  unitPrefab: {fileID: 1005237642776706, guid: 3260b6ea1509e644f9c1d0d8d78d2fdc, type: 2}
-  gui: {fileID: 114882902714621364, guid: 2234cd75cdbdb5c4b89f1d9defba62d8, type: 2}
-  attack: 0
-  defence: 0
+  unitPrefab: {fileID: 1005237642776706, guid: 8ae61c6a6652ea74faeb4e82ab2f4470, type: 2}
+  gui: {fileID: 0}
   color: {r: 1, g: 1, b: 1, a: 1}
-  human: 0
-  neutral: 1
-  active: 0
---- !u!114 &114483287272996658
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1402344266479868}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 718f6ca268989824f886e0fdec8bae80, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  texture: {fileID: 0}
 --- !u!114 &114582630190278122
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -318,19 +265,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6fe4d8b41ec0b9418be61d4379ca3ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ownedSectors:
-  - {fileID: 114895395897393718, guid: aee31a61dbe2b1b408bf78ee082c7565, type: 2}
-  units:
-  - {fileID: 114082502706938668, guid: 465ca9182e583ac46b15b01966b5161c, type: 2}
   game: {fileID: 114167196417003754}
-  unitPrefab: {fileID: 1005237642776706, guid: 465ca9182e583ac46b15b01966b5161c, type: 2}
-  gui: {fileID: 114725165989911992, guid: 2234cd75cdbdb5c4b89f1d9defba62d8, type: 2}
-  attack: 0
-  defence: 0
+  unitPrefab: {fileID: 1005237642776706, guid: 26a26f6c35e02e741b6011ca4d58b14b, type: 2}
+  gui: {fileID: 0}
   color: {r: 0.6945231, g: 0, b: 0.9411765, a: 1}
-  human: 1
-  neutral: 0
-  active: 0
 --- !u!114 &114874954980118012
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -342,17 +280,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6fe4d8b41ec0b9418be61d4379ca3ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ownedSectors: []
-  units: []
   game: {fileID: 114167196417003754}
-  unitPrefab: {fileID: 1005237642776706, guid: 5ef2522391c31af47b59219479771edb, type: 2}
-  gui: {fileID: 114235401383737020, guid: 2234cd75cdbdb5c4b89f1d9defba62d8, type: 2}
-  attack: 0
-  defence: 0
+  unitPrefab: {fileID: 1005237642776706, guid: 6d8addf51e1b32f4ea5444b9e4052acc, type: 2}
+  gui: {fileID: 0}
   color: {r: 0.8039216, g: 0.8039216, b: 0, a: 1}
-  human: 1
-  neutral: 0
-  active: 0
 --- !u!114 &114912479347063014
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -364,14 +295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6fe4d8b41ec0b9418be61d4379ca3ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ownedSectors: []
-  units: []
   game: {fileID: 114167196417003754}
-  unitPrefab: {fileID: 1005237642776706, guid: 59906775c138b134db535accab3ff442, type: 2}
-  gui: {fileID: 114620985819529642, guid: 2234cd75cdbdb5c4b89f1d9defba62d8, type: 2}
-  attack: 0
-  defence: 0
+  unitPrefab: {fileID: 1005237642776706, guid: 1486e80e1d1c1034790e21d826787651, type: 2}
+  gui: {fileID: 0}
   color: {r: 0, g: 0.8039216, b: 0, a: 1}
-  human: 1
-  neutral: 0
-  active: 0

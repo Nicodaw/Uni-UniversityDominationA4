@@ -1,124 +1,87 @@
-﻿using UnityEngine;
-using UnityEngine.TestTools;
-using NUnit.Framework;
+﻿#if UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NUnit.Framework;
+using UnityEngine;
+using UnityEngine.TestTools;
 
-public class GameTest 
+public class GameTest : BaseGameTest
 {
-    private Game game;
-    private Map map;
-    private Player[] players;
-	private PlayerUI[] gui;
-    
-    private void Setup()
+    [Test]
+    public void CreatePlayers_FourPlayersAreHuman()
     {
-        TestSetup t = new TestSetup();
-        this.game = t.Game;
-        this.map = t.GetMap();
-        this.players = t.Players;
-        this.gui = t.GetPlayerUIs();
-    }
-
-    [UnityTest]
-    public IEnumerator CreatePlayers_FourPlayersAreHuman() {
-        
-        Setup();
         game.CreatePlayers(false);
         // ensure creation of 4 players is accurate
-        Assert.IsTrue(game.GetComponent<Game>().players[0].Human);
-        Assert.IsTrue(game.GetComponent<Game>().players[1].Human);
-        Assert.IsTrue(game.GetComponent<Game>().players[2].Human);
-        Assert.IsTrue(game.GetComponent<Game>().players[3].Human);
-
-        yield return null;
+        Assert.That(game.GetComponent<Game>().players[0].Human);
+        Assert.That(game.GetComponent<Game>().players[1].Human);
+        Assert.That(game.GetComponent<Game>().players[2].Human);
+        Assert.That(game.GetComponent<Game>().players[3].Human);
     }
 
     // Test added by Owain
-    [UnityTest]
-    public IEnumerator CreatePlayers_ThreePlayersHumanAndOneNeutral()
+    [Test]
+    public void CreatePlayers_ThreePlayersHumanAndOneNeutral()
     {
-        Setup();
         game.CreatePlayers(true);
 
         // ensure game with three players and one neutral is accurate
-
-        Assert.IsTrue(game.GetComponent<Game>().players[0].Human);
-        Assert.IsTrue(game.GetComponent<Game>().players[1].Human);
-        Assert.IsTrue(game.GetComponent<Game>().players[2].Human);
-        Assert.IsTrue(game.GetComponent<Game>().players[3].Neutral);
-
-        yield return null;
+        Assert.That(game.GetComponent<Game>().players[0].Human);
+        Assert.That(game.GetComponent<Game>().players[1].Human);
+        Assert.That(game.GetComponent<Game>().players[2].Human);
+        Assert.That(game.GetComponent<Game>().players[3].Neutral);
     }
 
-
-    [UnityTest]
-    public IEnumerator InitializeMap_OneLandmarkAllocatedWithUnitPerPlayer() {
-        
+    [Test]
+    public void InitializeMap_OneLandmarkAllocatedWithUnitPerPlayer()
+    {
         // MAY BE MADE OBSELETE BY TESTS OF THE INDIVIDUAL METHODS
-        Setup();
         game.InitializeMap();
 
         // ensure that each player owns 1 sector and has 1 unit at that sector
         List<Sector> listOfAllocatedSectors = new List<Sector>();
         foreach (Player player in players)
         {
-            Assert.IsTrue(player.OwnedSectors.Count == 1);
-            Assert.IsNotNull(player.OwnedSectors[0].Landmark);
-            Assert.IsTrue(player.Units.Count == 1);
+            Assert.That(player.OwnedSectors.Count, Is.EqualTo(1));
+            Assert.That(player.OwnedSectors[0].Landmark, Is.Not.Null);
+            Assert.That(player.Units.Count, Is.EqualTo(1));
 
-            Assert.AreSame(player.OwnedSectors[0], player.Units[0].Sector);
+            Assert.That(player.OwnedSectors[0], Is.EqualTo(player.Units[0].Sector));
 
             listOfAllocatedSectors.Add(player.OwnedSectors[0]);
         }
 
+        var search =
+            from s in map.sectors
+            where s.Owner != null && !listOfAllocatedSectors.Contains(s)// any sector that has an owner but is not in the allocated sectors from above
+            select s;
 
-        foreach (Sector sector in map.sectors)
-        {
-            if (sector.Owner != null && !listOfAllocatedSectors.Contains(sector)) // any sector that has an owner but is not in the allocated sectors from above
-            {
-                Assert.Fail(); // must be an error as only sectors owned should be landmarks from above
-            }
-        }
-
-        yield return null;    
+        Assert.That(search.Count(), Is.EqualTo(0));// must be an error as only sectors owned should be landmarks from above
     }
 
-    [UnityTest]
-    public IEnumerator NoUnitSelected_ReturnsFalseWhenUnitIsSelected() {
-        
-        Setup();
+    [Test]
+    public void NoUnitSelected_ReturnsFalseWhenUnitIsSelected()
+    {
         game.Initialize(false);
 
         // clear any selected units
         foreach (Player player in game.players)
-        {
             foreach (Unit unit in player.Units)
-            {
                 unit.IsSelected = false;
-            }
-        }
 
         // assert that NoUnitSelected returns true
-        Assert.IsTrue(game.NoUnitSelected());
+        Assert.That(game.NoUnitSelected());
 
         // select a unit
         players[0].Units[0].IsSelected = true;
 
         // assert that NoUnitSelected returns false
-        Assert.IsFalse(game.NoUnitSelected());
-
-        yield return null;
+        Assert.That(game.NoUnitSelected(), Is.False);
     }
 
-
-    [UnityTest]
-    public IEnumerator NextPlayer_CurrentPlayerChangesToNextPlayerEachTime() {
-        
-        Setup();
-        yield return null;
-
+    [Test]
+    public void NextPlayer_CurrentPlayerChangesToNextPlayerEachTime()
+    {
         Player playerA = players[0];
         Player playerB = players[1];
         Player playerC = players[2];
@@ -131,39 +94,35 @@ public class GameTest
         // ensure that NextPlayer changes the current player
         // from player A to player B
         game.NextPlayer();
-        Assert.IsTrue(game.currentPlayer == playerB);
-        Assert.IsFalse(playerA.Active);
-        Assert.IsTrue(playerB.Active);
+        Assert.That(game.currentPlayer, Is.EqualTo(playerB));
+        Assert.That(playerA.Active, Is.False);
+        Assert.That(playerB.Active);
 
         // ensure that NextPlayer changes the current player
         // from player B to player C
         game.NextPlayer();
-        Assert.IsTrue(game.currentPlayer == playerC);
-        Assert.IsFalse(playerB.Active);
-        Assert.IsTrue(playerC.Active);
+        Assert.That(game.currentPlayer, Is.EqualTo(playerC));
+        Assert.That(playerB.Active, Is.False);
+        Assert.That(playerC.Active);
 
         // ensure that NextPlayer changes the current player
         // from player C to player D
         game.NextPlayer();
-        Assert.IsTrue(game.currentPlayer == playerD);
-        Assert.IsFalse(playerC.Active);
-        Assert.IsTrue(playerD.Active);
+        Assert.That(game.currentPlayer, Is.EqualTo(playerD));
+        Assert.That(playerC.Active, Is.False);
+        Assert.That(playerD.Active);
 
         // ensure that NextPlayer changes the current player
         // from player D to player A
         game.NextPlayer();
-        Assert.IsTrue(game.currentPlayer == playerA);
-        Assert.IsFalse(playerD.Active);
-        Assert.IsTrue(playerA.Active);
-
-        yield return null;
+        Assert.That(game.currentPlayer, Is.EqualTo(playerA));
+        Assert.That(playerD.Active, Is.False);
+        Assert.That(playerA.Active);
     }
 
     [UnityTest]
-    public IEnumerator NextPlayer_EliminatedPlayersAreSkipped() {
-        
-        Setup();
-
+    public IEnumerator NextPlayer_EliminatedPlayersAreSkipped()
+    {
         Player playerA = players[0];
         Player playerB = players[1];
         Player playerC = players[2];
@@ -171,113 +130,83 @@ public class GameTest
 
         game.currentPlayer = playerA;
 
-        playerC.Units.Add(MonoBehaviour.Instantiate(playerC.UnitPrefab).GetComponent<Unit>()); // make player C not eliminated
-        playerD.Units.Add(MonoBehaviour.Instantiate(playerD.UnitPrefab).GetComponent<Unit>()); // make player D not eliminated
+        playerC.Units.Add(InitUnit(2)); // make player C not eliminated
+        playerD.Units.Add(InitUnit(3)); // make player D not eliminated
 
         game.TurnState = TurnState.EndOfTurn;
-        game.UpdateMain(); // removes players that should be eliminated (A and B)
+        yield return null; // wait for next Update()
 
         // ensure eliminated players are skipped
-        Assert.IsTrue(game.currentPlayer == playerC);
-        Assert.IsFalse(playerA.Active);
-        Assert.IsFalse(playerB.Active);
-        Assert.IsTrue(playerC.Active);
-
-        yield return null;
+        Assert.That(game.currentPlayer, Is.EqualTo(playerC));
+        Assert.That(playerA.Active, Is.False);
+        Assert.That(playerB.Active, Is.False);
+        Assert.That(playerC.Active);
     }
 
     // Test added by Owain
-    [UnityTest]
-    public IEnumerator NeutralPlayerTurn_EnsureNeutralPlayerMovesCorrectly()
+    [Test]
+    public void NeutralPlayerTurn_EnsureNeutralPlayerMovesCorrectly()
     {
-        Setup();
-
-        List<Unit> units = game.currentPlayer.Units;
-        Unit selectedUnit = units[UnityEngine.Random.Range(0, units.Count)];
-        Sector[] adjacentSectors = selectedUnit.Sector.AdjacentSectors;
-        List<Sector> possibleSectors = new List<Sector>();
-        for (int i = 0; i < adjacentSectors.Length; i++)
-        {
-            bool neutralOrEmpty = adjacentSectors[i].Owner == null || adjacentSectors[i].Owner.Neutral;
-            if (neutralOrEmpty && !adjacentSectors[i].HasPVC)
-                possibleSectors.Add(adjacentSectors[i]);
-        }
-        if (possibleSectors.Count > 0)
-        {
-            selectedUnit.MoveTo(possibleSectors[UnityEngine.Random.Range(0, possibleSectors.Count - 1)]);
-        }
-    
+        game.Initialize(true);
+        game.currentPlayer = players[3];
+        Assert.That(game.currentPlayer.Units.Count, Is.EqualTo(1));
+        Sector[] adjacentSectors = game.currentPlayer.Units[0].Sector.AdjacentSectors;
+        game.NeutralPlayerTurn();
 
         // Check that the neutral player is only moving to sectors that do not already contain units
         // Check that the neutral player is not moving to a sector containing the vice chancellor
         foreach (Sector sector in adjacentSectors)
-        {
-            Assert.IsTrue(sector.Owner == null || sector.Owner.Neutral && !sector.HasPVC);
-        }
-
-        yield return null;
+            Assert.That(sector.Owner == null || sector.Owner.Neutral && !sector.HasPVC);
     }
 
-    [UnityTest]
-    public IEnumerator NextTurnState_TurnStateProgressesCorrectly() {
-        
-        Setup();
-
+    [Test]
+    public void NextTurnState_TurnStateProgressesCorrectly()
+    {
         // initialize turn state to Move1
         game.TurnState = TurnState.Move1;
 
         // ensure NextTurnState changes the turn state
         // from Move1 to Move2
         game.NextTurnState();
-        Assert.IsTrue(game.TurnState == TurnState.Move2);
+        Assert.That(game.TurnState, Is.EqualTo(TurnState.Move2));
 
         // ensure NextTurnState changes the turn state
         // from Move2 to EndOfTurn
         game.NextTurnState();
-        Assert.IsTrue(game.TurnState == TurnState.EndOfTurn);
+        Assert.That(game.TurnState, Is.EqualTo(TurnState.EndOfTurn));
 
         // ensure NextTurnState changes the turn state
         // from EndOfTurn to Move1
         game.NextTurnState();
-        Assert.IsTrue(game.TurnState == TurnState.Move1);
+        Assert.That(game.TurnState, Is.EqualTo(TurnState.Move1));
 
         // ensure NextTurnState does not change turn state
         // if the current turn state is NULL
         game.TurnState = TurnState.NULL;
         game.NextTurnState();
-        Assert.IsTrue(game.TurnState == TurnState.NULL);
-
-        yield return null;
+        Assert.That(game.TurnState, Is.EqualTo(TurnState.NULL));
     }
-        
-    [UnityTest]
-    public IEnumerator GetWinner_OnePlayerWithLandmarksAndUnitsWins() {
-        
-        Setup();
-        yield return null;
 
+    [Test]
+    public void GetWinner_OnePlayerWithLandmarksAndUnitsWins()
+    {
         Sector landmark1 = map.sectors[1];
         Player playerA = players[0];
 
         // ensure 'landmark1' is a landmark
         landmark1.Initialize();
-        Assert.IsNotNull(landmark1.Landmark);
+        Assert.That(landmark1.Landmark, Is.Not.Null);
 
         // ensure winner is found if only 1 player owns a landmark
         ClearSectorsAndUnitsOfAllPlayers();
         playerA.OwnedSectors.Add(landmark1);
-        playerA.Units.Add(MonoBehaviour.Instantiate(playerA.UnitPrefab).GetComponent<Unit>());
-        Assert.IsNotNull(game.GetWinner());
-
-        yield return null;
+        playerA.Units.Add(InitUnit());
+        Assert.That(game.GetWinner(), Is.Not.Null);
     }
 
-    [UnityTest]
-    public IEnumerator GetWinner_NoWinnerWhenMultiplePlayersOwningLandmarks() {
-        
-        Setup();
-        yield return null;
-
+    [Test]
+    public void GetWinner_NoWinnerWhenMultiplePlayersOwningLandmarks()
+    {
         Sector landmark1 = map.sectors[1];
         Sector landmark2 = map.sectors[7];
         Player playerA = players[0];
@@ -286,97 +215,84 @@ public class GameTest
         // ensure'landmark1' and 'landmark2' are landmarks
         landmark1.Initialize();
         landmark2.Initialize();
-        Assert.IsNotNull(landmark1.Landmark);
-        Assert.IsNotNull(landmark2.Landmark);
+        Assert.That(landmark1.Landmark, Is.Not.Null);
+        Assert.That(landmark2.Landmark, Is.Not.Null);
 
         // ensure no winner is found if >1 players own a landmark
         ClearSectorsAndUnitsOfAllPlayers();
         playerA.OwnedSectors.Add(landmark1);
         playerB.OwnedSectors.Add(landmark2);
-        Assert.IsNull(game.GetWinner());
-
-        yield return null;
+        Assert.That(game.GetWinner(), Is.Null);
     }
 
-    [UnityTest]
-    public IEnumerator GetWinner_NoWinnerWhenMultiplePlayersWithUnits() {
-        
-        Setup();
-
+    [Test]
+    public void GetWinner_NoWinnerWhenMultiplePlayersWithUnits()
+    {
         Player playerA = players[0];
         Player playerB = players[1];
 
         // ensure no winner is found if >1 players have a unit
         ClearSectorsAndUnitsOfAllPlayers();
-        playerA.Units.Add(MonoBehaviour.Instantiate(playerA.UnitPrefab).GetComponent<Unit>());
-        playerB.Units.Add(MonoBehaviour.Instantiate(playerB.UnitPrefab).GetComponent<Unit>());
-        Assert.IsNull(game.GetWinner());
-
-        yield return null;
+        playerA.Units.Add(InitUnit(0));
+        playerB.Units.Add(InitUnit(1));
+        Assert.That(game.GetWinner(), Is.Null);
     }
 
-    [UnityTest]
-    public IEnumerator GetWinner_NoWinnerWhenAPlayerHasLandmarkAndAnotherHasUnits() {
-        
-        Setup();
-        yield return null;
-
+    [Test]
+    public void GetWinner_NoWinnerWhenAPlayerHasLandmarkAndAnotherHasUnits()
+    {
         Sector landmark1 = map.sectors[1];
         Player playerA = players[0];
         Player playerB = players[1];
 
         // ensure 'landmark1' is a landmark
         landmark1.Initialize();
-        Assert.IsNotNull(landmark1.Landmark);
+        Assert.That(landmark1.Landmark, Is.Not.Null);
 
         // ensure no winner is found if 1 player has a landmark
         // and another player has a unit
         ClearSectorsAndUnitsOfAllPlayers();
         playerA.OwnedSectors.Add(landmark1);
-        playerB.Units.Add(MonoBehaviour.Instantiate(playerB.UnitPrefab).GetComponent<Unit>());
-        Assert.IsNull(game.GetWinner());
-
-        yield return null;
-    }
-        
-    [UnityTest]
-    public IEnumerator EndGame_GameEndsCorrectlyWithNoCurrentPlayerAndNoActivePlayersAndNoTurnState() {
-        
-        Setup();
-        yield return null;
-        game.currentPlayer = game.players[0];
-        game.EndGame();
-
-        // ensure the game is marked as finished
-        Assert.IsTrue(game.IsFinished);
-
-        // ensure the current player is null
-        Assert.IsNull(game.currentPlayer);
-
-        // ensure no players are active
-        foreach (Player player in game.players)
-            Assert.IsFalse(player.Active);
-
-        // ensure turn state is NULL
-        Assert.IsTrue(game.TurnState == TurnState.NULL);
-
-        yield return null;
+        playerB.Units.Add(InitUnit(1));
+        Assert.That(game.GetWinner(), Is.Null);
     }
 
-
-    
-
-    private void ClearSectorsAndUnitsOfAllPlayers() {
-        
-        foreach (Player player in game.players)
-        {
+    void ClearSectorsAndUnitsOfAllPlayers()
+    {
+        foreach (Player player in players)
             ClearSectorsAndUnits(player);
-        }
     }
 
-    private void ClearSectorsAndUnits(Player player) {
-        
+    void ClearSectorsAndUnits(Player player)
+    {
         player.Units.Clear();
         player.OwnedSectors.Clear();
     }
+
+    [Test]
+    public void EndGame_GameEndsCorrectlyWithNoCurrentPlayerAndNoActivePlayersAndNoTurnState()
+    {
+        foreach (Player player in players)
+        {
+            player.Units.Clear();
+            player.OwnedSectors.Clear();
+        }
+        game.currentPlayer = players[0];
+        game.currentPlayer.Units.Add(null);
+        game.EndGame();
+
+        // ensure the game is marked as finished
+        Assert.That(game.IsFinished);
+
+        // ensure the current player is null
+        Assert.That(game.currentPlayer, Is.Null);
+
+        // ensure no players are active
+        foreach (Player player in game.players)
+            Assert.That(player.Active, Is.False);
+
+        // ensure turn state is NULL
+        Assert.That(game.TurnState, Is.EqualTo(TurnState.NULL));
+    }
 }
+#endif

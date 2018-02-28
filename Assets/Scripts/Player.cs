@@ -18,8 +18,8 @@ public class Player : MonoBehaviour
 
     #region Private Fields
 
-    List<Sector> ownedSectors;
-    List<Unit> units;
+    List<Sector> ownedSectors = new List<Sector>();
+    List<Unit> units = new List<Unit>();
     int attack = 0;
     int defence = 0;
     bool human;

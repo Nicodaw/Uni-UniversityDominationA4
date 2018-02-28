@@ -1,32 +1,12 @@
-﻿using UnityEngine;
-using UnityEngine.TestTools;
+﻿#if UNITY_EDITOR
 using NUnit.Framework;
-using System.Collections;
 
-public class UnitTest 
+public class UnitTest : BaseGameTest
 {
-    private Game game;
-    private Map map;
-	private Player[] players;
-	private PlayerUI[] gui;
-    private GameObject unitPrefab;
-
-    private void Setup()
+    [Test]
+    public void MoveToFriendlyFromNull_UnitInCorrectSector()
     {
-        TestSetup t = new TestSetup();
-        this.game = t.Game;
-        this.map = t.GetMap();
-        this.players = t.Players;
-        this.gui = t.GetPlayerUIs();
-        this.unitPrefab = t.UnitPrefab;
-    }
-
-    [UnityTest]
-    public IEnumerator MoveToFriendlyFromNull_UnitInCorrectSector() {
-        
-        Setup();
-
-        Unit unit = MonoBehaviour.Instantiate(unitPrefab).GetComponent<Unit>();
+        Unit unit = InitUnit();
         Sector sectorA = map.sectors[0];
         Player playerA = players[0];
 
@@ -37,18 +17,14 @@ public class UnitTest
         sectorA.Owner = playerA;
 
         unit.MoveTo(sectorA);
-        Assert.IsTrue(unit.Sector == sectorA);
-        Assert.IsTrue(sectorA.Unit == unit);
-
-        yield return null;
+        Assert.That(unit.Sector, Is.EqualTo(sectorA));
+        Assert.That(sectorA.Unit, Is.EqualTo(unit));
     }
 
-    [UnityTest]
-    public IEnumerator MoveToNeutral_UnitInCorrectSector() {
-        
-        Setup();
-
-        Unit unit = MonoBehaviour.Instantiate(unitPrefab).GetComponent<Unit>();
+    [Test]
+    public void MoveToNeutral_UnitInCorrectSector()
+    {
+        Unit unit = InitUnit();
         Sector sectorA = map.sectors[0];
         Sector sectorB = map.sectors[1];
         Player playerA = players[0];
@@ -62,19 +38,15 @@ public class UnitTest
         sectorB.Owner = playerA;
 
         unit.MoveTo(sectorB);
-        Assert.IsTrue(unit.Sector == sectorB);
-        Assert.IsTrue(sectorB.Unit == unit);
-        Assert.IsNull(sectorA.Unit);
-
-        yield return null;
+        Assert.That(unit.Sector, Is.EqualTo(sectorB));
+        Assert.That(sectorB.Unit, Is.EqualTo(unit));
+        Assert.That(sectorA.Unit, Is.Null);
     }
 
-    [UnityTest]
-    public IEnumerator MoveToFriendly_UnitInCorrectSector() {
-        
-        Setup();
-
-        Unit unit = MonoBehaviour.Instantiate(unitPrefab).GetComponent<Unit>();
+    [Test]
+    public void MoveToFriendly_UnitInCorrectSector()
+    {
+        Unit unit = InitUnit();
         Sector sectorA = map.sectors[0];
         Player playerA = players[0];
 
@@ -86,16 +58,12 @@ public class UnitTest
         sectorA.Owner = playerA;
 
         unit.MoveTo(sectorA);
-        Assert.IsTrue(unit.Level == 1);
-
-        yield return null;
+        Assert.That(unit.Level, Is.EqualTo(1));
     }
 
-    public IEnumerator MoveToHostile_UnitInCorrectSectorAndLevelUp() {
-        
-        Setup();
-
-        Unit unit = MonoBehaviour.Instantiate(unitPrefab).GetComponent<Unit>();
+    public void MoveToHostile_UnitInCorrectSectorAndLevelUp()
+    {
+        Unit unit = InitUnit();
         Sector sectorA = map.sectors[0];
         Player playerA = players[0];
         Player playerB = players[1];
@@ -108,91 +76,78 @@ public class UnitTest
         sectorA.Owner = playerB;
 
         unit.MoveTo(sectorA);
-        Assert.IsTrue(unit.Level == 2);
-        Assert.IsTrue(sectorA.Owner == unit.Owner);
-
-        yield return null;
+        Assert.That(unit.Level, Is.EqualTo(2));
+        Assert.That(sectorA.Owner, Is.EqualTo(unit.Owner));
     }
 
-    [UnityTest]
-    public IEnumerator SwapPlaces_UnitsInCorrectNewSectors() {
+    [Test]
+    public void SwapPlaces_UnitsInCorrectNewSectors()
+    {
+        Unit[] units = InitUnits(2);
 
-        Setup();
-
-        Unit unitA = map.sectors[0].Unit;
-        Unit unitB = map.sectors[1].Unit;
-        
         Sector sectorA = map.sectors[0];
         Sector sectorB = map.sectors[1];
+        Player player = players[0];
 
-        yield return null;
+        // places players unitA in sectorA
+        units[0].Owner = player;
+        units[0].Sector = sectorA;
+        sectorA.Unit = units[0];
 
-        unitA.SwapPlacesWith(unitB);
-        Assert.IsTrue(unitA.Sector == sectorB); // unitA in sectorB
-        Assert.IsTrue(sectorB.Unit == unitA); // sectorB has unitA
-        Assert.IsTrue(unitB.Sector == sectorA); // unitB in sectorA
-        Assert.IsTrue(sectorA.Unit == unitB); // sectorA has unitB
+        // places players unitB in sectorB
+        units[1].Owner = player;
+        units[1].Sector = sectorB;
+        sectorB.Unit = units[1];
 
-        yield return null;
+        units[0].SwapPlacesWith(units[1]);
+        Assert.That(units[0].Sector, Is.EqualTo(sectorB)); // unitA in sectorB
+        Assert.That(sectorB.Unit, Is.EqualTo(units[0])); // sectorB has unitA
+        Assert.That(units[1].Sector, Is.EqualTo(sectorA)); // unitB in sectorA
+        Assert.That(sectorA.Unit, Is.EqualTo(units[1])); // sectorA has unitB
     }
 
-    [UnityTest]
-    public IEnumerator LevelUp_UnitLevelIncreasesByOne() {
-        
-        Setup();
-
-        Unit unit = MonoBehaviour.Instantiate(unitPrefab).GetComponent<Unit>();
+    [Test]
+    public void LevelUp_UnitLevelIncreasesByOne()
+    {
+        Unit unit = InitUnit();
 
         // ensure LevelUp increments level as expected
         unit.Level = 1;
         unit.LevelUp();
-        Assert.IsTrue(unit.Level == 2);
-
-        yield return null;
+        Assert.That(unit.Level, Is.EqualTo(2));
     }
 
-    [UnityTest]
-    public IEnumerator LevelUp_UnitLevelDoesNotPastFive() {
-        
-        Setup();
-
-        Unit unit = MonoBehaviour.Instantiate(unitPrefab).GetComponent<Unit>();
+    [Test]
+    public void LevelUp_UnitLevelDoesNotPastFive()
+    {
+        Unit unit = InitUnit();
 
         // ensure LevelUp does not increment past 5
         unit.Level = 5;
         unit.LevelUp();
-        Assert.IsTrue(unit.Level == 5);
-
-        yield return null;
+        Assert.That(unit.Level, Is.EqualTo(5));
     }
-        
-    [UnityTest]
-    public IEnumerator SelectAndDeselect_SelectedTrueWhenSelectedFalseWhenDeselected() {
-        
-        Setup();
 
-        Unit unit = MonoBehaviour.Instantiate(unitPrefab).GetComponent<Unit>();
+    [Test]
+    public void SelectAndDeselect_SelectedTrueWhenSelectedFalseWhenDeselected()
+    {
+        Unit unit = InitUnit();
         Sector sector = map.sectors[0];
 
         unit.Sector = sector;
         unit.IsSelected = false;
 
         unit.Select();
-        Assert.IsTrue(unit.IsSelected);
+        Assert.That(unit.IsSelected);
 
         unit.Deselect();
-        Assert.IsFalse(unit.IsSelected);
-
-        yield return null;
+        Assert.That(unit.IsSelected, Is.False);
     }
 
-
-    [UnityTest]
-    public IEnumerator DestroySelf_UnitNotInSectorAndNotInPlayersUnitsList() {
-        
-        Setup();
-
-        Unit unit = MonoBehaviour.Instantiate(unitPrefab).GetComponent<Unit>();
+    [Test]
+    public void DestroySelf_UnitNotInSectorAndNotInPlayersUnitsList()
+    {
+        Unit unit = InitUnit();
         Sector sector = map.sectors[0];
         Player player = players[0];
 
@@ -204,9 +159,8 @@ public class UnitTest
 
         unit.DestroySelf();
 
-        Assert.IsNull(sector.Unit); // unit not on sector 
-        Assert.IsFalse(player.Units.Contains(unit)); // unit not in list of players units
-
-        yield return null;
+        Assert.That(sector.Unit, Is.Null); // unit not on sector 
+        Assert.That(player.Units, Does.Not.Contains(unit)); // unit not in list of players units
     }
 }
+#endif

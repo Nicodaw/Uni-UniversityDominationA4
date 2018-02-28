@@ -12,7 +12,6 @@ public class GameData
     // Must be public
     public TurnState turnState;
     public bool gameFinished;
-    public bool testMode;
     public int currentPlayerID; // Index from 0
     
     // Players
@@ -122,7 +121,6 @@ public class GameData
         // Game properties
         turnState = game.TurnState;
         gameFinished = game.IsFinished;
-        testMode = game.TestModeEnabled;
         currentPlayerID = game.GetPlayerID(game.CurrentPlayer);
         
         // Player properties

@@ -10,9 +10,11 @@ public class Game : MonoBehaviour
     #region Unity Bindings
 
     public Player[] players;
+    public Player neutralPlayer;
     public GameObject gameMap;
     public Player currentPlayer;
     public Dialog dialog;
+    public Text actionsRemaining;
 
     #endregion
 
@@ -26,7 +28,6 @@ public class Game : MonoBehaviour
     TurnState turnState;
     bool gameFinished = false;
     bool testMode = false;
-    Text actionsRemaining;
 
     #endregion
 
@@ -50,21 +51,11 @@ public class Game : MonoBehaviour
     }
 
     /// <summary>
-    /// Enable test mode.
-    /// </summary>
-    public bool TestModeEnabled
-    {
-        get { return testMode; }
-        set { testMode = value; }
-    }
-
-    /// <summary>
     /// All the players in the game.
     /// </summary>
     public Player[] Players
     {
         get { return players; }
-        set { players = value; }
     }
 
     /// <summary>
@@ -85,19 +76,7 @@ public class Game : MonoBehaviour
 
     public Sector[] LandmarkedSectors
     {
-        get
-        {
-            List<Sector> landmarkedSectors = new List<Sector>();
-            foreach (Sector sector in sectors)
-            {
-                if (sector.Landmark != null)
-                {
-                    landmarkedSectors.Add(sector);
-                }
-            }
-
-            return landmarkedSectors.ToArray();
-        }
+        get { return sectors.Where(s => s.Landmark != null).ToArray(); }
     }
 
     /// <summary>
@@ -128,13 +107,6 @@ public class Game : MonoBehaviour
     /// </summary>
     public void Initialize(bool neutralPlayer)
     {
-        if (testMode) return;
-        // initialize the game
-        actionsRemaining = GameObject.Find("Remaining_Actions_Value").GetComponent<Text>();
-
-        Button endTurnButton = GameObject.Find("End_Turn_Button").GetComponent<Button>();
-        endTurnButton.onClick.AddListener(EndTurn);
-
         // create a specified number of human players
         CreatePlayers(neutralPlayer);
 
@@ -187,7 +159,7 @@ public class Game : MonoBehaviour
                 int randomIndex = UnityEngine.Random.Range(0, landmarkedSectors.Length);
 
                 // if the sector is not yet allocated, allocate the player
-                if (((Sector)landmarkedSectors[randomIndex]).Owner == null)
+                if (landmarkedSectors[randomIndex].Owner == null)
                 {
                     player.Capture(landmarkedSectors[randomIndex]);
                     playerAllocated = true;
@@ -216,18 +188,17 @@ public class Game : MonoBehaviour
     /// 3 human + 1 neutral if neutral player enabled,
     /// 4 human if no neutal player.
     /// </summary>
-    /// <param name="neutralPlayer">True if neutral player enabled else false.</param>
-    public void CreatePlayers(bool neutralPlayer)
+    /// <param name="enableNeutralPlayer">True if neutral player enabled else false.</param>
+    public void CreatePlayers(bool enableNeutralPlayer)
     {
         // mark the specified number of players as human
-        if (!neutralPlayer)
+        if (!enableNeutralPlayer)
         {
             for (int i = 0; i < NUMBER_OF_PLAYERS; i++)
             {
                 players[i].Human = true;
             }
-            GameObject.Find("PlayerNeutralUI").SetActive(false);
-            players[NUMBER_OF_PLAYERS - 1] = GameObject.Find("Player4").GetComponent<Player>();
+            neutralPlayer.gameObject.SetActive(false);
         }
         else
         {
@@ -235,8 +206,8 @@ public class Game : MonoBehaviour
             {
                 players[i].Human = true;
             }
-            players[NUMBER_OF_PLAYERS - 1] = GameObject.Find("PlayerNeutral").GetComponent<Player>();
-            GameObject.Find("Player4UI").SetActive(false);
+            players[NUMBER_OF_PLAYERS - 1].gameObject.SetActive(false);
+            players[NUMBER_OF_PLAYERS - 1] = neutralPlayer;
             players[NUMBER_OF_PLAYERS - 1].Neutral = true;
         }
 
@@ -279,9 +250,9 @@ public class Game : MonoBehaviour
         gameMap = GameObject.Find("Map");
 
         // initialize the game
-        actionsRemaining = GameObject.Find("Remaining_Actions_Value").GetComponent<Text>();
+        actionsRemaining = GameObject.Find("RemainingActionsValue").GetComponent<Text>();
 
-        UnityEngine.UI.Button endTurnButton = GameObject.Find("End_Turn_Button").GetComponent<Button>();
+        UnityEngine.UI.Button endTurnButton = GameObject.Find("EndTurnButton").GetComponent<Button>();
         endTurnButton.onClick.AddListener(EndTurn);
 
         if (savedGame.player4Controller.Equals("human"))
@@ -296,7 +267,6 @@ public class Game : MonoBehaviour
         // set global game settings
         turnState = savedGame.turnState;
         gameFinished = savedGame.gameFinished;
-        testMode = savedGame.testMode;
         currentPlayer = players[savedGame.currentPlayerID];
         currentPlayer.Gui.Activate();
         players[savedGame.currentPlayerID].Active = true;
@@ -413,18 +383,10 @@ public class Game : MonoBehaviour
     #region MonoBehaviour
 
     /// <summary>
-    /// Calls <see cref="UpdateMain"/>.
-    /// </summary>
-    void Update()
-    {
-        UpdateMain();
-    }
-
-    /// <summary>
     /// At the end of each turn, check for a winner and end the game if necessary; otherwise, start the next player's turn 
     /// exposed version of update method so accessible for testing.
     /// </summary>
-    public void UpdateMain()
+    void Update()
     {
         if (triggerDialog)
         {

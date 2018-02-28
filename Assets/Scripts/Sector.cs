@@ -212,6 +212,7 @@ public class Sector : MonoBehaviour
     /// Get the level of the unit on the sector.
     /// </summary>
     /// <returns>The level of the sector</returns>
+    [System.Obsolete("Will be removed/reworked after memento pattern implementation.")]
     public int GetLevel()
     {
         if (unit == null)

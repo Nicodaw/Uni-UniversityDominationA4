@@ -130,6 +130,7 @@ public class Unit : MonoBehaviour
         // player than the unit, capture it and level up
         if (targetSector.Owner != this.owner)
         {
+            Debug.Log("capuring sector");
             // level up
             LevelUp();
 
