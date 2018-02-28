@@ -130,8 +130,8 @@ public class SectorTest
         unitA.Owner = playerA;
         unitB.Owner = playerB;
 
-        playerA.units.Add(unitA);
-        playerB.units.Add(unitB);
+        playerA.Units.Add(unitA);
+        playerB.Units.Add(unitB);
 
 
         // test clicking a sector with a unit while the unit's owner

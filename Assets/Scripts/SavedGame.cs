@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
+using UnityEngine;
 
+[Obsolete("Will be removed/reworked after memento pattern implementation.")]
 public static class SavedGame
 {
     /// <summary>

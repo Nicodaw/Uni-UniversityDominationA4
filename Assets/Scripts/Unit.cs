@@ -4,18 +4,24 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    #region Private Fields
-    [SerializeField] Player owner;
-    [SerializeField] Sector sector;
-    [SerializeField] int level;
-    [SerializeField] Color color;
-    [SerializeField] bool selected = false;
+    #region Unity Bindings
 
-    [SerializeField] Material level1Material;
-    [SerializeField] Material level2Material;
-    [SerializeField] Material level3Material;
-    [SerializeField] Material level4Material;
-    [SerializeField] Material level5Material;
+    public Material level1Material;
+    public Material level2Material;
+    public Material level3Material;
+    public Material level4Material;
+    public Material level5Material;
+
+    #endregion
+
+    #region Private Fields
+
+    Player owner;
+    Sector sector;
+    int level;
+    Color color;
+    bool selected = false;
+
     #endregion
 
     #region Public Properties
@@ -23,12 +29,20 @@ public class Unit : MonoBehaviour
     /// <summary>
     /// Player that owns this unit
     /// </summary>
-    public Player Owner { get { return owner; } set { owner = value; } }
+    public Player Owner
+    {
+        get { return owner; }
+        set { owner = value; }
+    }
 
     /// <summary>
     /// The Sector the unit is occupying
     /// </summary>
-    public Sector Sector { get { return sector; } set { sector = value; } }
+    public Sector Sector
+    {
+        get { return sector; }
+        set { sector = value; }
+    }
 
     /// <summary>
     /// The unit's level
@@ -42,28 +56,34 @@ public class Unit : MonoBehaviour
     /// <summary>
     /// The colour of the unit
     /// </summary>
-    public Color Color { get { return color; } set { color = value; } }
+    public Color Color
+    {
+        get { return color; }
+        set { color = value; }
+    }
 
     /// <summary>
     /// Whether the unit is currently selected.
     /// </summary>
-    public bool IsSelected { get { return selected; } set { selected = value; } }
+    public bool IsSelected
+    {
+        get { return selected; }
+        set { selected = value; }
+    }
 
     #endregion
 
     #region Initialization
 
-
     /// <summary>
-    /// Initializes the unit on the passed sector and assigns it to the passed player
-    /// The unit is set to level 1
-    /// The unit's colour is set to the colour of the player that owns it
+    /// Initializes the unit on the passed sector and assigns it to the passed player.
+    /// The unit is set to level 1.
+    /// The unit's colour is set to the colour of the player that owns it.
     /// </summary>
-    /// <param name="player">The player the unit belongs to</param>
-    /// <param name="sector">The sector the unit is on</param>
+    /// <param name="player">The player the unit belongs to.</param>
+    /// <param name="sector">The sector the unit is on.</param>
     public void Initialize(Player player, Sector sector)
     {
-
         // set the owner, level, and color of the unit
         owner = player;
         level = 1;
@@ -74,23 +94,19 @@ public class Unit : MonoBehaviour
 
         // place the unit in the sector
         MoveTo(sector);
-
     }
+
     #endregion
 
     #region Helper Methods
 
-
     /// <summary>
-    /// 
-    /// Moves this unit to the passed sector
-    /// If the unit moves to a sector they do not own then LevelUp is called on it
-    /// 
+    /// Moves this unit to the passed sector.
+    /// If the unit moves to a sector they do not own then LevelUp is called on it.
     /// </summary>
     /// <param name="targetSector">The sector to move this unit to</param>
     public void MoveTo(Sector targetSector)
     {
-
         // clear the unit's current sector
         if (this.sector != null)
         {
@@ -110,7 +126,6 @@ public class Unit : MonoBehaviour
         // align the transform to the sector
         transform.position = targetTransform.position;
 
-
         // if the target sector belonged to a different 
         // player than the unit, capture it and level up
         if (targetSector.Owner != this.owner)
@@ -121,22 +136,17 @@ public class Unit : MonoBehaviour
             // capture the target sector for the owner of this unit
             owner.Capture(targetSector);
         }
-
     }
 
     /// <summary>
-    /// 
-    /// switch the position of this unit and the passed unit
-    /// 
+    /// Switch the position of this unit and the passed unit.
     /// </summary>
-    /// <param name="otherUnit">The unit to be swapped with this one</param>
+    /// <param name="otherUnit">The unit to be swapped with this one.</param>
     public void SwapPlacesWith(Unit otherUnit)
     {
-
         // swap the sectors' references to the units
         this.sector.Unit = otherUnit;
         otherUnit.sector.Unit = this;
-
 
         // get the index of this unit's sector in the map's list of sectors
         int tempSectorIndex = -1;
@@ -156,28 +166,20 @@ public class Unit : MonoBehaviour
 
         otherUnit.transform.SetParent(otherUnit.sector.transform.Find("Units").transform);
         otherUnit.transform.position = otherUnit.sector.transform.Find("Units").position;
-
     }
 
     /// <summary>
-    /// 
-    /// increase this units level and update the unit model to display the new level
-    /// levelling up is capped at level 5
-    /// 
+    /// Increase this units level and update the unit model to display the new level.
+    /// Leveling up is capped at level 5.
     /// </summary>
 	public void LevelUp()
     {
-
-        // level up the unit, capping at Level 5
-
         if (level < 5)
         {
-
             // increase level
             level++;
             UpdateUnitMaterial();
         }
-
     }
 
     public void UpdateUnitMaterial()
@@ -206,21 +208,16 @@ public class Unit : MonoBehaviour
     }
 
     /// <summary>
-    /// 
-    /// select the unit and highlight the sectors adjacent to it
-    /// 
+    /// Select the unit and highlight the sectors adjacent to it.
     /// </summary>
     public void Select()
     {
-
         selected = true;
         sector.ApplyHighlightAdjacent();
     }
 
     /// <summary>
-    /// 
-    /// deselect the unit and unhighlight the sectors adjacent to it
-    /// 
+    /// Deselect the unit and unhighlight the sectors adjacent to it.
     /// </summary>
     public void Deselect()
     {
@@ -230,16 +227,15 @@ public class Unit : MonoBehaviour
     }
 
     /// <summary>
-    /// 
-    /// safely destroy the unit by removing it from its owner's list of units before destroying
-    /// 
+    /// Safely destroy the unit by removing it from its owner's list of units before destroying.
     /// </summary>
     public void DestroySelf()
     {
         sector.ClearUnit();
-        owner.units.Remove(this);
+        owner.Units.Remove(this);
         Destroy(this.gameObject);
     }
+
     #endregion
 }
 

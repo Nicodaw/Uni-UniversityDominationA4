@@ -12,7 +12,7 @@ public class Game : MonoBehaviour
     public Player[] players;
     public GameObject gameMap;
     public Player currentPlayer;
-    public Sector[] sectors;
+    public Dialog dialog;
 
     #endregion
 
@@ -21,46 +21,67 @@ public class Game : MonoBehaviour
     const int NUMBER_OF_PLAYERS = 4;
     bool isSaveQuitMenuOpen = false;
     bool triggerDialog = false;
+    Sector[] sectors;
     bool[] eliminatedPlayers;
-    [SerializeField] TurnState turnState;
-    [SerializeField] bool gameFinished = false;
-    [SerializeField] bool testMode = false;
-    [SerializeField] Text actionsRemaining;
-    [SerializeField] Dialog dialog;
+    TurnState turnState;
+    bool gameFinished = false;
+    bool testMode = false;
+    Text actionsRemaining;
 
     #endregion
 
     #region Public Properties
 
     /// <summary>
-    /// The current turn state of the game
+    /// The current turn state of the game.
     /// </summary>
-    public TurnState TurnState { get { return turnState; } set { turnState = value; } }
+    public TurnState TurnState
+    {
+        get { return turnState; }
+        set { turnState = value; }
+    }
 
     /// <summary>
-    /// Returns if the game is finished
+    /// Returns if the game is finished.
     /// </summary>
-    public bool IsFinished { get { return gameFinished; } }
+    public bool IsFinished
+    {
+        get { return gameFinished; }
+    }
 
     /// <summary>
-    /// Enable test mode
+    /// Enable test mode.
     /// </summary>
-    public bool TestModeEnabled { get { return testMode; } set { testMode = value; } }
+    public bool TestModeEnabled
+    {
+        get { return testMode; }
+        set { testMode = value; }
+    }
 
     /// <summary>
-    /// All the players in the game
+    /// All the players in the game.
     /// </summary>
-    public Player[] Players { get { return players; } set { players = value; } }
+    public Player[] Players
+    {
+        get { return players; }
+        set { players = value; }
+    }
 
     /// <summary>
-    /// The current player
+    /// The current player.
     /// </summary>
-    public Player CurrentPlayer { get { return currentPlayer; } }
+    public Player CurrentPlayer
+    {
+        get { return currentPlayer; }
+    }
 
     /// <summary>
-    /// An array of all the sectors on the map
+    /// An array of all the sectors on the map.
     /// </summary>
-    public Sector[] Sectors { get { return sectors; } }
+    public Sector[] Sectors
+    {
+        get { return sectors; }
+    }
 
     public Sector[] LandmarkedSectors
     {
@@ -80,15 +101,16 @@ public class Game : MonoBehaviour
     }
 
     /// <summary>
-    /// The ID of the sector that contains the PVC
+    /// The ID of the sector that contains the PVC.
     /// </summary>
+    [Obsolete("Will be removed/reworked after memento pattern implementation.")]
     public int PVCSectorID
     {
         get
         {
             foreach (Sector sector in sectors)
             {
-                if (sector.PVC)
+                if (sector.HasPVC)
                 {
                     return Array.IndexOf(sectors, sector);
                 }
@@ -97,13 +119,12 @@ public class Game : MonoBehaviour
         }
     }
 
-
     #endregion
 
     #region Initialization
 
     /// <summary>
-    /// Initializes a new game
+    /// Initializes a new game.
     /// </summary>
     public void Initialize(bool neutralPlayer)
     {
@@ -130,15 +151,13 @@ public class Game : MonoBehaviour
 
         // update GUIs
         UpdateGUI();
-
     }
 
     /// <summary>
-    /// initialize all sectors, allocate players to landmarks, and spawn units
+    /// Initialize all sectors, allocate players to landmarks, and spawn units.
     /// </summary>
     public void InitializeMap()
     {
-
         // get an array of all sectors
         sectors = gameMap.GetComponentsInChildren<Sector>();
 
@@ -156,7 +175,6 @@ public class Game : MonoBehaviour
         {
             throw new Exception("Must have at least as many landmarks as players; only " + landmarkedSectors.Length.ToString() + " landmarks found for " + players.Length.ToString() + " players.");
         }
-
 
         // randomly allocate sectors to players
         foreach (Player player in players)
@@ -189,16 +207,16 @@ public class Game : MonoBehaviour
         int rand = UnityEngine.Random.Range(0, sectors.Length);
         while (sectors[rand].Landmark != null)
             rand = UnityEngine.Random.Range(0, sectors.Length);
-        sectors[rand].PVC = true;
+        sectors[rand].HasPVC = true;
         Debug.Log("PVC initially allocated at: " + sectors[rand].name);
     }
 
     /// <summary>
-    /// Sets up the players in the game
-    /// 3 human + 1 neutral if neutral player enabled
-    /// 4 human if no neutal player
+    /// Sets up the players in the game.
+    /// 3 human + 1 neutral if neutral player enabled,
+    /// 4 human if no neutal player.
     /// </summary>
-    /// <param name="neutralPlayer">True if neutral player enabled else false</param>
+    /// <param name="neutralPlayer">True if neutral player enabled else false.</param>
     public void CreatePlayers(bool neutralPlayer)
     {
         // mark the specified number of players as human
@@ -222,7 +240,6 @@ public class Game : MonoBehaviour
             players[NUMBER_OF_PLAYERS - 1].Neutral = true;
         }
 
-
         // give all players a reference to this game
         // and initialize their GUIs
         for (int i = 0; i < NUMBER_OF_PLAYERS; i++)
@@ -243,9 +260,9 @@ public class Game : MonoBehaviour
     #region Serialization
 
     /// <summary>
-    /// Saves this game to file
+    /// Saves this game to file.
     /// </summary>
-    /// <param name="fileName">Name of save game file</param>
+    /// <param name="fileName">Name of save game file.</param>
     public void SaveGame(string fileName)
     {
         SavedGame.Save(fileName, this);
@@ -253,35 +270,10 @@ public class Game : MonoBehaviour
     }
 
     /// <summary>
-    /// Returns if there is a unit currently selected
+    /// Sets up a game with the state stored by the passed GameData.
     /// </summary>
-    /// <returns>True if no unit is seleced else false</returns>
-    public bool NoUnitSelected()
-    {
-
-        // return true if no unit is selected, false otherwise
-
-
-        // scan through each player
-        foreach (Player player in players)
-        {
-            // scan through each unit of each player
-            foreach (Unit unit in player.units)
-            {
-                // if a selected unit is found, return false
-                if (unit.IsSelected == true)
-                    return false;
-            }
-        }
-
-        // otherwise, return true
-        return true;
-    }
-
-    /// <summary>
-    /// sets up a game with the state stored by the passed GameData
-    /// </summary>
-    /// <param name="savedGame">The saved game state</param>
+    /// <param name="savedGame">The saved game state.</param>
+    [Obsolete("Will be removed/reworked after memento pattern implementation.")]
     public void Initialize(GameData savedGame)
     {
         gameMap = GameObject.Find("Map");
@@ -411,7 +403,7 @@ public class Game : MonoBehaviour
         SetupUnit(31, savedGame.sector32Level);
 
         //set VC sector
-        if (savedGame.VCSector != -1) sectors[savedGame.VCSector].PVC = true;
+        if (savedGame.VCSector != -1) sectors[savedGame.VCSector].HasPVC = true;
 
         UpdateGUI();
 
@@ -421,18 +413,18 @@ public class Game : MonoBehaviour
     #region MonoBehaviour
 
     /// <summary>
-    /// calls UpdateAccessible
+    /// Calls <see cref="UpdateMain"/>.
     /// </summary>
     void Update()
     {
-        UpdateAccessible();
+        UpdateMain();
     }
 
     /// <summary>
-    /// at the end of each turn, check for a winner and end the game if necessary; otherwise, start the next player's turn 
-    /// exposed version of update method so accessible for testing
+    /// At the end of each turn, check for a winner and end the game if necessary; otherwise, start the next player's turn 
+    /// exposed version of update method so accessible for testing.
     /// </summary>
-    public void UpdateAccessible()
+    public void UpdateMain()
     {
         if (triggerDialog)
         {
@@ -466,16 +458,39 @@ public class Game : MonoBehaviour
         }
     }
 
-    private void OnApplicationQuit()
+    void OnApplicationQuit()
     {
         PlayerPrefs.DeleteAll();
     }
+
     #endregion
 
     #region Helper Methods
 
     /// <summary>
-    /// Triggers the Save and quit dialog
+    /// Returns if there is a unit currently selected.
+    /// </summary>
+    /// <returns>True if no unit is seleced else false.</returns>
+    public bool NoUnitSelected()
+    {
+        // scan through each player
+        foreach (Player player in players)
+        {
+            // scan through each unit of each player
+            foreach (Unit unit in player.Units)
+            {
+                // if a selected unit is found, return false
+                if (unit.IsSelected == true)
+                    return false;
+            }
+        }
+
+        // otherwise, return true
+        return true;
+    }
+
+    /// <summary>
+    /// Triggers the Save and quit dialog.
     /// </summary>
     public void OpenSaveQuitMenu()
     {
@@ -491,27 +506,21 @@ public class Game : MonoBehaviour
     }
 
     /// <summary>
-    /// Gets the index of the passed player object in the players array
+    /// Gets the index of the passed player object in the players array.
     /// </summary>
-    /// <param name="player">The player to find the index of</param>
-    /// <returns>The player objects index in players</returns>
+    /// <param name="player">The player to find the index of.</param>
+    /// <returns>The player objects index in players.</returns>
     public int GetPlayerID(Player player)
     {
         return Array.IndexOf(players, player);
     }
 
     /// <summary>
-    /// 
-    /// Sets the active player to the next player
-    /// If it is a neutral player's turn then carries out their actions
-    /// 
+    /// Sets the active player to the next player.
+    /// If it is a neutral player's turn then carries out their actions.
     /// </summary>
     public void NextPlayer()
     {
-
-        // set the current player to the next player in the order
-
-
         // deactivate the current player
         currentPlayer.Active = false;
         currentPlayer.Gui.Deactivate();
@@ -537,21 +546,22 @@ public class Game : MonoBehaviour
             }
         }
     }
+
     /// <summary>
-    /// Carries out the neutral player turn
-    /// The neutral player units cannot move to a sector with a unit on
+    /// Carries out the neutral player turn.
+    /// The neutral player units cannot move to a sector with a unit on.
     /// </summary>
     public void NeutralPlayerTurn()
     {
         NextTurnState();
-        List<Unit> units = currentPlayer.units;
+        List<Unit> units = currentPlayer.Units;
         Unit selectedUnit = units[UnityEngine.Random.Range(0, units.Count)];
         Sector[] adjacentSectors = selectedUnit.Sector.AdjacentSectors;
         List<Sector> possibleSectors = new List<Sector>();
         for (int i = 0; i < adjacentSectors.Length; i++)
         {
             bool neutralOrEmpty = adjacentSectors[i].Owner == null || adjacentSectors[i].Owner.Neutral;
-            if (neutralOrEmpty && !adjacentSectors[i].PVC)
+            if (neutralOrEmpty && !adjacentSectors[i].HasPVC)
                 possibleSectors.Add(adjacentSectors[i]);
         }
         if (possibleSectors.Count > 0)
@@ -561,18 +571,14 @@ public class Game : MonoBehaviour
     }
 
     /// <summary>
-    /// Advances the turn state to the next state
+    /// Advances the turn state to the next state.
     /// </summary>
     public void NextTurnState()
     {
-
-        // change the turn state to the next in the order,
-        // or to initial turn state if turn is completed
-
         switch (turnState)
         {
             case TurnState.Move1:
-                if (!currentPlayer.hasUnits())
+                if (!currentPlayer.HasUnits())
                 {
                     turnState = TurnState.EndOfTurn;
                     break;
@@ -586,9 +592,6 @@ public class Game : MonoBehaviour
 
             case TurnState.EndOfTurn:
                 turnState = TurnState.Move1;
-                break;
-
-            default:
                 break;
         }
 
@@ -608,32 +611,27 @@ public class Game : MonoBehaviour
     }
 
     /// <summary>
-    /// Updates the text of the Actions Remaining label
+    /// Updates the text of the Actions Remaining label.
     /// </summary>
-    private void UpdateActionsRemainingLabel()
+    void UpdateActionsRemainingLabel()
     {
         switch (turnState)
         {
             case TurnState.Move1:
                 actionsRemaining.text = "2";
                 break;
-
             case TurnState.Move2:
                 actionsRemaining.text = "1";
                 break;
-
             case TurnState.EndOfTurn:
                 actionsRemaining.text = "0";
-                break;
-
-            default:
                 break;
         }
     }
 
     /// <summary>
-    /// Checks if any players were defeated that turn and removes them 
-    /// Displays a dialog box showing which players have been defeated this turn
+    /// Checks if any players were defeated that turn and removes them.
+    /// Displays a dialog box showing which players have been defeated this turn.
     /// </summary>
     public void CheckForDefeatedPlayers()
     {
@@ -651,9 +649,8 @@ public class Game : MonoBehaviour
         }
     }
 
-
     /// <summary>
-    /// sets the turn phase to the EndOfTurn state
+    /// Sets the turn phase to the EndOfTurn state.
     /// </summary>
     public void EndTurn()
     {
@@ -661,15 +658,12 @@ public class Game : MonoBehaviour
     }
 
     /// <summary>
-    /// checks if there is a winner in the game
-    /// a winner is found when there is only one player with territory remaining, (unclaimed territories are ignored)
+    /// Checks if there is a winner in the game.
+    /// A winner is found when there is only one player with territory remaining, (unclaimed territories are ignored).
     /// </summary>
-    /// <returns>The winning player object or null if no winner has been found</returns>
+    /// <returns>The winning player object or null if no winner has been found.</returns>
     public Player GetWinner()
     {
-
-        // return the winning player, or null if no winner yet
-
         Player winner = null;
 
         // scan through each player
@@ -695,19 +689,16 @@ public class Game : MonoBehaviour
     }
 
     /// <summary>
-    /// Called when the game is over
-    /// Displays a Dialog saying which player has won and allows the player to quit the game or restart the game
+    /// Called when the game is over.
+    /// Displays a Dialog saying which player has won and allows the player to quit the game or restart the game.
     /// </summary>
     public void EndGame()
     {
-
         gameFinished = true;
-
 
         dialog.SetDialogType(DialogType.EndGame);
         dialog.SetDialogData(GetWinner().name);
         dialog.Show();
-
 
         currentPlayer.Active = false;
         currentPlayer = null;
@@ -716,11 +707,10 @@ public class Game : MonoBehaviour
     }
 
     /// <summary>
-    /// Updates the Player Information GUI components and the Actions remaining label
+    /// Updates the Player Information GUI components and the Actions remaining label.
     /// </summary>
 	public void UpdateGUI()
     {
-
         // update all players' GUIs
         for (int i = 0; i < 4; i++)
         {
@@ -729,14 +719,13 @@ public class Game : MonoBehaviour
         UpdateActionsRemainingLabel();
     }
 
-
-
     /// <summary>
-    /// sets the sector owner, if it has one
+    /// Sets the sector owner, if it has one.
     /// </summary>
-    /// <param name="sectorId">id of sector being set</param>
-    /// <param name="ownerId">id of player</param>
-    private void SetupSectorOwner(int sectorId, int ownerId)
+    /// <param name="sectorId">Id of sector being set.</param>
+    /// <param name="ownerId">Id of player.</param>
+    [Obsolete("Will be removed/reworked after memento pattern implementation.")]
+    void SetupSectorOwner(int sectorId, int ownerId)
     {
         if (ownerId == -1)
         {
@@ -744,15 +733,16 @@ public class Game : MonoBehaviour
         }
         Player p = players[ownerId];
         sectors[sectorId].Owner = p;
-        p.ownedSectors.Add(sectors[sectorId]);
+        p.OwnedSectors.Add(sectors[sectorId]);
     }
 
     /// <summary>
-    /// sets up the units on the passed sector
+    /// Sets up the units on the passed sector.
     /// </summary>
-    /// <param name="sectorIndex">Sector id of sector being setup</param>
-    /// <param name="level">unit level on sector; -1 if no unit on this sector</param>
-    private void SetupUnit(int sectorIndex, int level)
+    /// <param name="sectorIndex">Sector id of sector being setup.</param>
+    /// <param name="level">Unit level on sector; -1 if no unit on this sector.</param>
+    [Obsolete("Will be removed/reworked after memento pattern implementation.")]
+    void SetupUnit(int sectorIndex, int level)
     {
         if (level == -1)
         {
@@ -763,16 +753,12 @@ public class Game : MonoBehaviour
         unit.Level = level;
         unit.UpdateUnitMaterial();
         unit.MoveTo(sectors[sectorIndex]);
-        sectors[sectorIndex].Owner.units.Add(unit);
+        sectors[sectorIndex].Owner.Units.Add(unit);
     }
 
-
-
     /// <summary>
-    /// 
     /// Allocates a reward to the player when they complete the mini game
     /// Reward = (Number of coins collected + 1) / 2 added to attack and defence bonus
-    /// 
     /// </summary>
     internal void GiveReward()
     {

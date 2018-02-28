@@ -1,8 +1,8 @@
 ﻿/// <summary>
-/// Types of Bonus
+/// Types of Bonus.
 /// </summary>
 public enum ResourceType
 {
-    Attack,
-    Defence
+    Attack, // AKA beer
+    Defence // AKA knowledge
 };

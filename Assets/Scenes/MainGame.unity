@@ -863,7 +863,7 @@ MonoBehaviour:
   - {fileID: 874683425}
   - {fileID: 1504733619}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &86836388 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 661a25b41301114468629a17dee337f6, type: 3}
@@ -905,7 +905,7 @@ MonoBehaviour:
   - {fileID: 1504733619}
   - {fileID: 381651177}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &91517971 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 12e9690c244ed5c48bc84cebbea31f1e, type: 3}
@@ -2238,7 +2238,7 @@ MonoBehaviour:
   - {fileID: 1193213106}
   - {fileID: 2035498297}
   landmark: {fileID: 944140230}
-  VC: 0
+  pvc: 0
 --- !u!4 &252651573 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 4f39bc360adbdfa43b43ff57401c746c, type: 3}
@@ -2869,7 +2869,7 @@ MonoBehaviour:
   - {fileID: 2035498297}
   - {fileID: 1598349745}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &318856583 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 90d55c589a7bce345935269d2ea7a2e8, type: 3}
@@ -3004,7 +3004,6 @@ GameObject:
   - component: {fileID: 369558831}
   - component: {fileID: 369558830}
   - component: {fileID: 369558832}
-  - component: {fileID: 369558833}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -3034,11 +3033,8 @@ MonoBehaviour:
   turnState: 0
   gameFinished: 0
   testMode: 0
-  saveFilePath: 
   actionsRemaining: {fileID: 0}
-  dialog: {fileID: 369558833}
-  triggerDialog: 0
-  eliminatedPlayers: 
+  dialog: {fileID: 771273928}
 --- !u!4 &369558831
 Transform:
   m_ObjectHideFlags: 0
@@ -3069,18 +3065,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   game: {fileID: 369558830}
---- !u!114 &369558833
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 369558829}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 718f6ca268989824f886e0fdec8bae80, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  texture: {fileID: 771273924}
 --- !u!1001 &373963877
 Prefab:
   m_ObjectHideFlags: 0
@@ -3205,7 +3189,7 @@ MonoBehaviour:
   - {fileID: 597418672}
   - {fileID: 318856579}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &381651181 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: a1b77f5dc1afeb341b77513da39e2968, type: 3}
@@ -3502,7 +3486,7 @@ MonoBehaviour:
   - {fileID: 1185958552}
   - {fileID: 798288505}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &404973231 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 4d48df6783fa0ba4aadb91b29ad05700, type: 3}
@@ -3956,7 +3940,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 369558833}
+      - m_Target: {fileID: 771273928}
         m_MethodName: Exit
         m_Mode: 1
         m_Arguments:
@@ -4717,7 +4701,7 @@ MonoBehaviour:
   - {fileID: 404973227}
   - {fileID: 798288505}
   landmark: {fileID: 515147245}
-  VC: 0
+  pvc: 0
 --- !u!4 &549129402 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: cf2301c1ffa163a4b965fddee37d7b5a, type: 3}
@@ -4761,7 +4745,7 @@ MonoBehaviour:
   - {fileID: 1310810841}
   - {fileID: 1058976151}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &555099666 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: e6bfcee1fcb54cc4e9fa1c848ea69a1a, type: 3}
@@ -5097,7 +5081,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 369558833}
+      - m_Target: {fileID: 771273928}
         m_MethodName: Close
         m_Mode: 1
         m_Arguments:
@@ -5259,7 +5243,7 @@ MonoBehaviour:
   - {fileID: 86836384}
   - {fileID: 1229847032}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &593477891 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: aa09f7f2214dc9b4c972b79ade499fc3, type: 3}
@@ -5301,7 +5285,7 @@ MonoBehaviour:
   - {fileID: 1698281851}
   - {fileID: 318856579}
   landmark: {fileID: 1654334558}
-  VC: 0
+  pvc: 0
 --- !u!4 &597418676 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 3d4584bea935c524b8466d3d0c27c4d5, type: 3}
@@ -5372,7 +5356,7 @@ MonoBehaviour:
   - {fileID: 1860884819}
   - {fileID: 1543727952}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &607278877 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 0fbd5b2d5d0c29f44889b7af4ff3ace0, type: 3}
@@ -5985,7 +5969,7 @@ MonoBehaviour:
   - {fileID: 1814767436}
   - {fileID: 1780098134}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &702129935 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: f8d517d147eb2bb4c9b6d301350369bd, type: 3}
@@ -6657,6 +6641,7 @@ GameObject:
   - component: {fileID: 771273925}
   - component: {fileID: 771273927}
   - component: {fileID: 771273926}
+  - component: {fileID: 771273928}
   m_Layer: 5
   m_Name: Dialog
   m_TagString: Untagged
@@ -6722,6 +6707,24 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 771273924}
+--- !u!114 &771273928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 771273924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 718f6ca268989824f886e0fdec8bae80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogTitle: {fileID: 1178596744}
+  dialogInfo: {fileID: 784910517}
+  dialogOkay: {fileID: 579811562}
+  dialogRestart: {fileID: 1105538899}
+  dialogQuit: {fileID: 420055566}
+  dialogSaveQuit: {fileID: 1000788803}
+  dialogCloseDialogBtn: {fileID: 1000579394}
 --- !u!1 &784910517
 GameObject:
   m_ObjectHideFlags: 0
@@ -6823,7 +6826,7 @@ MonoBehaviour:
   - {fileID: 404973227}
   - {fileID: 1543727952}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!64 &798288509
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -7460,7 +7463,7 @@ MonoBehaviour:
   - {fileID: 1497788360}
   - {fileID: 1193213106}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &874683429 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 2a92ff0cacc83be499fca803a47d68f6, type: 3}
@@ -7549,7 +7552,7 @@ MonoBehaviour:
   - {fileID: 1229847032}
   - {fileID: 91517967}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &893385578 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: a744327b9f0b5c245a198aa0c57d8ff7, type: 3}
@@ -8334,7 +8337,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 369558833}
+      - m_Target: {fileID: 771273928}
         m_MethodName: Close
         m_Mode: 1
         m_Arguments:
@@ -8392,7 +8395,7 @@ GameObject:
   - component: {fileID: 1000788806}
   - component: {fileID: 1000788805}
   m_Layer: 5
-  m_Name: Save & Quit
+  m_Name: SaveQuit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8886,7 +8889,7 @@ MonoBehaviour:
   - {fileID: 1598349745}
   - {fileID: 404973227}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &1058976155 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 0b47ae70d24d6894f9b5a7436f2f5359, type: 3}
@@ -9060,7 +9063,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 369558833}
+      - m_Target: {fileID: 771273928}
         m_MethodName: Restart
         m_Mode: 1
         m_Arguments:
@@ -9794,7 +9797,7 @@ MonoBehaviour:
   - {fileID: 1860884819}
   - {fileID: 1543727952}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &1185958556 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 5d16746f970ae194783448131db84360, type: 3}
@@ -9841,7 +9844,7 @@ MonoBehaviour:
   - {fileID: 1058976151}
   - {fileID: 2035498297}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &1193213110 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: f950503bd84f3ae459fd805222de7f24, type: 3}
@@ -9912,7 +9915,7 @@ MonoBehaviour:
   - {fileID: 86836384}
   - {fileID: 1504733619}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &1229847036 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: ed50a977ad2d2294394c7e3c3a926355, type: 3}
@@ -10318,7 +10321,7 @@ MonoBehaviour:
   - {fileID: 549129398}
   - {fileID: 555099662}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &1310810845 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 1b1453b12fb6a0149a271eb17b15cfd9, type: 3}
@@ -10500,7 +10503,7 @@ MonoBehaviour:
   adjacentSectors:
   - {fileID: 1764227531}
   landmark: {fileID: 674218996}
-  VC: 0
+  pvc: 0
 --- !u!4 &1333998481 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: a825fca66cd8c9d4ca84f14a9761b46c, type: 3}
@@ -11223,7 +11226,7 @@ MonoBehaviour:
   - {fileID: 1193213106}
   - {fileID: 1814767436}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &1462279708 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: c6eb5879a94aa0847b09b48687823c01, type: 3}
@@ -11311,7 +11314,7 @@ MonoBehaviour:
   - {fileID: 1504733619}
   - {fileID: 252651569}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &1497788364 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 69ff104d08606ea47afd480069d9869a, type: 3}
@@ -11359,7 +11362,7 @@ MonoBehaviour:
   - {fileID: 1497788360}
   - {fileID: 2035498297}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &1504733623 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 209941e65c65fe449987b27ee4d7ab25, type: 3}
@@ -11948,7 +11951,7 @@ MonoBehaviour:
   - {fileID: 607278873}
   - {fileID: 798288505}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &1543727956 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 5b60bc0ae5ee21d41b3e83a9a30fa003, type: 3}
@@ -12516,7 +12519,7 @@ MonoBehaviour:
   - {fileID: 1860884819}
   - {fileID: 607278873}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &1598349749 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 28d5d4726246db54ebc6d74d893805cc, type: 3}
@@ -12957,7 +12960,7 @@ MonoBehaviour:
   - {fileID: 1598349745}
   - {fileID: 607278873}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &1698281855 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 555cea34fdbb9c04692dd65c25553396, type: 3}
@@ -13275,7 +13278,7 @@ MonoBehaviour:
   - {fileID: 86836384}
   - {fileID: 874683425}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &1764227535 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 8939df96045c549479624cfb7c0dca1f, type: 3}
@@ -13368,7 +13371,7 @@ MonoBehaviour:
   - {fileID: 1310810841}
   - {fileID: 555099662}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &1780098138 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 58c47ea75861a784181571b404d6c9d3, type: 3}
@@ -13805,7 +13808,7 @@ MonoBehaviour:
   - {fileID: 1462279704}
   - {fileID: 702129931}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &1814767440 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 2a209d7be0fc78f43812b35c5c1bd9ab, type: 3}
@@ -14074,7 +14077,7 @@ MonoBehaviour:
   - {fileID: 607278873}
   - {fileID: 1543727952}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &1860884823 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: 754037520a40c24479f5af62ddd341f1, type: 3}
@@ -15015,7 +15018,7 @@ MonoBehaviour:
   - {fileID: 1058976151}
   - {fileID: 1598349745}
   landmark: {fileID: 0}
-  VC: 0
+  pvc: 0
 --- !u!4 &2035498301 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: ab56facd28bb0d84990ac3d061570f79, type: 3}

@@ -3,30 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerUI : MonoBehaviour {
-
+public class PlayerUI : MonoBehaviour
+{
     #region Private Fields
 
-    [SerializeField] Player player;
-    [SerializeField] Text header;
-    [SerializeField] Text headerHighlight;
-    [SerializeField] Text percentOwned;
-    [SerializeField] Text attack;
-    [SerializeField] Text defence;
-    [SerializeField] int numberOfSectors;
-    Color defaultHeaderColor = new Color(0.2f, 0.2f, 0.2f, 1.0f);
+    readonly Color defaultHeaderColor = new Color(0.2f, 0.2f, 0.2f, 1.0f);
+
+    Player player;
+    Text header;
+    Text headerHighlight;
+    Text percentOwned;
+    Text attack;
+    Text defence;
+    int numberOfSectors;
 
     #endregion
 
     #region Initialize
+
     /// <summary>
-    /// Loads all the components for a PlayerUI
+    /// Loads all the components for a PlayerUI.
     /// </summary>
-    /// <param name="player">The player object for whom this UI is for</param>
-    /// <param name="player_id">ID of the player</param>
+    /// <param name="player">The player object for whom this UI is for.</param>
+    /// <param name="player_id">ID of the player.</param>
     public void Initialize(Player player, int player_id)
     {
-
         this.player = player;
 
         header = transform.Find("Header").GetComponent<Text>();
@@ -46,23 +47,23 @@ public class PlayerUI : MonoBehaviour {
             headerHighlight.text = header.text;
         }
     }
+
     #endregion
 
     #region Helper Methods
+
     /// <summary>
-    /// Update the text labels in the UI
+    /// Update the text labels in the UI.
     /// </summary>
     public void UpdateDisplay()
     {
-
-        percentOwned.text = Mathf.Round(100 * player.ownedSectors.Count / numberOfSectors).ToString() + "%";
+        percentOwned.text = Mathf.Round(100 * player.OwnedSectors.Count / numberOfSectors).ToString() + "%";
         attack.text = player.AttackBonus.ToString();
         defence.text = player.DefenceBonus.ToString();
-
     }
 
     /// <summary>
-    /// Highlight the player's name in the UI
+    /// Highlight the player's name in the UI.
     /// </summary>
 	public void Activate()
     {
@@ -70,12 +71,13 @@ public class PlayerUI : MonoBehaviour {
     }
 
     /// <summary>
-    /// Un-highlight the player's name in the UI
+    /// Un-highlight the player's name in the UI.
     /// </summary>
 	public void Deactivate()
     {
         header.color = defaultHeaderColor;
     }
+
     #endregion
 
 }

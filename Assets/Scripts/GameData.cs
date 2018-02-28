@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 /// <summary>
 /// Serializable class to store all the properties of a game to initialise it
 /// </summary>
 [System.Serializable]
+[Obsolete("Will be removed/reworked after memento pattern implementation.")]
 public class GameData
 {
     // Define all properties that are needed to instantiate a Game

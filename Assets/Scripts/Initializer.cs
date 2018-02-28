@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 
-public class Initializer : MonoBehaviour {
+public class Initializer : MonoBehaviour
+{
+    #region Unity Bindings
 
     public Game game;
- 
-    /// <summary>
-    /// start the game 
-    /// </summary>
+
+    #endregion
+
+    #region MonoBehaviour
+
     void Start()
     {
         switch (PlayerPrefs.GetInt("_gamemode", 0))
@@ -29,4 +32,6 @@ public class Initializer : MonoBehaviour {
                 break;
         }
     }
+
+    #endregion
 }

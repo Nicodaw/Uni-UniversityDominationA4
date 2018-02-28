@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Landmark : MonoBehaviour
 {
+    #region Unity Bindings
 
-    #region Private Fields
-    [SerializeField] ResourceType resourceType;
-    [SerializeField] int amount = 2;
+    public ResourceType resourceType;
+    public int amount = 2;
+
     #endregion
 
     #region Public Properties

@@ -200,12 +200,12 @@ public class UnitTest
         sector.Unit = unit;
 
         unit.Owner = player;
-        player.units.Add(unit);
+        player.Units.Add(unit);
 
         unit.DestroySelf();
 
         Assert.IsNull(sector.Unit); // unit not on sector 
-        Assert.IsFalse(player.units.Contains(unit)); // unit not in list of players units
+        Assert.IsFalse(player.Units.Contains(unit)); // unit not in list of players units
 
         yield return null;
     }

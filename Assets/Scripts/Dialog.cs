@@ -9,15 +9,23 @@ public class Dialog : MonoBehaviour
 {
     #region Unity Bindings
 
-    public GameObject texture;
+    public GameObject dialogTitle;
+    public GameObject dialogInfo;
+    public GameObject dialogOkay;
+    public GameObject dialogRestart;
+    public GameObject dialogQuit;
+    public GameObject dialogSaveQuit;
+    public GameObject dialogCloseDialogBtn;
 
     #endregion
 
     #region Private fields
 
-    private DialogType type;
+    DialogType type;
 
     #endregion
+
+    #region Helper Methods
 
     /// <summary>
     /// Sets up the dialog in the format of the passed dialog type
@@ -29,86 +37,87 @@ public class Dialog : MonoBehaviour
         switch (type)
         {
             case DialogType.EndGame:
-                texture.transform.GetChild(0).GetComponent<Text>().text = "GAME OVER!"; // Hides the unnecessary buttons and shows the others
-                texture.transform.GetChild(1).gameObject.SetActive(false);
-                texture.transform.GetChild(2).gameObject.SetActive(false);
-                texture.transform.GetChild(3).gameObject.SetActive(true);
-                texture.transform.GetChild(4).gameObject.SetActive(true);
-                texture.transform.GetChild(5).gameObject.SetActive(false);
-                texture.transform.GetChild(6).gameObject.SetActive(false);
+                ApplyDialogState("GAME OVER!", false, false, true, true, false, false);
                 break;
             case DialogType.PlayerElimated:
-                texture.transform.GetChild(0).GetComponent<Text>().text = "ELIMINATED!";
-                texture.transform.GetChild(1).gameObject.SetActive(true);
-                texture.transform.GetChild(2).gameObject.SetActive(true);
-                texture.transform.GetChild(3).gameObject.SetActive(false);
-                texture.transform.GetChild(4).gameObject.SetActive(false);
-                texture.transform.GetChild(5).gameObject.SetActive(false);
-                texture.transform.GetChild(6).gameObject.SetActive(false);
+                ApplyDialogState("ELIMINATED!", true, true, false, false, false, false);
                 break;
             case DialogType.SaveQuit:
-                texture.transform.GetChild(0).GetComponent<Text>().text = "PAUSED";
-                texture.transform.GetChild(1).GetComponent<Text>().text = "";
-                texture.transform.GetChild(2).gameObject.SetActive(false);
-                texture.transform.GetChild(3).gameObject.SetActive(false);
-                texture.transform.GetChild(4).gameObject.SetActive(true);
-                texture.transform.GetChild(5).gameObject.SetActive(true);
-                texture.transform.GetChild(6).gameObject.SetActive(true);
+                ApplyDialogState("PAUSED", false, false, false, true, true, true, "");
                 break;
             case DialogType.ShowText:
-                texture.transform.GetChild(0).GetComponent<Text>().text = "";
-                texture.transform.GetChild(1).gameObject.SetActive(true);
-                texture.transform.GetChild(2).gameObject.SetActive(true);
-                texture.transform.GetChild(3).gameObject.SetActive(false);
-                texture.transform.GetChild(4).gameObject.SetActive(false);
-                texture.transform.GetChild(5).gameObject.SetActive(false);
-                texture.transform.GetChild(6).gameObject.SetActive(false);
+                ApplyDialogState("", true, true, false, false, false, false);
                 break;
 
         }
     }
 
     /// <summary>
-    /// Sets the players name in this dialog 
+    /// Applies the given state to the dialog.
     /// </summary>
-    /// <param name="name">The player's name who this dialog refers to</param>
-    public void SetDialogData(string data)
+    /// <param name="titleText">The title text.</param>
+    /// <param name="infoEnabled">Whether the info object is enabled.</param>
+    /// <param name="okayEnabled">Whether the okay object is enabled.</param>
+    /// <param name="restartEnabled">Whether the restart object is enabled.</param>
+    /// <param name="quitEnabled">Whether the quit object is enabled.</param>
+    /// <param name="saveQuitEnabled">Whether the save &amp; quit object is enabled.</param>
+    /// <param name="closeEnabled">Whether the close object is enabled.</param>
+    void ApplyDialogState(string titleText,
+                          bool infoEnabled, bool okayEnabled,
+                          bool restartEnabled, bool quitEnabled,
+                          bool saveQuitEnabled, bool closeEnabled,
+                          string infoText = null)
+    {
+        dialogTitle.GetComponent<Text>().text = titleText;
+        dialogInfo.SetActive(infoEnabled);
+        if (infoText != null)
+            dialogInfo.GetComponent<Text>().text = infoText;
+        dialogOkay.SetActive(okayEnabled);
+        dialogRestart.SetActive(restartEnabled);
+        dialogQuit.SetActive(quitEnabled);
+        dialogSaveQuit.SetActive(saveQuitEnabled);
+        dialogCloseDialogBtn.SetActive(closeEnabled);
+    }
+
+    /// <summary>
+    /// Sets the players name in this dialog.
+    /// </summary>
+    /// <param name="player">The player's name who this dialog refers to.</param>
+    public void SetDialogData(string player)
     {
         switch (type)
         {
             case DialogType.EndGame:
-                texture.transform.GetChild(1).GetComponent<Text>().text = data + " WON!";
+                dialogInfo.GetComponent<Text>().text = player + " WON!";
                 break;
             case DialogType.PlayerElimated:
-                texture.transform.GetChild(1).GetComponent<Text>().text = data + "\nwas eliminated";
+                dialogInfo.GetComponent<Text>().text = player + "\nwas eliminated";
                 break;
         }
     }
 
     /// <summary>
-    /// Creates a dialog with specific header and bidy text
+    /// Creates a dialog with specific header and bidy text.
     /// </summary>
-    /// <param name="header">Header text</param>
-    /// <param name="body">Body text</param>
+    /// <param name="header">Header text.</param>
+    /// <param name="body">Body text.</param>
     public void SetDialogData(string header, string body)
     {
         switch (type)
         {
             case DialogType.ShowText:
-                texture.transform.GetChild(0).GetComponent<Text>().text = header;
-                texture.transform.GetChild(1).GetComponent<Text>().text = body;
+                dialogTitle.GetComponent<Text>().text = header;
+                dialogInfo.GetComponent<Text>().text = body;
                 break;
         }
     }
 
-
-    #region Helper Methods
     /// <summary>
     /// Displays this dialog
     /// </summary>
     public void Show()
     {
-        texture.SetActive(true);
+        gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -117,11 +126,11 @@ public class Dialog : MonoBehaviour
     public void Close()
     {
         Debug.Log("Closing");
-        texture.SetActive(false);
+        gameObject.SetActive(false);
     }
 
     /// <summary>
-    /// Changes to the previous sce3ne
+    /// Changes to the previous scene
     /// </summary>
     public void Exit()
     {
@@ -135,7 +144,6 @@ public class Dialog : MonoBehaviour
     {
         SceneManager.LoadScene(0);
     }
+
     #endregion
-
-
 }

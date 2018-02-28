@@ -34,11 +34,11 @@ public class PlayerTest
 
         game.players[0].Capture(map.sectors[0]);
         Assert.AreSame(map.sectors[0].Owner, game.players[0]); // owner stored in sector
-        Assert.IsTrue(game.players[0].ownedSectors.Contains(map.sectors[0])); // sector is stored as owned by the player
+        Assert.IsTrue(game.players[0].OwnedSectors.Contains(map.sectors[0])); // sector is stored as owned by the player
 
 		if (/*run == true*/previousOwner != null) // if sector had previous owner
         {
-            Assert.IsFalse(previousOwner.ownedSectors.Contains(map.sectors[0])); // sector has been removed from previous owner list
+            Assert.IsFalse(previousOwner.OwnedSectors.Contains(map.sectors[0])); // sector has been removed from previous owner list
         }
 
         yield return null;
@@ -70,7 +70,7 @@ public class PlayerTest
 
         // ensure sector is captured correctly
         Assert.AreSame(landmarkedSector.Owner, playerA);
-        Assert.IsTrue(playerA.ownedSectors.Contains(landmarkedSector));
+        Assert.IsTrue(playerA.OwnedSectors.Contains(landmarkedSector));
 
         // ensure resources are transferred correctly
         Assert.IsTrue(attackerBeerBeforeCapture + landmark.Amount == playerA.AttackBonus);
@@ -105,7 +105,7 @@ public class PlayerTest
 
         // ensure sector is captured correctly
         Assert.AreSame(landmarkedSector.Owner, playerA);
-        Assert.IsTrue(playerA.ownedSectors.Contains(landmarkedSector));
+        Assert.IsTrue(playerA.OwnedSectors.Contains(landmarkedSector));
 
         // ensure resources are transferred correctly
         Assert.IsTrue(attackerKnowledgeBeforeCapture + landmark.Amount == playerA.DefenceBonus);
@@ -136,7 +136,7 @@ public class PlayerTest
 
         // ensure sector is captured correctly
         Assert.AreSame(landmarkedSector.Owner, playerA);
-        Assert.IsTrue(playerA.ownedSectors.Contains(landmarkedSector));
+        Assert.IsTrue(playerA.OwnedSectors.Contains(landmarkedSector));
 
         // ensure resources are gained correctly
         Assert.IsTrue(playerA.AttackBonus - oldBeer == landmark.Amount);
@@ -166,7 +166,7 @@ public class PlayerTest
 
         // ensure sector is captured correctly
         Assert.AreSame(landmarkedSector.Owner, playerA);
-        Assert.IsTrue(playerA.ownedSectors.Contains(landmarkedSector));
+        Assert.IsTrue(playerA.OwnedSectors.Contains(landmarkedSector));
 
         // ensure resources are gained correctly
         Assert.IsTrue(playerA.DefenceBonus - oldKnowledge == landmark.Amount);
@@ -191,7 +191,7 @@ public class PlayerTest
         playerA.SpawnUnits();
 
         // ensure a unit has been spawned for playerA in landmarkedSector
-        Assert.IsTrue(playerA.units.Contains(landmarkedSector.Unit));
+        Assert.IsTrue(playerA.Units.Contains(landmarkedSector.Unit));
 
         yield return null;
     }
@@ -253,18 +253,18 @@ public class PlayerTest
 
         Assert.IsFalse(playerA.IsEliminated()); // not eliminated because they have units
 
-        for (int i = 0; i < playerA.units.Count; i++)
+        for (int i = 0; i < playerA.Units.Count; i++)
         {
-            playerA.units[i].DestroySelf(); // removes units
+            playerA.Units[i].DestroySelf(); // removes units
         }
         Assert.IsFalse(playerA.IsEliminated()); // not eliminated because they still have a landmark
 
         // player[0] needs to lose their landmark
-        for (int i = 0; i < playerA.ownedSectors.Count; i++)
+        for (int i = 0; i < playerA.OwnedSectors.Count; i++)
         {
-            if (playerA.ownedSectors[i].Landmark != null)
+            if (playerA.OwnedSectors[i].Landmark != null)
             {
-                playerA.ownedSectors[i].Landmark = null; // player[0] no longer has landmarks
+                playerA.OwnedSectors[i].Landmark = null; // player[0] no longer has landmarks
             }
         }
         Assert.IsTrue(playerA.IsEliminated());
