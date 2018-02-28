@@ -6,16 +6,23 @@ using UnityEngine.UI;
 
 public class MinigameManager : MonoBehaviour
 {
-
     #region Unity Bindings
 
     public static MinigameManager instance;
-    [SerializeField] GameObject birdPrefab, pillarPrefab, cloudPrefab;
-    [SerializeField] GameObject startPos;
-    [SerializeField] GameObject uiOverlay, loseOverlay, minCoinSpawn, maxCoinSpawn;
-    [SerializeField] [Multiline] string initialText, winText, loseText;
-    [SerializeField] Vector3 minPos, maxPos;
-    [SerializeField] float maxScore = 10;
+    public GameObject birdPrefab;
+    public GameObject pillarPrefab;
+    public GameObject cloudPrefab;
+    public GameObject startPos;
+    public GameObject uiOverlay, loseOverlay, minCoinSpawn, maxCoinSpawn;
+    [Multiline]
+    public string initialText;
+    [Multiline]
+    public string winText;
+    [Multiline]
+    public string loseText;
+    public Vector3 minPos;
+    public Vector3 maxPos;
+    public float maxScore = 10;
 
     #endregion
 
@@ -28,10 +35,23 @@ public class MinigameManager : MonoBehaviour
 
     #endregion
 
-    #region MonoBehaviour
-    private void Awake()
+    #region Private Properties
+
+    bool WonGame
     {
-        instance = null;
+        get { return birdComponent.GetScore() >= maxScore; }
+    }
+
+    #endregion
+
+    #region MonoBehaviour
+
+    void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(this);
         MovingPillars.Reset();
     }
 
@@ -40,14 +60,6 @@ public class MinigameManager : MonoBehaviour
     /// </summary>
     void Start()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(this);
-        }
         GameObject goBird = Instantiate(birdPrefab, Vector3.zero, Quaternion.identity, startPos.transform);
         goBird.transform.localPosition = Vector3.zero;
         goBird.transform.localRotation = Quaternion.identity;
@@ -65,13 +77,13 @@ public class MinigameManager : MonoBehaviour
         {
             birdComponent.Pause();
         }
-        if (birdComponent.GetScore() == maxScore || birdComponent.IsDead())
+        if (WonGame || birdComponent.IsDead())
         {
             PlayerPrefs.SetInt("_mgScore", birdComponent.GetScore());
             if (gameOver)
                 return;
             gameOver = true;
-            StartCoroutine(EndGame(birdComponent.GetScore() == maxScore));
+            StartCoroutine(EndGame(WonGame));
         }
         if (birdComponent.IsPaused() == false)
         {
@@ -79,10 +91,11 @@ public class MinigameManager : MonoBehaviour
         }
         SpawnCloud();
     }
+
     #endregion
 
-
     #region Helper Methods
+
     /// <summary>
     /// Ends the game and reloads the main game scene
     /// </summary>
@@ -120,7 +133,7 @@ public class MinigameManager : MonoBehaviour
     /// <param name="position">where to measure distance from</param>
     /// <param name="range">Max length of vector</param>
     /// <returns></returns>
-    private Vector3 GetRandomValueBetweenWhilstAvoiding(Vector3 min, Vector3 max, Vector3 position, float range)
+    Vector3 GetRandomValueBetweenWhilstAvoiding(Vector3 min, Vector3 max, Vector3 position, float range)
     {
         Vector3 newPos = position;
         while (Vector3.Distance(newPos, position) <= range)
@@ -156,7 +169,6 @@ public class MinigameManager : MonoBehaviour
             clouds[clouds.Count - 1].GetComponent<MovingPillars>().SetSpeed(Random.value * 2 + 3);
         }
     }
+
     #endregion
-
-
 }

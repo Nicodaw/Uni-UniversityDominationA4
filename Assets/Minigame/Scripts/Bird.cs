@@ -7,33 +7,35 @@ using UnityEngine;
 public class Bird : MonoBehaviour
 {
     #region Unity Bindings
-    [SerializeField] float speed;
-    [SerializeField] float gravity;
-    [SerializeField] float jumpForce;
-    [SerializeField] float maxYVelocity = 0.1f;
-    [SerializeField] Material[] states = new Material[2];
+
+    public float speed;
+    public float gravity;
+    public float jumpForce;
+    public float maxYVelocity = 0.1f;
+    public Material[] states = new Material[2];
+
     #endregion
 
     #region Private fields
+
     new MeshRenderer renderer;
     int score;
     float yVel;
     Rigidbody rb;
     bool dead = false;
     bool paused = true;
+
     #endregion
 
     #region MonoBehaviour
-    private void Start()
+
+    void Start()
     {
         rb = GetComponent<Rigidbody>();
         renderer = GetComponent<MeshRenderer>();
     }
 
-    /// <summary>
-    /// Update bird position
-    /// </summary>
-    public void Update()
+    void Update()
     {
         float dx = 0;
         yVel = Mathf.Min(yVel + gravity, maxYVelocity);
@@ -56,16 +58,36 @@ public class Bird : MonoBehaviour
         }
         rb.velocity = new Vector3(-dx, -yVel, 0);
         Debug.Log(rb.velocity);
-
     }
+
+    /// <summary>
+    /// Handle the bird colliding with something
+    /// </summary>
+    /// <param name="collision">The collision event</param>
+    void OnCollisionEnter(Collision collision)
+    {
+        //Debug.Log("Collision Detected!");
+        if (collision.transform.tag == "Coin")
+        {
+            Destroy(collision.gameObject);
+            score++;
+        }
+        else if (collision.transform.tag == "Ground")
+        {
+            MovingPillars.Stop();
+            paused = true;
+            dead = true;
+            rb.constraints = RigidbodyConstraints.FreezePositionZ;
+        }
+    }
+
     #endregion
 
     #region Helper Methods
+
     /// <summary>
     /// Sets up bird from scene components
     /// </summary>
-
-
     IEnumerator SwapStates()
     {
         yield return new WaitForSeconds(0.1f);
@@ -99,27 +121,6 @@ public class Bird : MonoBehaviour
     }
 
     /// <summary>
-    /// Handle the bird colliding with something
-    /// </summary>
-    /// <param name="collision">The collision event</param>
-    private void OnCollisionEnter(Collision collision)
-    {
-        //Debug.Log("Collision Detected!");
-        if (collision.transform.tag == "Coin")
-        {
-            Destroy(collision.gameObject);
-            score++;
-        }
-        else if (collision.transform.tag == "Ground")
-        {
-            MovingPillars.Stop();
-            paused = true;
-            dead = true;
-            rb.constraints = RigidbodyConstraints.FreezePositionZ;
-        }
-    }
-
-    /// <summary>
     /// Returns if the game is paused or not
     /// </summary>
     /// <returns>True if game is paused else false</returns>
@@ -135,7 +136,6 @@ public class Bird : MonoBehaviour
     {
         paused = true;
     }
+
     #endregion
-
-
 }

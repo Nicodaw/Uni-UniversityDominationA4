@@ -2,15 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovingPillars : MonoBehaviour {
+public class MovingPillars : MonoBehaviour
+{
+    #region Unity Bindings
 
-    [SerializeField] float speed;
+    public float speed;
+
+    #endregion
+
+    #region Private Fields
 
     static bool stopped = false;
 
-	void Update () {
-        transform.position -= new Vector3(stopped ? 0 : speed * Time.deltaTime, 0, 0);
-	}
+    #endregion
+
+    #region MonoBehvaiour
+
+    void Update()
+    {
+        if (!stopped)
+            transform.position -= new Vector3(speed * Time.deltaTime, 0, 0);
+    }
+
+    #endregion
+
+    #region Helper Methods
 
     public static void Stop()
     {
@@ -26,4 +42,6 @@ public class MovingPillars : MonoBehaviour {
     {
         this.speed = speed;
     }
+
+    #endregion
 }
