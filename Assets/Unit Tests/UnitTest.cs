@@ -8,7 +8,7 @@ public class UnitTest : BaseGameTest
     {
         Unit unit = InitUnit();
         Sector sectorA = map.sectors[0];
-        Player playerA = players[0];
+        Player playerA = Players[0];
 
         // test moving from null
         unit.Sector = null;
@@ -27,7 +27,7 @@ public class UnitTest : BaseGameTest
         Unit unit = InitUnit();
         Sector sectorA = map.sectors[0];
         Sector sectorB = map.sectors[1];
-        Player playerA = players[0];
+        Player playerA = Players[0];
 
         // test moving from one sector to another
         unit.Sector = sectorA;
@@ -48,7 +48,7 @@ public class UnitTest : BaseGameTest
     {
         Unit unit = InitUnit();
         Sector sectorA = map.sectors[0];
-        Player playerA = players[0];
+        Player playerA = Players[0];
 
         // test moving into a friendly sector (no level up)
         unit.Level = 1;
@@ -65,8 +65,8 @@ public class UnitTest : BaseGameTest
     {
         Unit unit = InitUnit();
         Sector sectorA = map.sectors[0];
-        Player playerA = players[0];
-        Player playerB = players[1];
+        Player playerA = Players[0];
+        Player playerB = Players[1];
 
         // test moving into a non-friendly sector (level up)
         unit.Level = 1;
@@ -87,7 +87,7 @@ public class UnitTest : BaseGameTest
 
         Sector sectorA = map.sectors[0];
         Sector sectorB = map.sectors[1];
-        Player player = players[0];
+        Player player = Players[0];
 
         // places players unitA in sectorA
         units[0].Owner = player;
@@ -149,7 +149,7 @@ public class UnitTest : BaseGameTest
     {
         Unit unit = InitUnit();
         Sector sector = map.sectors[0];
-        Player player = players[0];
+        Player player = Players[0];
 
         unit.Sector = sector;
         sector.Unit = unit;

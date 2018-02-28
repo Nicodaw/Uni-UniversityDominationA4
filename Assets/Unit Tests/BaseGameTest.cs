@@ -10,8 +10,12 @@ public abstract class BaseGameTest
 
     protected Game game;
     protected Map map;
-    protected Player[] players;
     protected PlayerUI[] gui;
+
+    protected Player[] Players
+    {
+        get { return game.players; }
+    }
 
     #endregion
 
@@ -25,7 +29,6 @@ public abstract class BaseGameTest
         // grab main game assets
         game = Object.Instantiate(Resources.Load<GameObject>("GameManager")).GetComponent<Game>();
         map = Object.Instantiate(Resources.Load<GameObject>("Map")).GetComponent<Map>();
-        players = game.Players;
 
         // grab GUI asset and extract players UIs
         GameObject mainGui = Object.Instantiate(Resources.Load<GameObject>("GUI"));
@@ -44,11 +47,11 @@ public abstract class BaseGameTest
         map.sectors = map.gameObject.GetComponentsInChildren<Sector>();
 
         // establish references to a PlayerUI and Game for each player & initialize GUI
-        for (int i = 0; i < players.Length; i++)
+        for (int i = 0; i < Players.Length; i++)
         {
-            players[i].Gui = gui[i];
-            players[i].Game = game;
-            players[i].Gui.Initialize(players[i], i + 1);
+            Players[i].Gui = gui[i];
+            Players[i].Game = game;
+            Players[i].Gui.Initialize(Players[i], i + 1);
         }
         game.neutralPlayer.Gui = gui.Last();
         game.neutralPlayer.Game = game;
@@ -59,7 +62,7 @@ public abstract class BaseGameTest
     {
         Object.Destroy(game.gameObject);
         Object.Destroy(map.gameObject);
-        Object.Destroy(players[0].transform.parent.gameObject);
+        Object.Destroy(Players[0].transform.parent.gameObject);
         Object.Destroy(gui[0].transform.parent.gameObject);
         foreach (GameObject go in unitObjects)
             if (go != null)
@@ -73,7 +76,7 @@ public abstract class BaseGameTest
     /// <param name="player">The player to take the unit prefab from.</param>
     protected Unit InitUnit(int player = 0)
     {
-        GameObject go = Object.Instantiate(players[player].UnitPrefab);
+        GameObject go = Object.Instantiate(Players[player].UnitPrefab);
         unitObjects.Add(go);
         return go.GetComponent<Unit>();
     }

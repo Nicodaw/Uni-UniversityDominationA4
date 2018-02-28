@@ -9,7 +9,7 @@ public class SectorTest : BaseGameTest
     {
         Sector sector = map.sectors[0];
         sector.Owner = null;
-        Player player = players[0];
+        Player player = Players[0];
 
         sector.Owner = player;
         Assert.That(sector.Owner, Is.EqualTo(player));
@@ -70,8 +70,8 @@ public class SectorTest : BaseGameTest
         Sector sectorA = map.sectors[0];
         Sector sectorB = map.sectors[1];
         Sector sectorC = map.sectors[2];
-        Player playerA = players[0];
-        Player playerB = players[1];
+        Player playerA = Players[0];
+        Player playerB = Players[1];
         Unit unitA = InitUnit(0);
         Unit unitB = InitUnit(1);
 
@@ -161,14 +161,14 @@ public class SectorTest : BaseGameTest
         sectorA.Unit = InitUnit(0);
         sectorA.Unit.Sector = sectorA;
         sectorA.Unit.Level = 5;
-        sectorA.Unit.Owner = players[0];
-        sectorA.Owner = players[0];
+        sectorA.Unit.Owner = Players[0];
+        sectorA.Owner = Players[0];
 
         sectorB.Unit = InitUnit(0);
         sectorB.Unit.Sector = sectorB;
         sectorB.Unit.Level = 1;
-        sectorB.Unit.Owner = players[0];
-        sectorB.Owner = players[0];
+        sectorB.Unit.Owner = Players[0];
+        sectorB.Owner = Players[0];
 
         sectorB.MoveIntoFriendlyUnit(sectorA.Unit);
         Assert.That(sectorA.Unit.Level, Is.EqualTo(1)); // level 1 unit now in sectorA
@@ -252,14 +252,14 @@ public class SectorTest : BaseGameTest
 
         sectorA.Unit = InitUnit(0);
         sectorA.Unit.Sector = sectorA;
-        sectorA.Unit.Owner = players[0];
-        sectorA.Owner = players[0];
+        sectorA.Unit.Owner = Players[0];
+        sectorA.Owner = Players[0];
         sectorA.Unit.Level = 1;
 
         sectorB.Unit = InitUnit(1);
         sectorB.Unit.Sector = sectorB;
-        sectorB.Unit.Owner = players[1];
-        sectorB.Owner = players[1];
+        sectorB.Unit.Owner = Players[1];
+        sectorB.Owner = Players[1];
         sectorB.Unit.Level = 1;
     }
 

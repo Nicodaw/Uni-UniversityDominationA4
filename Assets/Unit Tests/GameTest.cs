@@ -13,10 +13,10 @@ public class GameTest : BaseGameTest
     {
         game.CreatePlayers(false);
         // ensure creation of 4 players is accurate
-        Assert.That(game.GetComponent<Game>().players[0].Human);
-        Assert.That(game.GetComponent<Game>().players[1].Human);
-        Assert.That(game.GetComponent<Game>().players[2].Human);
-        Assert.That(game.GetComponent<Game>().players[3].Human);
+        Assert.That(Players[0].Human);
+        Assert.That(Players[1].Human);
+        Assert.That(Players[2].Human);
+        Assert.That(Players[3].Human);
     }
 
     // Test added by Owain
@@ -26,10 +26,10 @@ public class GameTest : BaseGameTest
         game.CreatePlayers(true);
 
         // ensure game with three players and one neutral is accurate
-        Assert.That(game.GetComponent<Game>().players[0].Human);
-        Assert.That(game.GetComponent<Game>().players[1].Human);
-        Assert.That(game.GetComponent<Game>().players[2].Human);
-        Assert.That(game.GetComponent<Game>().players[3].Neutral);
+        Assert.That(Players[0].Human);
+        Assert.That(Players[1].Human);
+        Assert.That(Players[2].Human);
+        Assert.That(Players[3].Neutral);
     }
 
     [Test]
@@ -40,7 +40,7 @@ public class GameTest : BaseGameTest
 
         // ensure that each player owns 1 sector and has 1 unit at that sector
         List<Sector> listOfAllocatedSectors = new List<Sector>();
-        foreach (Player player in players)
+        foreach (Player player in Players)
         {
             Assert.That(player.OwnedSectors.Count, Is.EqualTo(1));
             Assert.That(player.OwnedSectors[0].Landmark, Is.Not.Null);
@@ -73,7 +73,7 @@ public class GameTest : BaseGameTest
         Assert.That(game.NoUnitSelected());
 
         // select a unit
-        players[0].Units[0].IsSelected = true;
+        Players[0].Units[0].IsSelected = true;
 
         // assert that NoUnitSelected returns false
         Assert.That(game.NoUnitSelected(), Is.False);
@@ -82,10 +82,10 @@ public class GameTest : BaseGameTest
     [Test]
     public void NextPlayer_CurrentPlayerChangesToNextPlayerEachTime()
     {
-        Player playerA = players[0];
-        Player playerB = players[1];
-        Player playerC = players[2];
-        Player playerD = players[3];
+        Player playerA = Players[0];
+        Player playerB = Players[1];
+        Player playerC = Players[2];
+        Player playerD = Players[3];
 
         // set the current player to the first player
         game.currentPlayer = playerA;
@@ -123,10 +123,10 @@ public class GameTest : BaseGameTest
     [UnityTest]
     public IEnumerator NextPlayer_EliminatedPlayersAreSkipped()
     {
-        Player playerA = players[0];
-        Player playerB = players[1];
-        Player playerC = players[2];
-        Player playerD = players[3];
+        Player playerA = Players[0];
+        Player playerB = Players[1];
+        Player playerC = Players[2];
+        Player playerD = Players[3];
 
         game.currentPlayer = playerA;
 
@@ -148,7 +148,7 @@ public class GameTest : BaseGameTest
     public void NeutralPlayerTurn_EnsureNeutralPlayerMovesCorrectly()
     {
         game.Initialize(true);
-        game.currentPlayer = players[3];
+        game.currentPlayer = Players[3];
         Assert.That(game.currentPlayer.Units.Count, Is.EqualTo(1));
         Sector[] adjacentSectors = game.currentPlayer.Units[0].Sector.AdjacentSectors;
         game.NeutralPlayerTurn();
@@ -191,7 +191,7 @@ public class GameTest : BaseGameTest
     public void GetWinner_OnePlayerWithLandmarksAndUnitsWins()
     {
         Sector landmark1 = map.sectors[1];
-        Player playerA = players[0];
+        Player playerA = Players[0];
 
         // ensure 'landmark1' is a landmark
         landmark1.Initialize();
@@ -209,8 +209,8 @@ public class GameTest : BaseGameTest
     {
         Sector landmark1 = map.sectors[1];
         Sector landmark2 = map.sectors[7];
-        Player playerA = players[0];
-        Player playerB = players[1];
+        Player playerA = Players[0];
+        Player playerB = Players[1];
 
         // ensure'landmark1' and 'landmark2' are landmarks
         landmark1.Initialize();
@@ -228,8 +228,8 @@ public class GameTest : BaseGameTest
     [Test]
     public void GetWinner_NoWinnerWhenMultiplePlayersWithUnits()
     {
-        Player playerA = players[0];
-        Player playerB = players[1];
+        Player playerA = Players[0];
+        Player playerB = Players[1];
 
         // ensure no winner is found if >1 players have a unit
         ClearSectorsAndUnitsOfAllPlayers();
@@ -242,8 +242,8 @@ public class GameTest : BaseGameTest
     public void GetWinner_NoWinnerWhenAPlayerHasLandmarkAndAnotherHasUnits()
     {
         Sector landmark1 = map.sectors[1];
-        Player playerA = players[0];
-        Player playerB = players[1];
+        Player playerA = Players[0];
+        Player playerB = Players[1];
 
         // ensure 'landmark1' is a landmark
         landmark1.Initialize();
@@ -259,7 +259,7 @@ public class GameTest : BaseGameTest
 
     void ClearSectorsAndUnitsOfAllPlayers()
     {
-        foreach (Player player in players)
+        foreach (Player player in Players)
             ClearSectorsAndUnits(player);
     }
 
@@ -272,12 +272,12 @@ public class GameTest : BaseGameTest
     [Test]
     public void EndGame_GameEndsCorrectlyWithNoCurrentPlayerAndNoActivePlayersAndNoTurnState()
     {
-        foreach (Player player in players)
+        foreach (Player player in Players)
         {
             player.Units.Clear();
             player.OwnedSectors.Clear();
         }
-        game.currentPlayer = players[0];
+        game.currentPlayer = Players[0];
         game.currentPlayer.Units.Add(null);
         game.EndGame();
 
