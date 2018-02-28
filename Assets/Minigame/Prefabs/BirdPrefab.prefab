@@ -21,9 +21,9 @@ GameObject:
   - component: {fileID: 4848387644708160}
   - component: {fileID: 33442675938571498}
   - component: {fileID: 23890526987619892}
-  - component: {fileID: 114352560914453620}
   - component: {fileID: 135026151299204882}
   - component: {fileID: 54316161259551986}
+  - component: {fileID: 114575671342100634}
   m_Layer: 0
   m_Name: BirdPrefab
   m_TagString: Untagged
@@ -100,7 +100,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 120
   m_CollisionDetection: 0
---- !u!114 &114352560914453620
+--- !u!114 &114575671342100634
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -108,7 +108,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1562835215430058}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e83bcdce8423884ab6a20bb1bc35f50, type: 3}
+  m_Script: {fileID: 11500000, guid: 8eeca789567203a4daf3440453c466c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5

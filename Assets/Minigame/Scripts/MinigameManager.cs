@@ -4,25 +4,31 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-// Added by Jack
-public class MinigameManager : MonoBehaviour {
+public class MinigameManager : MonoBehaviour
+{
+
+    #region Unity Bindings
 
     public static MinigameManager instance;
-
     [SerializeField] GameObject birdPrefab, pillarPrefab, cloudPrefab;
     [SerializeField] GameObject startPos;
     [SerializeField] GameObject uiOverlay, loseOverlay, minCoinSpawn, maxCoinSpawn;
-    [SerializeField][Multiline] string initialText, winText, loseText;
+    [SerializeField] [Multiline] string initialText, winText, loseText;
     [SerializeField] Vector3 minPos, maxPos;
     [SerializeField] float maxScore = 10;
 
+    #endregion
+
+    #region Private Fields
+
     List<GameObject> pillars = new List<GameObject>();
     List<GameObject> clouds = new List<GameObject>();
-
     bool gameOver = false;
-
     Bird birdComponent;
 
+    #endregion
+
+    #region MonoBehaviour
     private void Awake()
     {
         instance = null;
@@ -30,11 +36,10 @@ public class MinigameManager : MonoBehaviour {
     }
 
     /// <summary>
-    /// 
     /// Starts the mini game
-    /// 
     /// </summary>
-    void Start () {
+    void Start()
+    {
         if (instance == null)
         {
             instance = this;
@@ -48,20 +53,19 @@ public class MinigameManager : MonoBehaviour {
         goBird.transform.localRotation = Quaternion.identity;
         birdComponent = goBird.GetComponent<Bird>();
         StartCoroutine(Countdown());
-	}
+    }
 
     /// <summary>
-    /// 
     /// Updates the mini game
-    /// 
     /// </summary>
-    void Update() {
+    void Update()
+    {
         Vector3 pos = birdComponent.transform.position;
         if (!(pos.x > minPos.x && pos.x < maxPos.x && pos.y > minPos.y && pos.y < maxPos.y))
         {
             birdComponent.Pause();
         }
-        if (birdComponent.GetScore() == maxScore  || birdComponent.IsDead())
+        if (birdComponent.GetScore() == maxScore || birdComponent.IsDead())
         {
             PlayerPrefs.SetInt("_mgScore", birdComponent.GetScore());
             if (gameOver)
@@ -75,26 +79,25 @@ public class MinigameManager : MonoBehaviour {
         }
         SpawnCloud();
     }
+    #endregion
 
+
+    #region Helper Methods
     /// <summary>
-    /// 
     /// Ends the game and reloads the main game scene
-    /// 
     /// </summary>
     /// <param name="won">True if the player won the minigame else false</param>
     IEnumerator EndGame(bool won)
     {
         PlayerPrefs.SetInt("_gamemode", 3);
         loseOverlay.SetActive(true);
-        loseOverlay.transform.GetChild(0).GetComponent<Text>().text = string.Format(won? winText : loseText, birdComponent.GetScore());
+        loseOverlay.transform.GetChild(0).GetComponent<Text>().text = string.Format(won ? winText : loseText, birdComponent.GetScore());
         yield return new WaitForSeconds(3);
         SceneManager.LoadScene(1);
     }
 
     /// <summary>
-    /// 
     /// Updates the countdown berfore the minigame starts
-    /// 
     /// </summary>
     IEnumerator Countdown()
     {
@@ -108,11 +111,9 @@ public class MinigameManager : MonoBehaviour {
     }
 
     /// <summary>
-    /// 
-    /// Returns avector with a random x and z value, y = 0
+    /// Returns a vector with a random x and z value, y = 0
     /// x and z values are in range specified by min and max
     /// total length of vector is less than range
-    /// 
     /// </summary>
     /// <param name="min">min x and z value</param>
     /// <param name="max">max x and z value</param>
@@ -130,9 +131,7 @@ public class MinigameManager : MonoBehaviour {
     }
 
     /// <summary>
-    /// 
     /// Adds a pilar to the minigame scene
-    /// 
     /// </summary>
     public void SpawnPillar()
     {
@@ -147,9 +146,7 @@ public class MinigameManager : MonoBehaviour {
     }
 
     /// <summary>
-    /// 
     /// Adds a cloud to the minigame scene
-    /// 
     /// </summary>
     public void SpawnCloud()
     {
@@ -158,6 +155,8 @@ public class MinigameManager : MonoBehaviour {
             clouds.Add(Instantiate(cloudPrefab, new Vector3(10.5f, Random.value * 3 + 1.5f, Random.value * 0.2f - 0.1f + 6.21f), Quaternion.Euler(90, 180, 0)));
             clouds[clouds.Count - 1].GetComponent<MovingPillars>().SetSpeed(Random.value * 2 + 3);
         }
-    }  
+    }
+    #endregion
+
 
 }

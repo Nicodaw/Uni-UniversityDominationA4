@@ -8,7 +8,6 @@ public class MovingPillars : MonoBehaviour {
 
     static bool stopped = false;
 
-	// Update is called once per frame
 	void Update () {
         transform.position -= new Vector3(stopped ? 0 : speed * Time.deltaTime, 0, 0);
 	}

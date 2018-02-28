@@ -6,28 +6,24 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Bird : MonoBehaviour
 {
-
+    #region Unity Bindings
     [SerializeField] float speed;
     [SerializeField] float gravity;
     [SerializeField] float jumpForce;
     [SerializeField] float maxYVelocity = 0.1f;
     [SerializeField] Material[] states = new Material[2];
+    #endregion
 
+    #region Private fields
     new MeshRenderer renderer;
-
     int score;
     float yVel;
-
     Rigidbody rb;
-
     bool dead = false;
     bool paused = true;
+    #endregion
 
-    /// <summary>
-    /// 
-    /// Sets up bird from scene components
-    /// 
-    /// </summary>
+    #region MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -35,9 +31,7 @@ public class Bird : MonoBehaviour
     }
 
     /// <summary>
-    /// 
     /// Update bird position
-    /// 
     /// </summary>
     public void Update()
     {
@@ -58,12 +52,19 @@ public class Bird : MonoBehaviour
             yVel = -jumpForce;
             renderer.material = states[1];
             StartCoroutine(SwapStates());
-            
+
         }
         rb.velocity = new Vector3(-dx, -yVel, 0);
         Debug.Log(rb.velocity);
 
     }
+    #endregion
+
+    #region Helper Methods
+    /// <summary>
+    /// Sets up bird from scene components
+    /// </summary>
+
 
     IEnumerator SwapStates()
     {
@@ -72,9 +73,7 @@ public class Bird : MonoBehaviour
     }
 
     /// <summary>
-    /// 
     /// Gets the player's current score
-    /// 
     /// </summary>
     /// <returns>The player's current score</returns>
     public int GetScore()
@@ -83,9 +82,7 @@ public class Bird : MonoBehaviour
     }
 
     /// <summary>
-    /// 
     /// Returns if the bird is dead or not
-    /// 
     /// </summary>
     /// <returns>True if bird is dead, else false</returns>
     public bool IsDead()
@@ -94,9 +91,7 @@ public class Bird : MonoBehaviour
     }
 
     /// <summary>
-    /// 
-    /// Unpauses the mini game
-    /// 
+    /// Unpauses the mini game 
     /// </summary>
     public void UnPause()
     {
@@ -104,9 +99,7 @@ public class Bird : MonoBehaviour
     }
 
     /// <summary>
-    /// 
     /// Handle the bird colliding with something
-    /// 
     /// </summary>
     /// <param name="collision">The collision event</param>
     private void OnCollisionEnter(Collision collision)
@@ -116,7 +109,8 @@ public class Bird : MonoBehaviour
         {
             Destroy(collision.gameObject);
             score++;
-        } else if (collision.transform.tag == "Ground")
+        }
+        else if (collision.transform.tag == "Ground")
         {
             MovingPillars.Stop();
             paused = true;
@@ -126,9 +120,7 @@ public class Bird : MonoBehaviour
     }
 
     /// <summary>
-    /// 
     /// Returns if the game is paused or not
-    /// 
     /// </summary>
     /// <returns>True if game is paused else false</returns>
     internal bool IsPaused()
@@ -137,13 +129,13 @@ public class Bird : MonoBehaviour
     }
 
     /// <summary>
-    /// 
     /// Pauses the game
-    /// 
     /// </summary>
     public void Pause()
     {
         paused = true;
     }
+    #endregion
+
 
 }

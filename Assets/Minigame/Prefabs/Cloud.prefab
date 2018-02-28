@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33369045302212566}
   - component: {fileID: 23791993266455082}
   - component: {fileID: 65652498238935308}
-  - component: {fileID: 114362264132987486}
+  - component: {fileID: 114257833258071932}
   m_Layer: 0
   m_Name: Cloud
   m_TagString: Ground
@@ -96,7 +96,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 10, y: 2.2204466e-16, z: 10.000002}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114362264132987486
+--- !u!114 &114257833258071932
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -104,7 +104,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1671197032961354}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 082aae0d5f02ad940915a21c2da66d45, type: 3}
+  m_Script: {fileID: 11500000, guid: 435960b2d21ed514aa6e8ffa07ab2f78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3
