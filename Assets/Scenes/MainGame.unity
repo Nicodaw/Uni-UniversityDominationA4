@@ -6265,12 +6265,12 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114649024893058430, guid: 2234cd75cdbdb5c4b89f1d9defba62d8,
+    - target: {fileID: 114314357128539024, guid: 2234cd75cdbdb5c4b89f1d9defba62d8,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 369558830}
-    - target: {fileID: 114314357128539024, guid: 2234cd75cdbdb5c4b89f1d9defba62d8,
+    - target: {fileID: 114649024893058430, guid: 2234cd75cdbdb5c4b89f1d9defba62d8,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
