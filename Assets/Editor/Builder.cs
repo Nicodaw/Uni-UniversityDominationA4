@@ -1,34 +1,48 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
 
-public class ProjectBuilder
+public static class ProjectBuilder
 {
     const string buildPath = "Builds/";
+    const string testingResourcesBasePath = "Assets/Resources/Testing";
+    const string testingResourcesTmpPath = "Temp/TestingResources";
     static readonly string[] scenes = {
-        "Assets/Scenes/MainMenuScene.unity",
+        "Assets/Scenes/MainMenu.unity",
         "Assets/Scenes/MainGame.unity",
-        "Assets/Doom/Scenes/DoomMinigame.unity"
+        "Assets/Minigame/Scenes/Minigame.unity"
+    };
+    static readonly Dictionary<string, string> nameMapping = new Dictionary<string, string>
+    {
+        {"macOS", "UniversityDomination.app"},
+        {"win32","win32/UniversityDomination32.exe"},
+        {"win64","win64/UniversityDomination64.exe"},
+        {"android","UniversityDomination.apk"},
+        {"linux-universal","linuxUniversal/UniversityDomination"},
+        {"linux32","linux32/UniversityDomination"},
+        {"linux64","linux64/UniversityDomination"}
     };
 
-    [MenuItem("Tools/Build")]
     public static void BuildProject()
     {
         Directory.CreateDirectory(buildPath);
 
-        // do builds
-#if UNITY_2017_3_OR_NEWER
-        PerformBuild("macOS", BuildTarget.StandaloneOSX, "UniversityDomination.app");
-#else
-        PerformBuild("macOS", BuildTarget.StandaloneOSXIntel64, "UniversityDomination.app");
-#endif
-        PerformBuild("win32", BuildTarget.StandaloneWindows, "win32/UniversityDomination32.exe");
-        PerformBuild("win64", BuildTarget.StandaloneWindows64, "win64/UniversityDomination64.exe");
-        PerformBuild("android", BuildTarget.Android, "UniversityDomination.apk");
-        PerformBuild("linux-universal", BuildTarget.StandaloneLinuxUniversal, "linuxUniversal/UniversityDomination");
-        PerformBuild("linux32", BuildTarget.StandaloneLinux, "linux32/UniversityDomination");
-        PerformBuild("linux64", BuildTarget.StandaloneLinux64, "linux64/UniversityDomination");
+        // move unneeded resources
+        if (Directory.Exists(testingResourcesBasePath))
+        {
+            if (Directory.Exists(testingResourcesTmpPath))
+                Directory.Delete(testingResourcesTmpPath);
+            Directory.Move(testingResourcesBasePath, testingResourcesTmpPath);
+        }
+
+        // perform builds for all platforms
+        foreach (Tuple<string, BuildTarget> buildItem in BuildHelper.BuildNames(false))
+            PerformBuild(buildItem.Item1, buildItem.Item2, nameMapping[buildItem.Item1]);
+
+        if (Directory.Exists(testingResourcesTmpPath))
+            Directory.Move(testingResourcesTmpPath, testingResourcesBasePath);
     }
 
     static void PerformBuild(string kind, BuildTarget target, string name)

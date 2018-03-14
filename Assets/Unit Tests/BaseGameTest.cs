@@ -21,17 +21,18 @@ public abstract class BaseGameTest
 
     #region Test Management
 
+    const string resourcePath = "Testing/";
     List<GameObject> unitObjects = new List<GameObject>(); // used to keep track of units
 
     [SetUp]
     public void SetUp()
     {
         // grab main game assets
-        game = Object.Instantiate(Resources.Load<GameObject>("GameManager")).GetComponent<Game>();
-        map = Object.Instantiate(Resources.Load<GameObject>("Map")).GetComponent<Map>();
+        game = Object.Instantiate(Resources.Load<GameObject>(resourcePath + "GameManager")).GetComponent<Game>();
+        map = Object.Instantiate(Resources.Load<GameObject>(resourcePath + "Map")).GetComponent<Map>();
 
         // grab GUI asset and extract players UIs
-        GameObject mainGui = Object.Instantiate(Resources.Load<GameObject>("GUI"));
+        GameObject mainGui = Object.Instantiate(Resources.Load<GameObject>(resourcePath + "GUI"));
         gui = mainGui.GetComponentsInChildren<PlayerUI>();
 
         // the "Scenery" asset contains the camera and light source of the 4x4 Test
