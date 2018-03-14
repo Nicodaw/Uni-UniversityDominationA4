@@ -5,8 +5,12 @@ public class Sector : MonoBehaviour
     #region Unity Bindings
 
     public Map map;
-    public Sector[] adjacentSectors;
-    public Landmark landmark;
+    [UnityEngine.Serialization.FormerlySerializedAs("adjacentSectors")]
+    [SerializeField]
+    Sector[] m_adjacentSectors;
+    [UnityEngine.Serialization.FormerlySerializedAs("landmark")]
+    [SerializeField]
+    Landmark m_landmark;
 
     #endregion
 
@@ -62,7 +66,7 @@ public class Sector : MonoBehaviour
     /// </summary>
     public Sector[] AdjacentSectors
     {
-        get { return adjacentSectors; }
+        get { return m_adjacentSectors; }
     }
 
     /// <summary>
@@ -70,8 +74,8 @@ public class Sector : MonoBehaviour
     /// </summary>
     public Landmark Landmark
     {
-        get { return landmark; }
-        set { landmark = value; }
+        get { return m_landmark; }
+        set { m_landmark = value; }
     }
 
     #endregion
@@ -130,7 +134,7 @@ public class Sector : MonoBehaviour
     /// </summary>
     public void ApplyHighlightAdjacent()
     {
-        foreach (Sector adjacentSector in adjacentSectors)
+        foreach (Sector adjacentSector in m_adjacentSectors)
         {
             adjacentSector.ApplyHighlight(0.2f);
         }
@@ -141,7 +145,7 @@ public class Sector : MonoBehaviour
     /// </summary>
     public void RevertHighlightAdjacent()
     {
-        foreach (Sector adjacentSector in adjacentSectors)
+        foreach (Sector adjacentSector in m_adjacentSectors)
         {
             adjacentSector.RevertHighlight(0.2f);
         }
@@ -280,7 +284,7 @@ public class Sector : MonoBehaviour
         // return null otherwise
 
         // scan through each adjacent sector
-        foreach (Sector adjacentSector in adjacentSectors)
+        foreach (Sector adjacentSector in m_adjacentSectors)
         {
             // if the adjacent sector contains the selected unit,
             // return the selected unit

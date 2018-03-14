@@ -14,7 +14,7 @@ public class Menu : MonoBehaviour
     public void Play(bool neutralPlayer)
     {
         PlayerPrefs.SetInt("_gamemode", neutralPlayer ? 1 : 0);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene("MainGame");
     }
 
     /// <summary>
@@ -24,7 +24,7 @@ public class Menu : MonoBehaviour
     {
         if (!SavedGame.SaveExists("test1")) return;
         PlayerPrefs.SetInt("_gamemode", 2);
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("MainGame");
     }
 
     /// <summary>
