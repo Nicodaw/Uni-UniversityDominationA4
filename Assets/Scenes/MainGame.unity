@@ -125,7 +125,7 @@ GameObject:
   - component: {fileID: 5373510}
   - component: {fileID: 5373509}
   m_Layer: 5
-  m_Name: Image
+  m_Name: BackgroundImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -146,8 +146,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -5.499998, y: 0}
+  m_SizeDelta: {x: 149, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5373509
 MonoBehaviour:
@@ -3056,7 +3056,7 @@ GameObject:
   - component: {fileID: 603876783}
   - component: {fileID: 603876782}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: BackgroundCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
