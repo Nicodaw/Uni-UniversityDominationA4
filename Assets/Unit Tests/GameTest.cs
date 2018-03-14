@@ -52,7 +52,7 @@ public class GameTest : BaseGameTest
         }
 
         var search =
-            from s in map.sectors
+            from s in map.Sectors
             where s.Owner != null && !listOfAllocatedSectors.Contains(s)// any sector that has an owner but is not in the allocated sectors from above
             select s;
 
@@ -190,7 +190,7 @@ public class GameTest : BaseGameTest
     [Test]
     public void GetWinner_OnePlayerWithLandmarksAndUnitsWins()
     {
-        Sector landmark1 = map.sectors[1];
+        Sector landmark1 = map.Sectors[1];
         Player playerA = Players[0];
 
         // ensure 'landmark1' is a landmark
@@ -207,8 +207,8 @@ public class GameTest : BaseGameTest
     [Test]
     public void GetWinner_NoWinnerWhenMultiplePlayersOwningLandmarks()
     {
-        Sector landmark1 = map.sectors[1];
-        Sector landmark2 = map.sectors[7];
+        Sector landmark1 = map.Sectors[1];
+        Sector landmark2 = map.Sectors[7];
         Player playerA = Players[0];
         Player playerB = Players[1];
 
@@ -241,7 +241,7 @@ public class GameTest : BaseGameTest
     [Test]
     public void GetWinner_NoWinnerWhenAPlayerHasLandmarkAndAnotherHasUnits()
     {
-        Sector landmark1 = map.sectors[1];
+        Sector landmark1 = map.Sectors[1];
         Player playerA = Players[0];
         Player playerB = Players[1];
 

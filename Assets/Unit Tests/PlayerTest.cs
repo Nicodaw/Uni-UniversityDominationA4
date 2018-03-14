@@ -6,21 +6,21 @@ public class PlayerTest : BaseGameTest
     [Test]
     public void CaptureSector_ChangesOwner()
     {
-        Player previousOwner = map.sectors[0].Owner;
+        Player previousOwner = map.Sectors[0].Owner;
 
-        game.players[0].Capture(map.sectors[0]);
-        Assert.That(map.sectors[0].Owner, Is.EqualTo(game.players[0])); // owner stored in sector
-        Assert.That(game.players[0].OwnedSectors, Contains.Item(map.sectors[0])); // sector is stored as owned by the player
+        game.players[0].Capture(map.Sectors[0]);
+        Assert.That(map.Sectors[0].Owner, Is.EqualTo(game.players[0])); // owner stored in sector
+        Assert.That(game.players[0].OwnedSectors, Contains.Item(map.Sectors[0])); // sector is stored as owned by the player
 
         if (previousOwner != null) // if sector had previous owner
-            Assert.That(previousOwner.OwnedSectors, Does.Not.Contains(map.sectors[0])); // sector has been removed from previous owner list
+            Assert.That(previousOwner.OwnedSectors, Does.Not.Contains(map.Sectors[0])); // sector has been removed from previous owner list
     }
 
     [Test]
     public void CaptureLandmark_BothPlayersBeerAmountCorrect()
     {
         // capturing landmark
-        Sector landmarkedSector = map.sectors[1];
+        Sector landmarkedSector = map.Sectors[1];
         landmarkedSector.Initialize();
 
         Landmark landmark = landmarkedSector.Landmark;
@@ -52,7 +52,7 @@ public class PlayerTest : BaseGameTest
     public void CaptureLandmark_BothPlayersKnowledgeAmountCorrect()
     {
         // capturing landmark
-        Sector landmarkedSector = map.sectors[1];
+        Sector landmarkedSector = map.Sectors[1];
         landmarkedSector.Initialize();
 
         Landmark landmark = landmarkedSector.Landmark;
@@ -84,7 +84,7 @@ public class PlayerTest : BaseGameTest
     public void CaptureLandmark_NeutralLandmarkPlayerBeerAmountCorrect()
     {
         // capturing landmark
-        Sector landmarkedSector = map.sectors[1];
+        Sector landmarkedSector = map.Sectors[1];
         landmarkedSector.Initialize();
 
         Landmark landmark = landmarkedSector.Landmark;
@@ -111,7 +111,7 @@ public class PlayerTest : BaseGameTest
     public void CaptureLandmark_NeutralLandmarkPlayerKnowledgeAmountCorrect()
     {
         // capturing landmark
-        Sector landmarkedSector = map.sectors[1];
+        Sector landmarkedSector = map.Sectors[1];
         landmarkedSector.Initialize();
 
         Landmark landmark = landmarkedSector.Landmark;
@@ -137,7 +137,7 @@ public class PlayerTest : BaseGameTest
     [Test]
     public void SpawnUnits_SpawnedWhenLandmarkOwnedAndUnoccupied()
     {
-        Sector landmarkedSector = map.sectors[1];
+        Sector landmarkedSector = map.Sectors[1];
         Player playerA = game.players[0];
 
         // ensure that 'landmarkedSector' is a landmark and does not contain a unit
@@ -155,7 +155,7 @@ public class PlayerTest : BaseGameTest
     [Test]
     public void SpawnUnits_NotSpawnedWhenLandmarkOwnedAndOccupied()
     {
-        Sector landmarkedSector = map.sectors[1];
+        Sector landmarkedSector = map.Sectors[1];
         Player playerA = game.players[0];
 
         // ensure that 'landmarkedSector' is a landmark and contains a Level 5 unit
@@ -175,7 +175,7 @@ public class PlayerTest : BaseGameTest
     [Test]
     public void SpawnUnits_NotSpawnedWhenLandmarkNotOwned()
     {
-        Sector landmarkedSector = map.sectors[1];
+        Sector landmarkedSector = map.Sectors[1];
         Player playerA = game.players[0];
         Player playerB = game.players[1];
         landmarkedSector.Unit = null;

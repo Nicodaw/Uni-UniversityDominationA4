@@ -44,7 +44,7 @@ public abstract class BaseGameTest
         game.dialog = mainGui.transform.Find("Dialog").GetComponent<Dialog>();
 
         map.game = game;
-        map.sectors = map.gameObject.GetComponentsInChildren<Sector>();
+        //map.Sectors = map.gameObject.GetComponentsInChildren<Sector>();
 
         // establish references to a PlayerUI and Game for each player & initialize GUI
         for (int i = 0; i < Players.Length; i++)

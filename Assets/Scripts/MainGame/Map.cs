@@ -7,6 +7,9 @@ using UnityEngine;
 /// </summary>
 public class Map : MonoBehaviour
 {
+    [SerializeField]
+    Sector[] m_sectors;
     public Game game;
-    public Sector[] sectors;
+
+    public Sector[] Sectors => m_sectors;
 }

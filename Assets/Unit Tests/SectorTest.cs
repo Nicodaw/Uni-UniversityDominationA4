@@ -7,7 +7,7 @@ public class SectorTest : BaseGameTest
     [Test]
     public void SetOwner_SectorOwnerAndColorCorrect()
     {
-        Sector sector = map.sectors[0];
+        Sector sector = map.Sectors[0];
         sector.Owner = null;
         Player player = Players[0];
 
@@ -23,8 +23,8 @@ public class SectorTest : BaseGameTest
     [Test]
     public void Initialize_OwnedAndNotOwnedSectorsOwnerAndColor()
     {
-        Sector sectorWithoutLandmark = map.sectors[0];
-        Sector sectorWithLandmark = map.sectors[1];
+        Sector sectorWithoutLandmark = map.Sectors[0];
+        Sector sectorWithLandmark = map.Sectors[1];
 
         sectorWithoutLandmark.Initialize();
         Assert.That(sectorWithoutLandmark.Owner, Is.Null);
@@ -42,7 +42,7 @@ public class SectorTest : BaseGameTest
     [Test]
     public void Highlight_SectorColourCorrect()
     {
-        Sector sector = map.sectors[0];
+        Sector sector = map.Sectors[0];
         sector.gameObject.GetComponent<Renderer>().material.color = Color.gray;
         float amount = 0.2f;
         Color highlightedGray = Color.gray + (Color)(new Vector4(amount, amount, amount, 1));
@@ -57,7 +57,7 @@ public class SectorTest : BaseGameTest
     [Test]
     public void ClearUnit_UnitRemovedFromSector()
     {
-        Sector sector = map.sectors[0];
+        Sector sector = map.Sectors[0];
         sector.Unit = InitUnit();
 
         sector.ClearUnit();
@@ -67,9 +67,9 @@ public class SectorTest : BaseGameTest
     [Test]
     public void OnMouseAsButton_CorrectUnitIsSelected()
     {
-        Sector sectorA = map.sectors[0];
-        Sector sectorB = map.sectors[1];
-        Sector sectorC = map.sectors[2];
+        Sector sectorA = map.Sectors[0];
+        Sector sectorB = map.Sectors[1];
+        Sector sectorC = map.Sectors[2];
         Player playerA = Players[0];
         Player playerB = Players[1];
         Unit unitA = InitUnit(0);
@@ -138,8 +138,8 @@ public class SectorTest : BaseGameTest
     public void MoveIntoUnoccupiedSector_NewSectorHasUnitAndOldDoesNotAndTurnStateProgressed()
     {
         game.TurnState = TurnState.Move1;
-        Sector sectorA = map.sectors[0];
-        Sector sectorB = map.sectors[1];
+        Sector sectorA = map.Sectors[0];
+        Sector sectorB = map.Sectors[1];
 
         sectorA.Unit = InitUnit(0);
         sectorA.Unit.Sector = sectorA;
@@ -155,8 +155,8 @@ public class SectorTest : BaseGameTest
     public void MoveIntoFriendlyUnit_UnitsSwapSectorsAndTurnStateProgressed()
     {
         game.TurnState = TurnState.Move1;
-        Sector sectorA = map.sectors[0];
-        Sector sectorB = map.sectors[1];
+        Sector sectorA = map.Sectors[0];
+        Sector sectorB = map.Sectors[1];
 
         sectorA.Unit = InitUnit(0);
         sectorA.Unit.Sector = sectorA;
@@ -180,8 +180,8 @@ public class SectorTest : BaseGameTest
     public void MoveIntoHostileUnit_AttackingUnitTakesSectorAndLevelUpAndTurnEnd()
     {
         game.TurnState = TurnState.Move1;
-        Sector sectorA = map.sectors[0];
-        Sector sectorB = map.sectors[1];
+        Sector sectorA = map.Sectors[0];
+        Sector sectorB = map.Sectors[1];
 
         // for all tests, sectorA's unit will be the attacking unit
         // and sectorB's unit will be the defending unit
@@ -201,8 +201,8 @@ public class SectorTest : BaseGameTest
     public void MoveIntoHostileUnit_DefendingUnitDefendsSectorAndTurnEnd()
     {
         game.TurnState = TurnState.Move1;
-        Sector sectorA = map.sectors[0];
-        Sector sectorB = map.sectors[1];
+        Sector sectorA = map.Sectors[0];
+        Sector sectorB = map.Sectors[1];
 
         // for all tests, sectorA's unit will be the attacking unit
         // and sectorB's unit will be the defending unit
@@ -223,8 +223,8 @@ public class SectorTest : BaseGameTest
     public void MoveIntoHostileUnit_TieConflict_DefendingUnitDefendsSectorAndTurnEnd()
     {
         game.TurnState = TurnState.Move1;
-        Sector sectorA = map.sectors[0];
-        Sector sectorB = map.sectors[1];
+        Sector sectorA = map.Sectors[0];
+        Sector sectorB = map.Sectors[1];
 
         // for all tests, sectorA's unit will be the attacking unit
         // and sectorB's unit will be the defending unit
@@ -266,8 +266,8 @@ public class SectorTest : BaseGameTest
     [Test]
     public void AdjacentSelectedUnit_SectorsAreAdjacent()
     {
-        Sector sectorA = map.sectors[0];
-        Sector sectorB = map.sectors[1];
+        Sector sectorA = map.Sectors[0];
+        Sector sectorB = map.Sectors[1];
 
         // ensure sectors A and B are adjacent to each other
         Assert.That(sectorB.AdjacentSectors, Contains.Item(sectorA));

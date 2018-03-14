@@ -35,7 +35,7 @@ public class PlayerUI : MonoBehaviour
         percentOwned = transform.Find("PercentOwned_Value").GetComponent<Text>();
         attack = transform.Find("ATK_Value").GetComponent<Text>();
         defence = transform.Find("DEF_Value").GetComponent<Text>();
-        numberOfSectors = player.Game.gameMap.GetComponent<Map>().sectors.Length;
+        numberOfSectors = player.Game.gameMap.GetComponent<Map>().Sectors.Length;
 
         header.text = "Player " + player_id.ToString();
         headerHighlight.text = header.text;

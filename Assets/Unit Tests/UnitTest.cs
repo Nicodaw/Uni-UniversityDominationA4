@@ -7,7 +7,7 @@ public class UnitTest : BaseGameTest
     public void MoveToFriendlyFromNull_UnitInCorrectSector()
     {
         Unit unit = InitUnit();
-        Sector sectorA = map.sectors[0];
+        Sector sectorA = map.Sectors[0];
         Player playerA = Players[0];
 
         // test moving from null
@@ -25,8 +25,8 @@ public class UnitTest : BaseGameTest
     public void MoveToNeutral_UnitInCorrectSector()
     {
         Unit unit = InitUnit();
-        Sector sectorA = map.sectors[0];
-        Sector sectorB = map.sectors[1];
+        Sector sectorA = map.Sectors[0];
+        Sector sectorB = map.Sectors[1];
         Player playerA = Players[0];
 
         // test moving from one sector to another
@@ -47,7 +47,7 @@ public class UnitTest : BaseGameTest
     public void MoveToFriendly_UnitInCorrectSector()
     {
         Unit unit = InitUnit();
-        Sector sectorA = map.sectors[0];
+        Sector sectorA = map.Sectors[0];
         Player playerA = Players[0];
 
         // test moving into a friendly sector (no level up)
@@ -64,7 +64,7 @@ public class UnitTest : BaseGameTest
     public void MoveToHostile_UnitInCorrectSectorAndLevelUp()
     {
         Unit unit = InitUnit();
-        Sector sectorA = map.sectors[0];
+        Sector sectorA = map.Sectors[0];
         Player playerA = Players[0];
         Player playerB = Players[1];
 
@@ -85,8 +85,8 @@ public class UnitTest : BaseGameTest
     {
         Unit[] units = InitUnits(2);
 
-        Sector sectorA = map.sectors[0];
-        Sector sectorB = map.sectors[1];
+        Sector sectorA = map.Sectors[0];
+        Sector sectorB = map.Sectors[1];
         Player player = Players[0];
 
         // places players unitA in sectorA
@@ -132,7 +132,7 @@ public class UnitTest : BaseGameTest
     public void SelectAndDeselect_SelectedTrueWhenSelectedFalseWhenDeselected()
     {
         Unit unit = InitUnit();
-        Sector sector = map.sectors[0];
+        Sector sector = map.Sectors[0];
 
         unit.Sector = sector;
         unit.IsSelected = false;
@@ -148,7 +148,7 @@ public class UnitTest : BaseGameTest
     public void DestroySelf_UnitNotInSectorAndNotInPlayersUnitsList()
     {
         Unit unit = InitUnit();
-        Sector sector = map.sectors[0];
+        Sector sector = map.Sectors[0];
         Player player = Players[0];
 
         unit.Sector = sector;
