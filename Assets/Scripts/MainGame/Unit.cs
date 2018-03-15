@@ -153,8 +153,8 @@ public class Unit : MonoBehaviour
         // diff = +ve: attacker advantage 
         // diff = -ve or 0: defender advantage
         int diff =
-            (Level + Owner.Effects.AttackBonus) - // attacker value
-            (other.Level + other.Owner.Effects.DefenceBonus); // defender value
+            (Level + Effects.AttackBonus + Owner.Effects.AttackBonus) - // attacker value
+            (other.Level + Effects.DefenceBonus + other.Owner.Effects.DefenceBonus); // defender value
 
         if (UnityEngine.Random.Range(0f, 1f) < CalculateAttackUncertainty(diff))
             // disadvantaged side won

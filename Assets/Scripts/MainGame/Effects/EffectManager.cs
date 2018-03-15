@@ -6,9 +6,9 @@ public class EffectManager : MonoBehaviour
 {
     #region Public Properties
 
-    public int AttackBonus { get; } // default: 0
+    public float AttackBonus { get; } // default: 0
 
-    public int DefenceBonus { get; } // default: 0
+    public float DefenceBonus { get; } // default: 0
 
     public int Actions { get; } // default: 2
 
