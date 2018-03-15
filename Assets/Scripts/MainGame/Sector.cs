@@ -1,45 +1,93 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
+[RequireComponent(typeof(EffectManager))]
 public class Sector : MonoBehaviour
 {
     #region Unity Bindings
 
-    public Map map;
-    [UnityEngine.Serialization.FormerlySerializedAs("adjacentSectors")]
-    [SerializeField]
-    Sector[] m_adjacentSectors;
-    [UnityEngine.Serialization.FormerlySerializedAs("landmark")]
-    [SerializeField]
-    Landmark m_landmark;
+    [SerializeField] Sector[] m_adjacentSectors;
+    [SerializeField] Landmark m_landmark;
 
     #endregion
 
     #region Private fields
 
-    Unit unit;
-    Player owner;
-    bool pvc = false;
+    const float DefaultHighlightAmount = 0.2f;
+
+    int _id;
+    Transform _unitStore;
+    EffectManager _effects;
+    bool _pvc; // default: false
+    Unit _unit;
+    int? _owner;
+    bool _highlighed; // default: false
 
     #endregion
 
     #region Public properties
 
     /// <summary>
+    /// The ID of the current sector.
+    /// </summary>
+    public int Id => _id;
+
+    /// <summary>
+    /// The effect manager of the current sector.
+    /// </summary>
+    public EffectManager Effects => _effects;
+
+    /// <summary>
     /// Whether the PVC is contained in this sector.
     /// </summary>
     public bool HasPVC
     {
-        get { return pvc; }
-        set { pvc = value; }
+        get { return _pvc; }
+        set { _pvc = value; }
     }
+
+    /// <summary>
+    /// Whether the sector allows the PVC to be hidden on it.
+    /// </summary>
+    public bool AllowPVC => Landmark == null && Unit == null;
 
     /// <summary>
     /// The Unit occupying this sector.
     /// </summary>
     public Unit Unit
     {
-        get { return unit; }
-        set { unit = value; }
+        get { return _unit; }
+        set
+        {
+            if (_unit != null)
+                _unit.OnDeath -= Unit_OnDeath;
+            
+            if (value != null)
+            {
+                Sector prev = _unit?.Sector; // store previous sector
+
+                _unit = value;
+                _unit.transform.parent = transform; //.SetParent(transform, false);
+                //transform.position = targetTransform.position;
+
+                // if the target sector belonged to a different 
+                // player than the unit, capture it and level up
+                if (Owner != _unit.Owner)
+                {
+                    Debug.Log("capuring sector");
+
+                    Owner = _unit.Owner;
+                    _unit.LevelUp();
+                }
+
+                OnUnitMove?.Invoke(_unit, new UpdateEventArgs<Sector>(prev, Unit.Sector));
+                _unit.OnDeath += Unit_OnDeath;
+            }
+            else
+                _unit = null;
+        }
     }
 
     /// <summary>
@@ -47,56 +95,127 @@ public class Sector : MonoBehaviour
     /// </summary>
     public Player Owner
     {
-        get { return owner; }
+        get { return _owner.HasValue ? Game.Instance.Players[_owner.Value] : null; }
         set
         {
-            owner = value;
+            Player prev = Owner;
+            _owner = value?.Id;
 
             // set sector color to the color of the given player
             // or gray if null
-            if (owner == null)
-                gameObject.GetComponent<Renderer>().material.color = Color.gray;
+            if (_owner.HasValue)
+                gameObject.GetComponent<Renderer>().material.color = Owner.Color;
             else
-                gameObject.GetComponent<Renderer>().material.color = owner.Color;
+                gameObject.GetComponent<Renderer>().material.color = Color.gray;
+
+
+            if (prev != Owner)
+                OnCaptured?.Invoke(this, new UpdateEventArgs<Player>(prev, Owner));
         }
     }
 
     /// <summary>
+    /// Whether the current sector is traversable.
+    /// </summary>
+    public bool Traversable => Effects.Traversable;
+
+    /// <summary>
     /// The neighbouring sectors.
     /// </summary>
-    public Sector[] AdjacentSectors
-    {
-        get { return m_adjacentSectors; }
-    }
+    public IEnumerable<Sector> AdjacentSectors => m_adjacentSectors.Where(s => s.Traversable);
 
     /// <summary>
     /// The landmark on this sector.
     /// </summary>
-    public Landmark Landmark
+    public Landmark Landmark => m_landmark;
+
+    /// <summary>
+    /// Gets or sets the highlight on the current sector.
+    /// </summary>
+    public bool Highlighted
     {
-        get { return m_landmark; }
-        set { m_landmark = value; }
+        get { return _highlighed; }
+        set
+        {
+            if (value != _highlighed)
+            {
+                Renderer rend = GetComponent<Renderer>();
+                Color currentColor = rend.material.color;
+                Color offset = new Color(DefaultHighlightAmount, DefaultHighlightAmount, DefaultHighlightAmount);
+                Color newColor;
+                if (value && !_highlighed)
+                    newColor = currentColor + offset;
+                else if (!value && _highlighed)
+                    newColor = currentColor - offset;
+                else
+                    throw new InvalidOperationException();
+                rend.material.color = newColor;
+            }
+            _highlighed = value;
+        }
     }
+
+    #endregion
+
+    #region Events
+
+    /// <summary>
+    /// Raised when the sector is clicked.
+    /// </summary>
+    public event EventHandler OnClick;
+
+    /// <summary>
+    /// Raised when the sector is captured (i.e. when ownership changes).
+    /// </summary>
+    public event EventHandler<UpdateEventArgs<Player>> OnCaptured;
+
+    /// <summary>
+    /// Raised when a unit moves sector.
+    /// </summary>
+    public event EventHandler<UpdateEventArgs<Sector>> OnUnitMove;
+
+    /// <summary>
+    /// Raised when the unit in the sector dies.
+    /// This event is a pure pass-through to reduce the need to dynamically
+    /// re-bind events on unit create/move/death.
+    /// </summary>
+    public event EventHandler OnUnitDeath;
 
     #endregion
 
     #region Initialization
 
-    /// <summary>
-    /// Initializes a sector.
-    /// Determines if the sector contains a landmark.
-    /// Sets owner and unit to null.
-    /// </summary>
-    public void Initialize()
+    public void Init(int id)
     {
-        // set no owner
+        _id = id;
+    }
+
+    #endregion
+
+    #region MonoBehaviour
+
+    void Awake()
+    {
+        _unitStore = gameObject.transform.Find("Units");
+        _effects = GetComponent<EffectManager>();
+    }
+
+    void Start()
+    {
         Owner = null;
+        _unit = null;
+    }
 
-        // clear unit
-        unit = null;
+    internal void OnMouseUpAsButton() => OnClick?.Invoke(this, new EventArgs());
 
-        // get landmark (if any)
-        Landmark = gameObject.GetComponentInChildren<Landmark>();
+    #endregion
+
+    #region Handlers
+
+    void Unit_OnDeath(object sender, EventArgs e)
+    {
+        OnUnitDeath?.Invoke(sender, e);
+        Unit.OnDeath -= Unit_OnDeath;
     }
 
     #endregion
@@ -104,244 +223,24 @@ public class Sector : MonoBehaviour
     #region Helper Methods
 
     /// <summary>
-    /// Highlight a sector by increasing its RGB values by a specified amount.
+    /// Set the highlight of all the adjacent sectors.
     /// </summary>
-    /// <param name="amount"></param>
-    public void ApplyHighlight(float amount)
+    [Obsolete("Will remove in favour of range-based highlighting")]
+    public void ApplyHighlightAdjacent(bool highlight)
     {
-        Renderer renderer = GetComponent<Renderer>();
-        Color currentColor = renderer.material.color;
-        Color offset = new Vector4(amount, amount, amount, 1);
-        Color newColor = currentColor + offset;
-        renderer.material.color = newColor;
+        foreach (Sector adjacentSector in AdjacentSectors)
+            adjacentSector.Highlighted = highlight;
     }
 
     /// <summary>
-    /// Unhighlight a sector by decreasing its RGB values by a specified amount.
+    /// Swaps the units of the current and other sector.
     /// </summary>
-    /// <param name="amount"></param>
-    public void RevertHighlight(float amount)
+    /// <param name="other">The sector to transfer the unit with.</param>
+    public void TransferUnits(Sector other)
     {
-        Renderer renderer = GetComponent<Renderer>();
-        Color currentColor = renderer.material.color;
-        Color offset = new Vector4(amount, amount, amount, 1);
-        Color newColor = currentColor - offset;
-        renderer.material.color = newColor;
-    }
-
-    /// <summary>
-    /// Highlight each sector adjacent to this one.
-    /// </summary>
-    public void ApplyHighlightAdjacent()
-    {
-        foreach (Sector adjacentSector in m_adjacentSectors)
-        {
-            adjacentSector.ApplyHighlight(0.2f);
-        }
-    }
-
-    /// <summary>
-    /// Unhighlight each sector adjacent to this one.
-    /// </summary>
-    public void RevertHighlightAdjacent()
-    {
-        foreach (Sector adjacentSector in m_adjacentSectors)
-        {
-            adjacentSector.RevertHighlight(0.2f);
-        }
-    }
-
-    /// <summary>
-    /// Clear this sector of any unit.
-    /// </summary>
-    public void ClearUnit()
-    {
-        unit = null;
-    }
-
-    void OnMouseUpAsButton()
-    {
-        // when this sector is clicked, determine the context
-        // and act accordingly
-        OnMouseUpAsButtonAccessible();
-    }
-
-    public void OnMouseUpAsButtonAccessible()
-    {
-        // a method of OnMouseUpAsButton that is 
-        // accessible to other objects for testing
-
-        // if this sector contains a unit and belongs to the
-        // current active player, and if no unit is selected
-        if (unit != null && owner.Active && map.game.NoUnitSelected())
-        {
-            // select this sector's unit
-            unit.Select();
-        }
-
-        // if this sector's unit is already selected
-        else if (unit != null && unit.IsSelected)
-        {
-            // deselect this sector's unit           
-            unit.Deselect();
-        }
-
-        // if this sector is adjacent to the sector containing
-        // the selected unit
-        else if (AdjacentSelectedUnit() != null)
-        {
-            // get the selected unit
-            Unit selectedUnit = AdjacentSelectedUnit();
-
-            // deselect the selected unit
-            selectedUnit.Deselect();
-
-            // if this sector is unoccupied
-            if (unit == null)
-                MoveIntoUnoccupiedSector(selectedUnit);
-
-            // if the sector is occupied by a friendly unit
-            else if (unit.Owner == selectedUnit.Owner)
-                MoveIntoFriendlyUnit(selectedUnit);
-
-            // if the sector is occupied by a hostile unit
-            else if (unit.Owner != selectedUnit.Owner)
-                MoveIntoHostileUnit(selectedUnit, this.unit);
-
-            map.game.NextTurnState(); // adavance to next turn phase when action take (Modified by Dom 13/02/2018)
-        }
-    }
-
-    /// <summary>
-    /// Get the level of the unit on the sector.
-    /// </summary>
-    /// <returns>The level of the sector</returns>
-    [System.Obsolete("Will be removed/reworked after memento pattern implementation.")]
-    public int GetLevel()
-    {
-        if (unit == null)
-        {
-            return -1;
-        }
-        else
-        {
-            return unit.Level;
-        }
-    }
-
-    /// <summary>
-    /// Moves the passed unit onto this sector.
-    /// Should only be used when this sector is unoccupied.
-    /// </summary>
-    /// <param name="unit">The unit to be moved onto this sector.</param>
-    public void MoveIntoUnoccupiedSector(Unit unit)
-    {
-        // move the selected unit into this sector
-        unit.MoveTo(this);
-    }
-
-    /// <summary>
-    /// Switches the unit on this sector with the passed one.
-    /// </summary>
-    /// <param name="otherUnit">Unit object of the unit on the adjacent sector to be switched onto this sector.</param>
-    public void MoveIntoFriendlyUnit(Unit otherUnit)
-    {
-        // swap the two units
-        unit.SwapPlacesWith(otherUnit);
-    }
-
-    /// <summary>
-    /// Initates a combat encounter between a pair of units.
-    /// The losing is destroyed.
-    /// If the attacker wins then they move onto the defending units territory.
-    /// </summary>
-    /// <param name="attackingUnit"></param>
-    /// <param name="defendingUnit"></param>
-    public void MoveIntoHostileUnit(Unit attackingUnit, Unit defendingUnit)
-    {
-        // if the attacking unit wins
-        if (Conflict(attackingUnit, defendingUnit))
-        {
-            // destroy defending unit
-            defendingUnit.DestroySelf();
-
-            // move the attacking unit into this sector
-            attackingUnit.MoveTo(this);
-        }
-        // if the defending unit wins
-        else
-        {
-            // destroy attacking unit
-            attackingUnit.DestroySelf();
-        }
-
-        // removed automatically end turn after attacking (Modified by Dom 13/02/18)
-    }
-
-    public Unit AdjacentSelectedUnit()
-    {
-        // return the selected unit if it is adjacent to this sector
-        // return null otherwise
-
-        // scan through each adjacent sector
-        foreach (Sector adjacentSector in m_adjacentSectors)
-        {
-            // if the adjacent sector contains the selected unit,
-            // return the selected unit
-            if (adjacentSector.unit != null && adjacentSector.unit.IsSelected)
-                return adjacentSector.unit;
-        }
-
-        // otherwise, return null
-        return null;
-    }
-
-    /// <summary>
-    /// Returns the outcome of a combat encounter between two units.
-    /// Takes into consideration the units levels and the attack/defence bonus of the player.
-    /// 
-    /// Close match leads to uncertain outcome (i.e. could go either way).
-    /// If one unit + bonuses is significantly more powerful than another then they are very likely to win.
-    /// </summary>
-    /// <param name="attackingUnit">Unit object of the attacking unit.</param>
-    /// <param name="defendingUnit">Unit object of the defending unit.</param>
-    /// <returns><c>true</c> if attacking unit wins or <c>false</c> if defending unit wins.</returns>
-    bool Conflict(Unit attackingUnit, Unit defendingUnit)
-    {
-        // diff = +ve attacker advantage 
-        // diff = -ve defender advantage
-        int diff = (attackingUnit.Level + attackingUnit.Owner.AttackBonus + 1) - (defendingUnit.Level + defendingUnit.Owner.DefenceBonus);
-
-        // determine uncertaincy in combat
-        // small diff in troops small uncertaincy level
-        float uncertaincy = -0.4f * (Mathf.Abs(diff)) + 0.5f;
-        if (uncertaincy < 0.1f)
-        {
-            uncertaincy = 0.1f; // always at least 10% uncertaincy
-        }
-
-        if (Random.Range(0, 1) < uncertaincy)
-        {
-            if (diff < 0)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-        else
-        {
-            if (diff < 0)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
+        Unit tmp = Unit;
+        Unit = other.Unit;
+        other.Unit = tmp;
     }
 
     #endregion

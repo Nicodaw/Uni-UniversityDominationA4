@@ -1,20 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Landmark : MonoBehaviour
 {
     #region Unity Bindings
 
-    public ResourceType resourceType;
-    public int amount = 2;
+    [UnityEngine.Serialization.FormerlySerializedAs("resourceType")]
+    [SerializeField] ResourceType m_resourceType;
+    [UnityEngine.Serialization.FormerlySerializedAs("amount")]
+    [SerializeField] int m_amount = 2;
 
     #endregion
 
     #region Public Properties
 
-    public ResourceType Resource { get { return resourceType; } set { resourceType = value; } }
-    public int Amount { get { return amount; } set { amount = value; } }
+    public ResourceType Resource => m_resourceType;
+    public int Amount => m_amount;
 
     #endregion
 }

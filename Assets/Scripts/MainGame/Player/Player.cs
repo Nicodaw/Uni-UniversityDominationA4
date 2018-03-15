@@ -1,122 +1,158 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class Player : MonoBehaviour
+[RequireComponent(typeof(EffectManager))]
+public abstract class Player : MonoBehaviour
 {
     #region Unity Bindings
 
-    public Game game;
-    public GameObject unitPrefab;
-    public PlayerUI gui;
-    public Color color;
+    [SerializeField] GameObject m_unitPrefab;
 
     #endregion
 
     #region Private Fields
 
-    List<Sector> ownedSectors = new List<Sector>();
-    List<Unit> units = new List<Unit>();
-    int attack = 0;
-    int defence = 0;
-    bool human;
-    bool neutral;
-    bool active = false;
+    int _id;
+    PlayerUI _gui;
+    Color _color;
+    EffectManager _effects;
+    int _actionsRemaining;
 
     #endregion
 
     #region Public Properties
 
     /// <summary>
-    /// The reference to the current <see cref="Game"/> object.
+    /// The ID of the current player.
     /// </summary>
-    public Game Game
-    {
-        get { return game; }
-        set { game = value; }
-    }
+    public int Id => _id;
 
     /// <summary>
     /// The <see cref="Unit"/> prefab object attached to this player.
     /// </summary>
-    public GameObject UnitPrefab
-    {
-        get { return unitPrefab; }
-    }
+    public GameObject UnitPrefab => m_unitPrefab;
 
     /// <summary>
     /// The <see cref="PlayerUI"/> object attached to this player.
     /// </summary>
-    public PlayerUI Gui
-    {
-        get { return gui; }
-        set { gui = value; }
-    }
-
-    public List<Sector> OwnedSectors
-    {
-        get { return ownedSectors; }
-    }
-
-    public List<Unit> Units
-    {
-        get { return units; }
-    }
-
-    /// <summary>
-    /// The amount of Attack bonus the player currently has.
-    /// </summary>
-    public int AttackBonus
-    {
-        get { return attack; }
-        set { attack = value; }
-    }
-
-    /// <summary>
-    /// The amount of Defence bonus the player currently has.
-    /// </summary>
-    public int DefenceBonus
-    {
-        get { return defence; }
-        set { defence = value; }
-    }
+    public PlayerUI Gui => _gui;
 
     /// <summary>
     /// The player's color.
     /// </summary>
-    public Color Color
-    {
-        get { return color; }
-        set { color = value; }
-    }
+    public Color Color => _color;
 
     /// <summary>
-    /// Whether this player is human or AI.
+    /// The effect manager of the current player.
     /// </summary>
-    public bool Human
-    {
-        get { return human; }
-        set { human = value; }
-    }
+    public EffectManager Effects => _effects;
 
     /// <summary>
-    /// Whether the neutral player is enabled.
+    /// The units the player owns.
     /// </summary>
-    public bool Neutral
-    {
-        get { return neutral; }
-        set { neutral = value; }
-    }
+    /// <value>The units.</value>
+    public IEnumerable<Unit> Units => Game.Instance.Map.Sectors.Select(s => s.Unit).Where(u => u.Owner == this);
 
     /// <summary>
-    /// Whether the player is currently active.
+    /// Whether the player owns any units.
     /// </summary>
-    public bool Active
+    public bool HasUnits => Units.Any();
+
+    /// <summary>
+    /// The sectors owned by this player.
+    /// </summary>
+    public IEnumerable<Sector> OwnedSectors => Game.Instance.Map.Sectors.Where(s => s.Owner == this);
+
+    /// <summary>
+    /// The landmarks that the player owns.
+    /// </summary>
+    public IEnumerable<Sector> OwnedLandmarkSectors => OwnedSectors.Intersect(Game.Instance.Map.LandmarkedSectors);
+
+    /// <summary>
+    /// Returns true if any of the sectors the player owns contains a landmark.
+    /// </summary>
+    public bool OwnsLandmark => OwnedLandmarkSectors.Any();
+
+    /// <summary>
+    /// Checks if the player has any units or if they own any landmarks.
+    /// If they have neither then they have been eliminated.
+    /// </summary>
+    public bool IsEliminated => !HasUnits && !OwnsLandmark;
+
+    /// <summary>
+    /// The number of actions remaining for the current player.
+    /// </summary>
+    public int ActionsRemaining => _actionsRemaining;
+
+    #endregion
+
+    #region Abstract Properties
+
+    public abstract PlayerKind Kind { get; }
+
+    #endregion
+
+    #region Events
+
+    /// <summary>
+    /// Raised when the player's turn starts.
+    /// </summary>
+    public event EventHandler OnTurnStart;
+
+    /// <summary>
+    /// Raised when the player's turn ends.
+    /// </summary>
+    public event EventHandler OnTurnEnd;
+
+    /// <summary>
+    /// Raised when an action has been performed.
+    /// Using cards does not raise this event.
+    /// </summary>
+    public event EventHandler OnActionPerformed;
+
+    #endregion
+
+    #region Base Methods
+
+    public virtual void ProcessTurnStart()
     {
-        get { return active; }
-        set { active = value; }
+        _actionsRemaining = Effects.Actions;
+        SpawnUnits();
+        OnTurnStart?.Invoke(this, new EventArgs());
+    }
+
+    public virtual void ProcessSectorClick(Sector clickedSector)
+    { }
+
+    protected virtual void EndTurn()
+    {
+        OnTurnEnd?.Invoke(this, new EventArgs());
+    }
+
+    #endregion
+
+    #region Initialization
+
+    public void Init(int id, Color color, PlayerUI gui)
+    {
+        _id = id;
+        _color = color;
+        _gui = gui;
+    }
+
+    #endregion
+
+    #region Serialization
+
+    #endregion
+
+    #region MonoBehaviour
+
+    void Awake()
+    {
+        _effects = GetComponent<EffectManager>();
     }
 
     #endregion
@@ -124,114 +160,43 @@ public class Player : MonoBehaviour
     #region Helper Methods
 
     /// <summary>
-    /// Store who controlls the player in the save game.
+    /// Attempt to move the unit in the <c>from</c> sector to the
+    /// <c>target</c> sector. If it is not empty, the follow is done:
+    /// 
+    /// If occupying unit is friendly, units are swapped.
+    /// If occupying unit is an enemy unit, conflict occurs.
+    /// 
+    /// Upon conflict, if the current unit wins, it takes over the sector,
+    /// destroying the enemy unit. If the enemy unit wins, the current
+    /// unit is destroyed.
     /// </summary>
-    /// <returns>String "human"/"neutral"/"none" depending on the player properties.</returns>
-    [Obsolete("Will be removed/reworked after memento pattern implementation.")]
-    public string GetController()
+    /// <param name="from">The starting sector.</param>
+    /// <param name="target">The target sector.</param>
+    internal void AttemptMove(Sector from, Sector target)
     {
-        if (Human)
+        // assert that we can actually do a move
+        if (from.Unit?.Owner != this) // if unit is null or not owned, then crash i guess ¯\_(ツ)_/¯
+            throw new InvalidOperationException();
+
+        if (target.Unit == null || target.Unit.Owner == this)
         {
-            return "human";
+            // transfer units between sectors
+            // if unit is null, is will be swapped as well
+            from.TransferUnits(target);
         }
-        else if (Neutral)
+        else // the only other option is that target contains an enemy unit
         {
-            return "neutral";
-        }
-        else
-        {
-            return "none";
-        }
-    }
-
-    /// <summary>
-    /// Sets how this player is controlled.
-    /// </summary>
-    /// <param name="controller">'human' if player controlled by human; 'neutral' if player controlled by neutral AI; all other values have no contoller</param>
-    [Obsolete("Will be removed/reworked after memento pattern implementation.")]
-    public void SetController(String controller)
-    {
-        if (controller.Equals("human"))
-        {
-            human = true;
-            neutral = false;
-        }
-        else if (controller.Equals("neutral"))
-        {
-            human = false;
-            neutral = true;
-        }
-        else
-        {
-            human = false;
-            neutral = false;
-        }
-    }
-
-    /// <summary>
-    /// Called when this player is eliminated in order to pass all sectors owned
-    /// by this player to the player that eliminated this player.
-    /// </summary>
-    /// <param name="player">The player to recieve all of this player's sectors.</param>
-    public void Defeat(Player player)
-    {
-        if (!IsEliminated())
-            return; // Incase the player hasn't lost
-        foreach (Sector sector in OwnedSectors)
-        {
-            sector.Owner = player; // Reset all the sectors
-        }
-    }
-
-    /// <summary>
-    /// Called when this player captures a sector.
-    /// Updates this players attack and defence bonuses.
-    /// Sets the sectors owner and updates its colour.
-    /// </summary>
-    /// <param name="sector">The sector that is being captured by this player.</param>
-    public void Capture(Sector sector)
-    {
-        // store a copy of the sector's previous owner
-        Player previousOwner = sector.Owner;
-
-        // add the sector to the list of owned sectors
-        OwnedSectors.Add(sector);
-
-        // remove the sector from the previous owner's
-        // list of sectors
-        if (previousOwner != null)
-            previousOwner.OwnedSectors.Remove(sector);
-
-        // set the sector's owner to this player
-        sector.Owner = this;
-
-        // if the sector contains a landmark
-        if (sector.Landmark != null)
-        {
-            Landmark landmark = sector.Landmark;
-
-            // remove the landmark's resource bonus from the previous
-            // owner and add it to this player
-            if (landmark.Resource == ResourceType.Attack)
+            // do attack
+            // destroy loser
+            // move from unit if it won
+            bool won = from.Unit.Attack(target.Unit);
+            if (won)
             {
-                this.attack += landmark.Amount;
-                if (previousOwner != null)
-                    previousOwner.attack -= landmark.Amount;
+                target.Unit.Kill(); // destroy enemy unit, making it null
+                from.TransferUnits(target); // since target unit is now null,
             }
-            else if (landmark.Resource == ResourceType.Defence)
-            {
-                this.defence += landmark.Amount;
-                if (previousOwner != null)
-                    previousOwner.defence -= landmark.Amount;
-            }
-        }
-
-        if (sector.HasPVC)
-        {
-            game.NextTurnState(); // update turn mode before game is saved
-            sector.HasPVC = false; // set VC to false so game can only be triggered once
-            SavedGame.Save("_tmp", game);
-            SceneManager.LoadScene(2);
+            else
+                from.Unit.Kill(); // destroy current unit, making it null
         }
     }
 
@@ -240,58 +205,28 @@ public class Player : MonoBehaviour
     /// </summary>
     public void SpawnUnits()
     {
-        // scan through each owned sector
-        foreach (Sector sector in OwnedSectors)
-        {
-            // if the sector contains a landmark and is unoccupied
-            if (sector.Landmark != null && sector.Unit == null)
-            {
-                // instantiate a new unit at the sector
-                Unit newUnit = Instantiate(unitPrefab).GetComponent<Unit>();
-
-                // initialize the new unit
-                newUnit.Initialize(this, sector);
-
-                // add the new unit to the player's list of units and 
-                // the sector's unit parameters
-                Units.Add(newUnit);
-                sector.Unit = newUnit;
-            }
-        }
+        foreach (Sector sector in OwnedLandmarkSectors.Where(s => s.Unit == null))
+            SpawnUnitAt(sector);
     }
 
     /// <summary>
-    /// Checks if the player has any units or if they own any landmarks.
-    /// If they have neither then they have been eliminated.
+    /// Spawns a unit at the given sector.
     /// </summary>
-    /// <returns>True if the player has no units and landmarks else false.</returns>
-    public bool IsEliminated()
+    /// <param name="sector">The sector to spawn the unit in.</param>
+    public void SpawnUnitAt(Sector sector)
     {
-        if (Units.Count == 0 && !OwnsLandmark())
-            return true;
-        return false;
-    }
-
-    public bool HasUnits()
-    {
-        return Units.Count > 0;
+        Unit unit = Instantiate(m_unitPrefab).GetComponent<Unit>();
+        unit.Init(this);
+        sector.Unit = unit;
     }
 
     /// <summary>
-    /// Returns true if any of the sectors the player owns contains a landmark.
+    /// Consumes an action.
     /// </summary>
-    /// <returns>True if the player owns 1 or more landmarks else false</returns>
-    bool OwnsLandmark()
+    protected void ConsumeAction()
     {
-        // scan through each owned sector
-        foreach (Sector sector in OwnedSectors)
-        {
-            // if a landmarked sector is found, return true
-            if (sector.Landmark != null)
-                return true;
-        }
-        // otherwise, return false
-        return false;
+        _actionsRemaining--;
+        OnActionPerformed?.Invoke(this, new EventArgs());
     }
 
     #endregion

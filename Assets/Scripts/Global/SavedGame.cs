@@ -2,95 +2,29 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
-using System.Xml.Serialization;
 using UnityEngine;
 
-[Obsolete("Will be removed/reworked after memento pattern implementation.")]
-public static class SavedGame
+public static class SaveManager
 {
-    /// <summary>
-    /// Creates an xml file storing all the neccessary properties to instantiate a game
-    /// </summary>
-    /// <param name="fileName">The filename to store the data in</param>
-    /// <param name="game">The game to save</param>
-    /// <returns></returns>
-    public static bool Save(string fileName, Game game)
+    const string SaveGameDirectory = "Saves/";
+    const string SameGameExtension = ".bin";
+
+    static string _saveGamePath;
+
+    static void Init()
     {
-        string filePath = Application.persistentDataPath + "/";
-        GameData gameData = new GameData();
-        gameData.SetupGameData(game); // Creates a serializable set of properties
-        try
+        if (_saveGamePath == null)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(GameData));
-            using (StreamWriter w = new StreamWriter(filePath + fileName + ".xml"))
-            {
-                serializer.Serialize(w, gameData);
-            }
-            return true;
-        }
-        catch (SerializationException)
-        {
-            return false;
+            _saveGamePath = Application.persistentDataPath + "/" + SaveGameDirectory;
+            Directory.CreateDirectory(_saveGamePath);
         }
     }
 
-    /// <summary>
-    /// Loads a given file and instantiates a game
-    /// </summary>
-    /// <param name="fileName">The file to be loaded, exclusing the extension</param>
-    /// <returns>True if game setup correctly, false if not</returns>
-    public static GameData Load(string fileName)
-    {
-        string filePath = Application.persistentDataPath + "/";
-        try
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(GameData));
-            using (StreamReader r = new StreamReader(filePath + fileName + ".xml"))
-            {
-                GameData savedGame = (GameData)serializer.Deserialize(r);
-                // Access to saved game like -> savedGame.currentPlayerID
-                // Calls to instantiate methods
-                return savedGame;
-            }
-        }
-        catch (SerializationException)
-        {
-            return null;
-        }
-        catch (FileNotFoundException)
-        {
-            return null;
-        }
-    }
+    // save game
 
-    /// <summary>
-    /// returns if a save game exists to load
-    /// </summary>
-    /// <param name="fileName">save file name</param>
-    /// <returns>true if game exists to load else false</returns>
-    public static bool SaveExists(string fileName)
-    {
-        string filePath = Application.persistentDataPath + "/";
-        try
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(GameData));
-            using (StreamReader r = new StreamReader(filePath + fileName + ".xml"))
-            {
-                GameData savedGame = (GameData)serializer.Deserialize(r);
-                // Access to saved game like -> savedGame.currentPlayerID
-                // Calls to instantiate methods
-                return true;
-            }
-        }
-        catch (SerializationException)
-        {
-            return false;
-        }
-        catch (FileNotFoundException)
-        {
-            return false;
-        }
-    }
+    // load game
+
+    // save exists
 
     /// <summary>
     /// Generates a list of any save files in the default folder
@@ -104,7 +38,7 @@ public static class SavedGame
         DirectoryInfo d = new DirectoryInfo(filePath);
         FileInfo[] files = d.GetFiles("*.xml");
 
-        foreach(FileInfo file in files)
+        foreach (FileInfo file in files)
         {
             saves.Add(file.Name.Replace(".xml", null));
         }

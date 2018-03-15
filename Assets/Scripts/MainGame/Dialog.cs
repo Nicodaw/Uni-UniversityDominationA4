@@ -1,27 +1,40 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-// Class created by Jack (01/02/2018)
 public class Dialog : MonoBehaviour
 {
     #region Unity Bindings
 
-    public GameObject dialogTitle;
-    public GameObject dialogInfo;
-    public GameObject dialogOkay;
-    public GameObject dialogRestart;
-    public GameObject dialogQuit;
-    public GameObject dialogSaveQuit;
-    public GameObject dialogCloseDialogBtn;
+    [UnityEngine.Serialization.FormerlySerializedAs("dialogTitle")]
+    [SerializeField] GameObject m_dialogTitle;
+    [UnityEngine.Serialization.FormerlySerializedAs("dialogInfo")]
+    [SerializeField] GameObject m_dialogInfo;
+    [UnityEngine.Serialization.FormerlySerializedAs("dialogOkay")]
+    [SerializeField] GameObject m_dialogOkay;
+    [UnityEngine.Serialization.FormerlySerializedAs("dialogRestart")]
+    [SerializeField] GameObject m_dialogRestart;
+    [UnityEngine.Serialization.FormerlySerializedAs("dialogQuit")]
+    [SerializeField] GameObject m_dialogQuit;
+    [UnityEngine.Serialization.FormerlySerializedAs("dialogSaveQuit")]
+    [SerializeField] GameObject m_dialogSaveQuit;
+    [UnityEngine.Serialization.FormerlySerializedAs("dialogCloseDialogBtn")]
+    [SerializeField] GameObject m_dialogCloseDialogBtn;
 
     #endregion
 
     #region Private fields
 
     DialogType type;
+
+    #endregion
+
+    #region Public Properties
+
+    /// <summary>
+    /// Gets whether the dialog is shown.
+    /// </summary>
+    public bool IsShown => gameObject.activeInHierarchy;
 
     #endregion
 
@@ -68,15 +81,15 @@ public class Dialog : MonoBehaviour
                           bool saveQuitEnabled, bool closeEnabled,
                           string infoText = null)
     {
-        dialogTitle.GetComponent<Text>().text = titleText;
-        dialogInfo.SetActive(infoEnabled);
+        m_dialogTitle.GetComponent<Text>().text = titleText;
+        m_dialogInfo.SetActive(infoEnabled);
         if (infoText != null)
-            dialogInfo.GetComponent<Text>().text = infoText;
-        dialogOkay.SetActive(okayEnabled);
-        dialogRestart.SetActive(restartEnabled);
-        dialogQuit.SetActive(quitEnabled);
-        dialogSaveQuit.SetActive(saveQuitEnabled);
-        dialogCloseDialogBtn.SetActive(closeEnabled);
+            m_dialogInfo.GetComponent<Text>().text = infoText;
+        m_dialogOkay.SetActive(okayEnabled);
+        m_dialogRestart.SetActive(restartEnabled);
+        m_dialogQuit.SetActive(quitEnabled);
+        m_dialogSaveQuit.SetActive(saveQuitEnabled);
+        m_dialogCloseDialogBtn.SetActive(closeEnabled);
     }
 
     /// <summary>
@@ -88,10 +101,10 @@ public class Dialog : MonoBehaviour
         switch (type)
         {
             case DialogType.EndGame:
-                dialogInfo.GetComponent<Text>().text = player + " WON!";
+                m_dialogInfo.GetComponent<Text>().text = player + " WON!";
                 break;
             case DialogType.PlayerElimated:
-                dialogInfo.GetComponent<Text>().text = player + "\nwas eliminated";
+                m_dialogInfo.GetComponent<Text>().text = player + "\nwas eliminated";
                 break;
         }
     }
@@ -106,8 +119,8 @@ public class Dialog : MonoBehaviour
         switch (type)
         {
             case DialogType.ShowText:
-                dialogTitle.GetComponent<Text>().text = header;
-                dialogInfo.GetComponent<Text>().text = body;
+                m_dialogTitle.GetComponent<Text>().text = header;
+                m_dialogInfo.GetComponent<Text>().text = body;
                 break;
         }
     }
@@ -130,8 +143,20 @@ public class Dialog : MonoBehaviour
     }
 
     /// <summary>
+    /// Toggle this dialog.
+    /// </summary>
+    public void Toggle()
+    {
+        if (IsShown)
+            Close();
+        else
+            Show();
+    }
+
+    /// <summary>
     /// Changes to the previous scene
     /// </summary>
+    [System.Obsolete("Use direct scene name")]
     public void Exit()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
@@ -140,6 +165,7 @@ public class Dialog : MonoBehaviour
     /// <summary>
     /// Loads the main menu scene
     /// </summary>
+    [System.Obsolete("Use direct scene name")]
     public void Restart()
     {
         SceneManager.LoadScene(0);

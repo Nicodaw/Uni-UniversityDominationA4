@@ -1,38 +1,42 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
+[RequireComponent(typeof(EffectManager))]
 public class Unit : MonoBehaviour
 {
     #region Unity Bindings
 
-    public Material level1Material;
-    public Material level2Material;
-    public Material level3Material;
-    public Material level4Material;
-    public Material level5Material;
+    [SerializeField] Material m_level1Material;
+    [SerializeField] Material m_level2Material;
+    [SerializeField] Material m_level3Material;
+    [SerializeField] Material m_level4Material;
+    [SerializeField] Material m_level5Material;
 
     #endregion
 
     #region Private Fields
 
-    Player owner;
-    Sector sector;
-    int level;
-    Color color;
-    bool selected = false;
+    EffectManager _effects;
+    int? _owner;
+    int _sector;
+    int _level;
 
     #endregion
 
     #region Public Properties
 
     /// <summary>
+    /// The effect manager of the current unit.
+    /// </summary>
+    public EffectManager Effects => _effects;
+
+    /// <summary>
     /// Player that owns this unit
     /// </summary>
     public Player Owner
     {
-        get { return owner; }
-        set { owner = value; }
+        get { return _owner.HasValue ? Game.Instance.Players[_owner.Value] : null; }
+        set { _owner = value?.Id; }
     }
 
     /// <summary>
@@ -40,36 +44,28 @@ public class Unit : MonoBehaviour
     /// </summary>
     public Sector Sector
     {
-        get { return sector; }
-        set { sector = value; }
+        get { return Game.Instance.Map.Sectors[_sector]; }
+        set { _sector = value.Id; }
     }
 
     /// <summary>
     /// The unit's level
     /// </summary>
-    public int Level
-    {
-        get { return (this == null) ? -1 : level; }
-        set { level = value; }
-    }
+    public int Level => _level;
 
     /// <summary>
     /// The colour of the unit
     /// </summary>
-    public Color Color
-    {
-        get { return color; }
-        set { color = value; }
-    }
+    public Color Color => Owner.Color;
+
+    #endregion
+
+    #region Events
 
     /// <summary>
-    /// Whether the unit is currently selected.
+    /// Raised when the unit dies.
     /// </summary>
-    public bool IsSelected
-    {
-        get { return selected; }
-        set { selected = value; }
-    }
+    public event EventHandler OnDeath;
 
     #endregion
 
@@ -81,19 +77,23 @@ public class Unit : MonoBehaviour
     /// The unit's colour is set to the colour of the player that owns it.
     /// </summary>
     /// <param name="player">The player the unit belongs to.</param>
-    /// <param name="sector">The sector the unit is on.</param>
-    public void Initialize(Player player, Sector sector)
+    public void Init(Player player)
     {
         // set the owner, level, and color of the unit
-        owner = player;
-        level = 1;
-        color = owner.Color;
+        Owner = player;
+        _level = 1;
 
         // set the material color to the player color
-        GetComponent<Renderer>().material.color = color;
+        GetComponent<Renderer>().material.color = Color;
+    }
 
-        // place the unit in the sector
-        MoveTo(sector);
+    #endregion
+
+    #region MonoBehaviour
+
+    void Awake()
+    {
+        _effects = GetComponent<EffectManager>();
     }
 
     #endregion
@@ -101,140 +101,93 @@ public class Unit : MonoBehaviour
     #region Helper Methods
 
     /// <summary>
-    /// Moves this unit to the passed sector.
-    /// If the unit moves to a sector they do not own then LevelUp is called on it.
-    /// </summary>
-    /// <param name="targetSector">The sector to move this unit to</param>
-    public void MoveTo(Sector targetSector)
-    {
-        // clear the unit's current sector
-        if (this.sector != null)
-        {
-            this.sector.ClearUnit();
-        }
-
-        // set the unit's sector to the target sector
-        // and the target sector's unit to the unit
-        this.sector = targetSector;
-        targetSector.Unit = this;
-        Transform targetTransform = targetSector.transform.Find("Units").transform;
-
-        // set the unit's transform to be a child of
-        // the target sector's transform
-        transform.SetParent(targetTransform);
-
-        // align the transform to the sector
-        transform.position = targetTransform.position;
-
-        // if the target sector belonged to a different 
-        // player than the unit, capture it and level up
-        if (targetSector.Owner != this.owner)
-        {
-            Debug.Log("capuring sector");
-            // level up
-            LevelUp();
-
-            // capture the target sector for the owner of this unit
-            owner.Capture(targetSector);
-        }
-    }
-
-    /// <summary>
-    /// Switch the position of this unit and the passed unit.
-    /// </summary>
-    /// <param name="otherUnit">The unit to be swapped with this one.</param>
-    public void SwapPlacesWith(Unit otherUnit)
-    {
-        // swap the sectors' references to the units
-        this.sector.Unit = otherUnit;
-        otherUnit.sector.Unit = this;
-
-        // get the index of this unit's sector in the map's list of sectors
-        int tempSectorIndex = -1;
-        for (int i = 0; i < this.owner.Game.gameMap.GetComponent<Map>().Sectors.Length; i++)
-        {
-            if (this.sector == this.owner.Game.gameMap.GetComponent<Map>().Sectors[i])
-                tempSectorIndex = i;
-        }
-
-        // swap the units' references to their sectors
-        this.sector = otherUnit.sector;
-        otherUnit.sector = this.owner.Game.gameMap.GetComponent<Map>().Sectors[tempSectorIndex];
-
-        // realign transforms for each unit
-        this.transform.SetParent(this.sector.transform.Find("Units").transform);
-        this.transform.position = this.sector.transform.Find("Units").position;
-
-        otherUnit.transform.SetParent(otherUnit.sector.transform.Find("Units").transform);
-        otherUnit.transform.position = otherUnit.sector.transform.Find("Units").position;
-    }
-
-    /// <summary>
     /// Increase this units level and update the unit model to display the new level.
     /// Leveling up is capped at level 5.
     /// </summary>
 	public void LevelUp()
     {
-        if (level < 5)
+        if (Level < Effects.LevelCap)
         {
             // increase level
-            level++;
+            _level++;
             UpdateUnitMaterial();
         }
     }
 
     public void UpdateUnitMaterial()
     {
-        switch (level)
+        switch (_level)
         {
             case 2:
-                this.gameObject.GetComponent<MeshRenderer>().material = level2Material;
+                gameObject.GetComponent<MeshRenderer>().material = m_level2Material;
                 break;
             case 3:
-                this.gameObject.GetComponent<MeshRenderer>().material = level3Material;
+                gameObject.GetComponent<MeshRenderer>().material = m_level3Material;
                 break;
             case 4:
-                this.gameObject.GetComponent<MeshRenderer>().material = level4Material;
+                gameObject.GetComponent<MeshRenderer>().material = m_level4Material;
                 break;
             case 5:
-                this.gameObject.GetComponent<MeshRenderer>().material = level5Material;
+                gameObject.GetComponent<MeshRenderer>().material = m_level5Material;
                 break;
             default:
-                this.gameObject.GetComponent<MeshRenderer>().material = level1Material;
+                gameObject.GetComponent<MeshRenderer>().material = m_level1Material;
                 break;
         }
 
         // set material color to match owner color
-        GetComponent<Renderer>().material.color = color;
+        GetComponent<Renderer>().material.color = Color;
     }
 
     /// <summary>
-    /// Select the unit and highlight the sectors adjacent to it.
+    /// Returns the outcome of a combat encounter between two units.
+    /// Takes into consideration the units levels and the attack/defence bonus of the player.
+    /// 
+    /// Close match leads to uncertain outcome (i.e. could go either way).
+    /// If one unit + bonuses is significantly more powerful than another then they are very likely to win.
     /// </summary>
-    public void Select()
+    /// <returns>The attack.</returns>
+    /// <param name="other">The defending unit.</param>
+    public bool Attack(Unit other)
     {
-        selected = true;
-        sector.ApplyHighlightAdjacent();
+        // diff = +ve: attacker advantage 
+        // diff = -ve or 0: defender advantage
+        int diff =
+            (Level + Owner.Effects.AttackBonus) - // attacker value
+            (other.Level + other.Owner.Effects.DefenceBonus); // defender value
+
+        if (UnityEngine.Random.Range(0f, 1f) < CalculateAttackUncertainty(diff))
+            // disadvantaged side won
+            // if diff <= 0, defender had advantage, attack has disadvantage
+            return diff <= 0;
+        // advantaged side won
+        // if diff > 0, attacker had advantage, defender has disadvantage
+        return diff > 0;
     }
 
     /// <summary>
-    /// Deselect the unit and unhighlight the sectors adjacent to it.
+    /// Calculates the attack uncertainty.
+    /// Uses the function explained here:
+    /// https://www.desmos.com/calculator/taaldm6iod.
     /// </summary>
-    public void Deselect()
+    /// <returns>The attack uncertainty.</returns>
+    /// <param name="x">The difference value.</param>
+    float CalculateAttackUncertainty(int x)
     {
+        // function parameters
+        const float z = 2.5f;
+        const float a = 1f / 12.5f;
+        const float b = 0.4f;
+        const float c = 2f;
 
-        selected = false;
-        sector.RevertHighlightAdjacent();
+        // calculation
+        return a * (Mathf.Pow(z, (-b * Mathf.Abs(x)) + c));
     }
 
-    /// <summary>
-    /// Safely destroy the unit by removing it from its owner's list of units before destroying.
-    /// </summary>
-    public void DestroySelf()
+    public void Kill()
     {
-        sector.ClearUnit();
-        owner.Units.Remove(this);
-        Destroy(this.gameObject);
+        Destroy(gameObject);
+        OnDeath?.Invoke(this, new EventArgs());
     }
 
     #endregion

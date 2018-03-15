@@ -2,20 +2,55 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class PlayerUI : MonoBehaviour
 {
+    #region Unity Bindings
+
+    [SerializeField] Text m_header;
+    [SerializeField] Text m_headerHighlight;
+    [SerializeField] Text m_percentOwned;
+    [SerializeField] Text m_attack;
+    [SerializeField] Text m_defence;
+    [SerializeField] Vector2 m_edgeOffset = new Vector2(10f, 10f);
+    [SerializeField] float m_betweenGap = 10f;
+
+    #endregion
+
     #region Private Fields
 
-    readonly Color defaultHeaderColor = new Color(0.2f, 0.2f, 0.2f, 1.0f);
+    const string PlayerNameFormat = "Player {0}";
+    const string PercentOwnedFormat = "{0:P}";
+    readonly Color DefaultHeaderColor = new Color(0.2f, 0.2f, 0.2f, 1.0f);
 
-    Player player;
-    Text header;
-    Text headerHighlight;
-    Text percentOwned;
-    Text attack;
-    Text defence;
-    int numberOfSectors;
+    int _playerId;
+    bool _isActive; // default: false
+
+    #endregion
+
+    #region Public Properties
+
+    /// <summary>
+    /// The player attatched to this UI.
+    /// </summary>
+    public Player Player => Game.Instance.Players[_playerId];
+
+    /// <summary>
+    /// Whether the UI is active or not.
+    /// </summary>
+    public bool IsActive
+    {
+        get { return _isActive; }
+        set
+        {
+            _isActive = value;
+            if (_isActive)
+                m_header.color = Player.Color;
+            else
+                m_header.color = DefaultHeaderColor;
+        }
+    }
 
     #endregion
 
@@ -24,28 +59,18 @@ public class PlayerUI : MonoBehaviour
     /// <summary>
     /// Loads all the components for a PlayerUI.
     /// </summary>
-    /// <param name="player">The player object for whom this UI is for.</param>
-    /// <param name="player_id">ID of the player.</param>
-    public void Initialize(Player player, int player_id)
+    /// <param name="playerId">ID of the player.</param>
+    public void Init(int playerId)
     {
-        this.player = player;
+        _playerId = playerId;
+        m_header.text = string.Format(PlayerNameFormat, playerId);
+        m_headerHighlight.text = m_header.text;
+        m_headerHighlight.color = Player.Color;
 
-        header = transform.Find("Header").GetComponent<Text>();
-        headerHighlight = transform.Find("HeaderHighlight").GetComponent<Text>();
-        percentOwned = transform.Find("PercentOwned_Value").GetComponent<Text>();
-        attack = transform.Find("ATK_Value").GetComponent<Text>();
-        defence = transform.Find("DEF_Value").GetComponent<Text>();
-        numberOfSectors = player.Game.gameMap.GetComponent<Map>().Sectors.Length;
-
-        header.text = "Player " + player_id.ToString();
-        headerHighlight.text = header.text;
-        headerHighlight.color = player.Color;
-
-        if (player.Neutral)
-        {
-            header.text = "Neutral";
-            headerHighlight.text = header.text;
-        }
+        // player id specified position of UI
+        RectTransform rectTransform = GetComponent<RectTransform>();
+        transform.localPosition = new Vector3(m_edgeOffset.x,
+                                              ((rectTransform.rect.height + m_betweenGap) * playerId) + m_edgeOffset.y);
     }
 
     #endregion
@@ -57,27 +82,10 @@ public class PlayerUI : MonoBehaviour
     /// </summary>
     public void UpdateDisplay()
     {
-        percentOwned.text = Mathf.Round(100 * player.OwnedSectors.Count / numberOfSectors).ToString() + "%";
-        attack.text = player.AttackBonus.ToString();
-        defence.text = player.DefenceBonus.ToString();
-    }
-
-    /// <summary>
-    /// Highlight the player's name in the UI.
-    /// </summary>
-	public void Activate()
-    {
-        header.color = player.Color;
-    }
-
-    /// <summary>
-    /// Un-highlight the player's name in the UI.
-    /// </summary>
-	public void Deactivate()
-    {
-        header.color = defaultHeaderColor;
+        m_percentOwned.text = string.Format(PercentOwnedFormat, Player.OwnedSectors.Count() / (float)Game.Instance.Map.Sectors.Length);
+        m_attack.text = Player.Effects.AttackBonus.ToString();
+        m_defence.text = Player.Effects.DefenceBonus.ToString();
     }
 
     #endregion
-
 }

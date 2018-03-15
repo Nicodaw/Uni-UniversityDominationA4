@@ -1,16 +1,52 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class HumanPlayer : MonoBehaviour {
+public class HumanPlayer : Player
+{
+    #region Private Fields
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    Sector _selectedSector;
+
+    #endregion
+
+    #region Public Properties
+
+    public override PlayerKind Kind => PlayerKind.Human;
+
+    #endregion
+
+    #region Override Methods
+
+    public override void ProcessSectorClick(Sector clickedSector)
+    {
+        base.ProcessSectorClick(clickedSector);
+        if (_selectedSector == null)
+        {
+            if (clickedSector.Unit != null && clickedSector.Unit.Owner == this)
+            {
+                _selectedSector = clickedSector;
+                _selectedSector.ApplyHighlightAdjacent(true);
+            }
+        }
+        else
+        {
+            _selectedSector.ApplyHighlightAdjacent(false);
+            if (_selectedSector.AdjacentSectors.Contains(clickedSector))
+                AttemptMove(_selectedSector, clickedSector);
+        }
+    }
+
+    #endregion
+
+    #region Helper Methods
+
+    void SelectSector(Sector sector)
+    {
+        _selectedSector = sector;
+        _selectedSector.ApplyHighlightAdjacent(true);
+    }
+
+    #endregion
 }
