@@ -48,11 +48,11 @@ public class Map : MonoBehaviour
         Sector lastPvcSector = Sectors.FirstOrDefault(s => s.HasPVC);
         Sector randomSector = Sectors.Random(s => s.AllowPVC && s != lastPvcSector);
 
-        randomSector.HasPVC = true;
+        randomSector.Stats.ApplyEffect(new EffectImpl.PVCEffect());
         Debug.Log("Allocated PVC at " + randomSector);
         if (lastPvcSector != null)
         {
-            lastPvcSector.HasPVC = false;
+            lastPvcSector.Stats.RemoveEffect<EffectImpl.PVCEffect>();
             Debug.Log("Previous sector de-allocated");
         }
     }

@@ -20,7 +20,6 @@ public class Sector : MonoBehaviour
     int _id;
     Transform _unitStore;
     EffectManager _effects;
-    bool _pvc; // default: false
     Unit _unit;
     int? _owner;
     bool _highlighed; // default: false
@@ -42,11 +41,7 @@ public class Sector : MonoBehaviour
     /// <summary>
     /// Whether the PVC is contained in this sector.
     /// </summary>
-    public bool HasPVC
-    {
-        get { return _pvc; }
-        set { _pvc = value; }
-    }
+    public bool HasPVC => Stats.HasEffect<EffectImpl.PVCEffect>();
 
     /// <summary>
     /// Whether the sector allows the PVC to be hidden on it.
@@ -63,7 +58,7 @@ public class Sector : MonoBehaviour
         {
             if (_unit != null)
                 _unit.OnDeath -= Unit_OnDeath;
-            
+
             if (value != null)
             {
                 Sector prev = _unit?.Sector; // store previous sector

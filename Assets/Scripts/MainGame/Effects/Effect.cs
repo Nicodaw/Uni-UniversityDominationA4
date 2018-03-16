@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Runtime.Serialization;
+
 /// <summary>
 /// The base class for all effects.
 /// If an effect property is null, then it doesn't count to the overall
 /// value <see cref="T:EffectManager"/> returns.
 /// </summary>
-public abstract class Effect
+public abstract class Effect : ISerializable
 {
     #region Private Fields
 
@@ -58,6 +60,23 @@ public abstract class Effect
 
     #endregion
 
+    #region Serialization
+
+    protected Effect()
+    { }
+
+    protected Effect(SerializationInfo info, StreamingContext context)
+    {
+        _id = info.GetInt32("_id");
+    }
+
+    public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+    {
+        info.AddValue("_id", _id);
+    }
+
+    #endregion
+
     #region Handlers
 
     // event handlers which are called when Game events are raised
@@ -104,12 +123,19 @@ public abstract class Effect
 
     #region Helper Methods
 
+    internal void Init(EffectManager manager)
+    {
+        if (_manager != null)
+            throw new InvalidOperationException();
+        _manager = manager;
+    }
+
     /// <summary>
     /// Applies the effect to the given object.
     /// </summary>
-    /// <param name="obj">Object.</param>
-    /// <param name="manager">Manager.</param>
-    /// <param name="id">Identifier.</param>
+    /// <param name="obj">The object to apply the effect to.</param>
+    /// <param name="manager">The manager that is managing the effect.</param>
+    /// <param name="id">The ID the effect will have.</param>
     /// <remarks>
     /// This function can take in any of Player, Sector or Unit.
     /// Any other object passed in will cause an exception.
@@ -119,7 +145,7 @@ public abstract class Effect
     /// </remarks>
     public void ApplyTo(object obj, EffectManager manager, int id)
     {
-        _manager = manager;
+        Init(manager);
         _id = id;
         if (obj as Player != null)
             ApplyToPlayer((Player)obj);

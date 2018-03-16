@@ -154,6 +154,8 @@ public class EffectManager : MonoBehaviour
         _nextEffectId++;
     }
 
+    public bool HasEffect<T>() => GetEffects<T>().Any();
+
     public void RemoveEffect(Effect effect)
     {
         if (!_effects.ContainsKey(effect.Id) ||
@@ -167,12 +169,13 @@ public class EffectManager : MonoBehaviour
     public void RemoveEffect<T>() where T : Effect
     {
         Stack<Effect> toRemove = new Stack<Effect>();
-        foreach (var kv in _effects)
-            if (kv.Value.GetType() == typeof(T))
-                toRemove.Push(kv.Value);
+        foreach (Effect effect in GetEffects<T>())
+            toRemove.Push(effect);
         while (toRemove.Count > 0)
             RemoveEffect(toRemove.Pop());
     }
+
+    IEnumerable<Effect> GetEffects<T>() => _effects.Values.Where(ef => ef.GetType() == typeof(T));
 
     #endregion
 }
