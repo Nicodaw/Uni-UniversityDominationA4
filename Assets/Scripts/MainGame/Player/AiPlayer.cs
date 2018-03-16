@@ -27,7 +27,27 @@ public class AiPlayer : Player
 
     #endregion
 
+    #region Serialization
+
+    public override void RestoreMemento(SerializablePlayer memento)
+    {
+        base.RestoreMemento(memento);
+        StartCoroutine(OnRestoreCheck());
+    }
+
+    #endregion
+
     #region Helper Methods
+
+    IEnumerator OnRestoreCheck()
+    {
+        // wait until end of frame
+        // this is done to wait until memento restore is completed
+        yield return null;
+        // if current player is this on, then we need to restart the
+        // coroutine process
+        StartCoroutine(PerformTurn());
+    }
 
     IEnumerator PerformTurn()
     {

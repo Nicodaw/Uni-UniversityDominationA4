@@ -93,6 +93,29 @@ public class EffectManager : MonoBehaviour
 
     #endregion
 
+    #region Serialization
+
+    public SerializableEffectManager CreateMemento()
+    {
+        return new SerializableEffectManager
+        {
+            nextEffectId = _nextEffectId,
+            effects = _effects.Values.ToArray()
+        };
+    }
+
+    public void RestoreMemento(SerializableEffectManager memento)
+    {
+        _nextEffectId = memento.nextEffectId;
+        foreach (Effect effect in memento.effects)
+        {
+            effect.Restore(_owner, this);
+            _effects.Add(effect.Id, effect);
+        }
+    }
+
+    #endregion
+
     #region MonoBehaviour
 
     void OnEnable()

@@ -27,6 +27,25 @@ public class Map : MonoBehaviour
 
     #endregion
 
+    #region Serialization
+
+    public SerializableMap CreateMemento()
+    {
+        return new SerializableMap
+        {
+            // create array of serialized sectors
+            sectors = Sectors.Select(s => s.CreateMemento()).ToArray()
+        };
+    }
+
+    public void RestoreMemento(SerializableMap memento)
+    {
+        for (int i = 0; i < Sectors.Length; i++)
+            Sectors[i].RestoreMemento(memento.sectors[i]);
+    }
+
+    #endregion
+
     #region MonoBehaviour
 
     void Awake()

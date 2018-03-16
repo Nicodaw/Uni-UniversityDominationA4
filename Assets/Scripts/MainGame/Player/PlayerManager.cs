@@ -50,13 +50,7 @@ public class PlayerManager : MonoBehaviour, ICollection<Player>
         }
     }
 
-    #endregion
-
-    #region Serialization
-
-    // memento methods
-
-    #endregion
+                  #endregion
 
     #region Initialization
 
@@ -90,6 +84,28 @@ public class PlayerManager : MonoBehaviour, ICollection<Player>
         currentPlayer.Init(id, color, playerUI);
         playerUI.Init(id);
         return currentPlayer;
+    }
+
+    #endregion
+
+    #region Serialization
+
+    public SerializablePlayerManager CreateMemento()
+    {
+        return new SerializablePlayerManager
+        {
+            players = _players.Select(p => p.CreateMemento()).ToArray()
+        };
+    }
+
+    public void RestoreMemento(SerializablePlayerManager memento)
+    {
+        _players = new Player[memento.players.Length];
+        for (int i = 0; i < _players.Length; i++)
+        {
+            _players[i] = InitPlayer(memento.players[i].kind, memento.players[i].id, memento.players[i].color);
+            _players[i].RestoreMemento(memento.players[i]);
+        }
     }
 
     #endregion

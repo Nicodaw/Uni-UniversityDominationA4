@@ -89,6 +89,29 @@ public class Unit : MonoBehaviour
 
     #endregion
 
+    #region Serialization
+
+    public SerializableUnit CreateMemento()
+    {
+        return new SerializableUnit
+        {
+            effectManager = _effects.CreateMemento(),
+            owner = _owner,
+            sector = _sector,
+            level = _level
+        };
+    }
+
+    public void RestoreMemento(SerializableUnit memento)
+    {
+        _effects.RestoreMemento(memento.effectManager);
+        _owner = memento.owner;
+        _sector = memento.sector;
+        _level = memento.level;
+    }
+
+    #endregion
+
     #region MonoBehaviour
 
     void Awake()

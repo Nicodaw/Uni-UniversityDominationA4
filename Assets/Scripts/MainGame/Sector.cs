@@ -182,6 +182,32 @@ public class Sector : MonoBehaviour
 
     #endregion
 
+    #region Serialization
+
+    public SerializableSector CreateMemento()
+    {
+        return new SerializableSector
+        {
+            unit = Unit?.CreateMemento(),
+            owner = _owner
+        };
+    }
+
+    public void RestoreMemento(SerializableSector memento)
+    {
+        _owner = memento.owner;
+        Owner = Owner; // if owned, apply ownership setup
+        if (Owner != null)
+        {
+            // only sectors that have an owner can have a unit
+            // this means we can shorthand unit intialization
+            Owner.SpawnUnitAt(this); // spawn unit here
+            Unit.RestoreMemento(memento.unit); // restore unit
+        }
+    }
+
+    #endregion
+
     #region MonoBehaviour
 
     void Awake()

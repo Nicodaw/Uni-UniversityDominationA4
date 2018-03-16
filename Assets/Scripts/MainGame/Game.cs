@@ -184,6 +184,25 @@ public class Game : MonoBehaviour
 
     #region Serialization
 
+    public SerializableGame CreateMemento()
+    {
+        return new SerializableGame
+        {
+            processEvents = _processEvents,
+            map = Map.CreateMemento(),
+            playerManager = Players.CreateMemento(),
+            currentPlayerId = _currentPlayerId
+        };
+    }
+
+    public void RestoreMemento(SerializableGame memento)
+    {
+        _processEvents = memento.processEvents;
+        Map.RestoreMemento(memento.map);
+        Players.RestoreMemento(memento.playerManager);
+        _currentPlayerId = memento.currentPlayerId;
+    }
+
     #endregion
 
     #region MonoBehaviour

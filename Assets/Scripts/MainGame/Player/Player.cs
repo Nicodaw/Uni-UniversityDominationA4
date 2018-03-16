@@ -146,6 +146,26 @@ public abstract class Player : MonoBehaviour
 
     #region Serialization
 
+    public virtual SerializablePlayer CreateMemento()
+    {
+        return new SerializablePlayer
+        {
+            kind = Kind,
+            id = _id,
+            color = _color,
+            effectManager = _effects.CreateMemento(),
+            actionsRemaining = _actionsRemaining
+        };
+    }
+
+    public virtual void RestoreMemento(SerializablePlayer memento)
+    {
+        // kind is used for instantiation
+        // id, color and gui are set on Init()
+        _effects.RestoreMemento(memento.effectManager);
+        _actionsRemaining = memento.actionsRemaining;
+    }
+
     #endregion
 
     #region MonoBehaviour
