@@ -26,9 +26,9 @@ public class Unit : MonoBehaviour
     #region Public Properties
 
     /// <summary>
-    /// The effect manager of the current unit.
+    /// The stats of the current unit.
     /// </summary>
-    public EffectManager Effects => _effects;
+    public EffectManager Stats => _effects;
 
     /// <summary>
     /// Player that owns this unit
@@ -94,6 +94,7 @@ public class Unit : MonoBehaviour
     void Awake()
     {
         _effects = GetComponent<EffectManager>();
+        _effects.Init(this);
     }
 
     #endregion
@@ -106,7 +107,7 @@ public class Unit : MonoBehaviour
     /// </summary>
 	public void LevelUp()
     {
-        if (Level < Effects.LevelCap)
+        if (Level < Stats.LevelCap)
         {
             // increase level
             _level++;
@@ -153,8 +154,8 @@ public class Unit : MonoBehaviour
         // diff = +ve: attacker advantage 
         // diff = -ve or 0: defender advantage
         int diff =
-            (Level + Effects.AttackBonus + Owner.Effects.AttackBonus) - // attacker value
-            (other.Level + Effects.DefenceBonus + other.Owner.Effects.DefenceBonus); // defender value
+            (Level + Stats.Attack + Owner.Stats.Attack) - // attacker value
+            (other.Level + Stats.Defence + other.Owner.Stats.Defence); // defender value
 
         if (UnityEngine.Random.Range(0f, 1f) < CalculateAttackUncertainty(diff))
             // disadvantaged side won

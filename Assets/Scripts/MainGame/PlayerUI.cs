@@ -83,8 +83,8 @@ public class PlayerUI : MonoBehaviour
     public void UpdateDisplay()
     {
         m_percentOwned.text = string.Format(PercentOwnedFormat, Player.OwnedSectors.Count() / (float)Game.Instance.Map.Sectors.Length);
-        m_attack.text = Player.Effects.AttackBonus.ToString();
-        m_defence.text = Player.Effects.DefenceBonus.ToString();
+        m_attack.text = Player.Stats.Attack.ToString();
+        m_defence.text = Player.Stats.Defence.ToString();
     }
 
     #endregion

@@ -45,9 +45,9 @@ public abstract class Player : MonoBehaviour
     public Color Color => _color;
 
     /// <summary>
-    /// The effect manager of the current player.
+    /// The stats of the current player.
     /// </summary>
-    public EffectManager Effects => _effects;
+    public EffectManager Stats => _effects;
 
     /// <summary>
     /// The units the player owns.
@@ -118,7 +118,7 @@ public abstract class Player : MonoBehaviour
 
     public virtual void ProcessTurnStart()
     {
-        _actionsRemaining = Effects.Actions;
+        _actionsRemaining = Stats.Actions;
         SpawnUnits();
         OnTurnStart?.Invoke(this, new EventArgs());
     }
@@ -153,6 +153,7 @@ public abstract class Player : MonoBehaviour
     void Awake()
     {
         _effects = GetComponent<EffectManager>();
+        _effects.Init(this);
     }
 
     #endregion

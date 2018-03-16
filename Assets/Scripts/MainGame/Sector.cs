@@ -35,9 +35,9 @@ public class Sector : MonoBehaviour
     public int Id => _id;
 
     /// <summary>
-    /// The effect manager of the current sector.
+    /// The stats of the current sector.
     /// </summary>
-    public EffectManager Effects => _effects;
+    public EffectManager Stats => _effects;
 
     /// <summary>
     /// Whether the PVC is contained in this sector.
@@ -115,14 +115,9 @@ public class Sector : MonoBehaviour
     }
 
     /// <summary>
-    /// Whether the current sector is traversable.
-    /// </summary>
-    public bool Traversable => Effects.Traversable;
-
-    /// <summary>
     /// The neighbouring sectors.
     /// </summary>
-    public IEnumerable<Sector> AdjacentSectors => m_adjacentSectors.Where(s => s.Traversable);
+    public IEnumerable<Sector> AdjacentSectors => m_adjacentSectors.Where(s => s.Stats.Traversable);
 
     /// <summary>
     /// The landmark on this sector.
@@ -198,6 +193,7 @@ public class Sector : MonoBehaviour
     {
         _unitStore = gameObject.transform.Find("Units");
         _effects = GetComponent<EffectManager>();
+        _effects.Init(this);
     }
 
     void Start()
