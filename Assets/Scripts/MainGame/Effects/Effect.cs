@@ -123,12 +123,47 @@ public abstract class Effect : ISerializable
 
     #region Helper Methods
 
-    internal void Init(EffectManager manager)
+    void Init(EffectManager manager)
     {
         if (_manager != null)
             throw new InvalidOperationException();
         _manager = manager;
     }
+
+    void SwitchObjectType(object obj,
+                          Action<Player> playerAction,
+                          Action<Sector> sectorAction,
+                          Action<Unit> unitAction)
+    {
+        if (obj as Player != null)
+            playerAction((Player)obj);
+        else if (obj as Sector != null)
+            sectorAction((Sector)obj);
+        else if (obj as Unit != null)
+            unitAction((Unit)obj);
+        else
+            throw new ArgumentException("Invalid type");
+    }
+
+    /// <summary>
+    /// Restores the effect. Used to set the manager and object variables.
+    /// </summary>
+    /// <param name="obj">Object.</param>
+    /// <param name="manager">Manager.</param>
+    public void Restore(object obj, EffectManager manager)
+    {
+        Init(manager);
+        SwitchObjectType(obj, RestorePlayer, RestoreSector, RestoreUnit);
+    }
+
+    protected virtual void RestorePlayer(Player player)
+    { }
+
+    protected virtual void RestoreSector(Sector sector)
+    { }
+
+    protected virtual void RestoreUnit(Unit unit)
+    { }
 
     /// <summary>
     /// Applies the effect to the given object.
@@ -147,14 +182,7 @@ public abstract class Effect : ISerializable
     {
         Init(manager);
         _id = id;
-        if (obj as Player != null)
-            ApplyToPlayer((Player)obj);
-        else if (obj as Sector != null)
-            ApplyToSector((Sector)obj);
-        else if (obj as Unit != null)
-            ApplyToUnit((Unit)obj);
-        else
-            throw new ArgumentException("Invalid type");
+        SwitchObjectType(obj, ApplyToPlayer, ApplyToSector, ApplyToUnit);
     }
 
     protected virtual void ApplyToPlayer(Player player)
