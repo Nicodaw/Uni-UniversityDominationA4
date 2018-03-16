@@ -62,6 +62,11 @@ public class Game : MonoBehaviour
     public static GameObject MapToLoad { get; set; } = null;
 
     /// <summary>
+    /// The memento to restore when the game load up.
+    /// </summary>
+    public static SerializableGame MementoToRestore { get; set; } = null;
+
+    /// <summary>
     /// The reward to give to the player.
     /// </summary>
     /// <remarks>
@@ -69,7 +74,7 @@ public class Game : MonoBehaviour
     /// the system will assume that a minigame justs occured, and will act
     /// accordingly.
     /// </remarks>
-    public static Effect MinigameReward { get; set; } = null;
+    public static MinigameRewardEffect MinigameReward { get; set; } = null;
 
     /// <summary>
     /// The current game map.
@@ -201,6 +206,10 @@ public class Game : MonoBehaviour
         Map.RestoreMemento(memento.map);
         Players.RestoreMemento(memento.playerManager);
         _currentPlayerId = memento.currentPlayerId;
+
+        if (MinigameReward != null)
+            // if a minigame reward exists, then apply it to the player
+            ApplyReward();
     }
 
     #endregion
@@ -379,18 +388,21 @@ public class Game : MonoBehaviour
     /// </summary>
     internal void ApplyReward()
     {
-        // REWARD TO BE ADDED TO PLAYER
-        //int bonus = (int)Math.Floor((double)(rewardLevel + 1) / 2);
-        int rewardLevel = PlayerPrefs.GetInt("_mgScore");
-        // apply effect to player
-        MinigameReward = null; // clear reward
+        Players[MinigameReward.ApplyPlayer].Stats.ApplyEffect(MinigameReward); // apply reward
 
         // set up UI
         m_dialog.SetDialogType(DialogType.ShowText);
-        //m_dialog.SetDialogData("REWARD!", string.Format("Well done, you have gained:\n+{0} Attack\n+{0} Defence", bonus));
+        m_dialog.SetDialogData("REWARD!", string.Format("Well done, you have gained:\n+{0} Attack\n+{1} Defence",
+                                                        MinigameReward.AttackBonus.Value,
+                                                        MinigameReward.DefenceBonus.Value));
         m_dialog.Show();
         UpdateGUI(); // update GUI with new bonuses
         Debug.Log(string.Format("Player {0} won the minigame, effect was applied", CurrentPlayer));
+
+        MinigameReward = null; // clear reward
+
+        // reallocate PVC
+        Map.AllocatePVC();
     }
 
     #endregion

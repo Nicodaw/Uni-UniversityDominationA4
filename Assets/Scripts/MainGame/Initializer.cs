@@ -9,10 +9,13 @@ public class Initializer : MonoBehaviour
 
     void Start()
     {
-        if (Game.MinigameReward == null)
+        if (Game.MementoToRestore == null)
             Game.Instance.Init();
         else
-            ; // restore game
+        {
+            Game.Instance.RestoreMemento(Game.MementoToRestore);
+            Game.MementoToRestore = null;
+        }
     }
 
     #endregion

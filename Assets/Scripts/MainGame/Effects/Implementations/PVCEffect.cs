@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.Serialization;
+using UnityEngine.SceneManagement;
 
 namespace EffectImpl
 {
@@ -23,9 +24,10 @@ namespace EffectImpl
 
         public override void ProcessSectorCaptured(object sender, UpdateEventArgs<Player> e)
         {
-            RemoveSelf(); // we don't need the effect any more
-                          // save game into static var
-                          // trigger minigame
+            // save game into static var
+            Game.MementoToRestore = Game.Instance.CreateMemento();
+            // trigger scene change
+            SceneManager.LoadScene("Minigame");
         }
 
         #endregion
