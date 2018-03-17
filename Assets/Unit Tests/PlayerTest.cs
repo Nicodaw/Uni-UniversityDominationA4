@@ -1,4 +1,4 @@
-﻿#if UNITY_EDITOR
+﻿#if false
 using NUnit.Framework;
 
 public class PlayerTest : BaseGameTest
