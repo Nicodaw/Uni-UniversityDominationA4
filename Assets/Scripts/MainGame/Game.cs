@@ -166,8 +166,7 @@ public class Game : MonoBehaviour
     /// </summary>
     public void InitMap()
     {
-        GameObject mapGo = MapToLoad ?? m_defaultMap;
-        _map = Instantiate(mapGo).GetComponent<Map>();
+        LoadMapObject();
 
         // ensure there are at least as many landmarks as players
         if (Map.LandmarkedSectors.Count() < Players.Count)
@@ -183,6 +182,14 @@ public class Game : MonoBehaviour
 
         // allocate Pro-Vice Chancellor
         Map.AllocatePVC();
+    }
+
+    void LoadMapObject()
+    {
+        if (_map != null)
+            throw new InvalidOperationException(); // only allow loading map once
+        GameObject mapGo = MapToLoad ?? m_defaultMap;
+        _map = Instantiate(mapGo).GetComponent<Map>();
     }
 
     #endregion
@@ -203,6 +210,7 @@ public class Game : MonoBehaviour
     public void RestoreMemento(SerializableGame memento)
     {
         _processEvents = memento.processEvents;
+        LoadMapObject(); // just load map object using default system for now
         Map.RestoreMemento(memento.map);
         Players.RestoreMemento(memento.playerManager);
         _currentPlayerId = memento.currentPlayerId;
