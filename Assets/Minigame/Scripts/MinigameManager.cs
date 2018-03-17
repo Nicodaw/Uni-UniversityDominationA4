@@ -44,6 +44,12 @@ public class MinigameManager : MonoBehaviour
 
     #endregion
 
+    #region Public Properties
+
+    public static int CurrentPlayerId { get; set; }
+
+    #endregion
+
     #region MonoBehaviour
 
     void Awake()
@@ -79,7 +85,6 @@ public class MinigameManager : MonoBehaviour
         }
         if (WonGame || birdComponent.IsDead())
         {
-            PlayerPrefs.SetInt("_mgScore", birdComponent.GetScore());
             if (gameOver)
                 return;
             gameOver = true;
@@ -102,11 +107,12 @@ public class MinigameManager : MonoBehaviour
     /// <param name="won">True if the player won the minigame else false</param>
     IEnumerator EndGame(bool won)
     {
-        PlayerPrefs.SetInt("_gamemode", 3);
         loseOverlay.SetActive(true);
         loseOverlay.transform.GetChild(0).GetComponent<Text>().text = string.Format(won ? winText : loseText, birdComponent.GetScore());
+        int reward = Mathf.FloorToInt((birdComponent.GetScore() + 1f) / 2f);
+        Game.MinigameReward = new MinigameRewardEffect(CurrentPlayerId, reward, reward);
         yield return new WaitForSeconds(3);
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("MainGame");
     }
 
     /// <summary>

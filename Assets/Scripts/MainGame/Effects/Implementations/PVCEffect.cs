@@ -24,10 +24,9 @@ namespace EffectImpl
 
         public override void ProcessSectorCaptured(object sender, UpdateEventArgs<Player> e)
         {
-            // save game into static var
-            Game.MementoToRestore = Game.Instance.CreateMemento();
-            // trigger scene change
-            SceneManager.LoadScene("Minigame");
+            Game.MementoToRestore = Game.Instance.CreateMemento(); // save game into static var
+            MinigameManager.CurrentPlayerId = e.NewValue.Id; // store the ID of the player who will get the reward
+            SceneManager.LoadScene("Minigame"); // trigger scene change
         }
 
         #endregion
