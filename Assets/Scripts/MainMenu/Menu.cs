@@ -10,10 +10,8 @@ public class Menu : MonoBehaviour
     /// <summary>
     /// Starts a new game.
     /// </summary>
-    /// <param name="neutralPlayer">True if neutal player should be in the game, else false.</param>
-    public void Play(bool neutralPlayer)
+    public void Play()
     {
-        PlayerPrefs.SetInt("_gamemode", neutralPlayer ? 1 : 0);
         SceneManager.LoadScene("MainGame");
     }
 
@@ -22,8 +20,10 @@ public class Menu : MonoBehaviour
     /// </summary>
     public void PlayLoad()
     {
-        if (!SavedGame.SaveExists("test1")) return;
-        PlayerPrefs.SetInt("_gamemode", 2);
+        // assume slot 0 for now
+        if (!SaveManager.SaveExists(0))
+            return;
+        Game.MementoToRestore = SaveManager.LoadGame(0);
         SceneManager.LoadScene("MainGame");
     }
 
