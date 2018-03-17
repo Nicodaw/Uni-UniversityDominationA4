@@ -1,54 +1,92 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public static class SaveManager
 {
-    const string SaveGameDirectory = "Saves/";
-    const string SameGameExtension = ".bin";
+    const string SaveDirectory = "/Saves/";
+    const string SavePrefix = "Save-";
+    const string SaveExtension = ".bin";
+    const string SavePathFormat = "{0}-{{0:D3}}{1}";
 
-    static string _saveGamePath;
+    static string _savePath;
+    static string _saveNameFormat;
 
-    static void Init()
+    static Regex _saveSlotRegex = new Regex(string.Format(@"^{0}(...){1}$", SavePrefix, SaveExtension));
+
+    static string GetSavePath(int slot)
     {
-        if (_saveGamePath == null)
+        if (_saveNameFormat == null)
         {
-            _saveGamePath = Application.persistentDataPath + "/" + SaveGameDirectory;
-            Directory.CreateDirectory(_saveGamePath);
+            _savePath = Application.persistentDataPath + SaveDirectory;
+            _saveNameFormat = string.Format(SavePathFormat,
+                                          SavePrefix,
+                                          SaveExtension);
+            Directory.CreateDirectory(_savePath);
+        }
+        return _savePath + string.Format(_saveNameFormat, slot);
+    }
+
+    public static void SaveGame(SerializableGame game, int slot)
+    {
+        using (FileStream fs = new FileStream(GetSavePath(slot), FileMode.OpenOrCreate))
+        {
+            try
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(fs, game);
+            }
+            catch (SerializationException ex)
+            {
+                Debug.Log("Failed to serialize. Reason: " + ex.Message);
+                throw ex;
+            }
         }
     }
 
-    // save game
+    public static SerializableGame LoadGame(int slot)
+    {
+        if (!SaveExists(slot))
+            throw new FileNotFoundException();
 
-    // load game
+        using (FileStream fs = new FileStream(GetSavePath(slot), FileMode.Open))
+        {
+            try
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                return (SerializableGame)formatter.Deserialize(fs);
+            }
+            catch (SerializationException ex)
+            {
+                Debug.Log("Failed to deserialize. Reason: " + ex.Message);
+                throw ex;
+            }
+        }
+    }
 
-    // save exists
+    public static bool SaveExists(int slot) => File.Exists(GetSavePath(slot));
 
     /// <summary>
-    /// Generates a list of any save files in the default folder
+    /// Gets an array of all the slots that have saves in.
     /// </summary>
-    /// <returns>List of strings</returns>
-    public static List<string> GetSaves()
+    /// <returns>The array of filled save slots.</returns>
+    public static int[] GetFilledSlots()
     {
-        string filePath = Application.persistentDataPath + "/";
-        List<string> saves = new List<string>();
-
-        DirectoryInfo d = new DirectoryInfo(filePath);
-        FileInfo[] files = d.GetFiles("*.xml");
-
-        foreach (FileInfo file in files)
-        {
-            saves.Add(file.Name.Replace(".xml", null));
-        }
-        return saves;
+        GetSavePath(0); // make sure variables have been initialized
+        DirectoryInfo d = new DirectoryInfo(_savePath);
+        return d.GetFiles(string.Format(_saveNameFormat, "???"))
+                .Select(fi => int.Parse(_saveSlotRegex.Match(fi.Name).Groups[1].Value))
+                .ToArray();
     }
 
-
-    public static void DeleteFile(string filename)
+    public static void DeleteSave(int slot)
     {
-        string filePath = Application.persistentDataPath + "/";
-        File.Delete(filePath + filename);
+        if (!SaveExists(slot))
+            throw new FileNotFoundException();
+
+        File.Delete(GetSavePath(slot));
     }
 }
