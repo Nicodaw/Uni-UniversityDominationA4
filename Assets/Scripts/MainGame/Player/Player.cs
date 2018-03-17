@@ -53,7 +53,7 @@ public abstract class Player : MonoBehaviour
     /// The units the player owns.
     /// </summary>
     /// <value>The units.</value>
-    public IEnumerable<Unit> Units => Game.Instance.Map.Sectors.Select(s => s.Unit).Where(u => u.Owner == this);
+    public IEnumerable<Unit> Units => Game.Instance.Map.Sectors.Select(s => s.Unit).Where(u => u != null && u.Owner == this);
 
     /// <summary>
     /// Whether the player owns any units.

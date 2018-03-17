@@ -64,5 +64,8 @@ public class MinigameRewardEffect : Effect
         throw new InvalidOperationException();
     }
 
+    protected override void ApplyToPlayer(Player player)
+    { }
+
     #endregion
 }

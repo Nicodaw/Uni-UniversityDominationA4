@@ -154,11 +154,14 @@ public class Game : MonoBehaviour
         InitMap();
 
         // init starting player
-        _currentPlayerId = -1;
-        Players.ToNextPlayer(ref _currentPlayerId);
+        _currentPlayerId = 0;
+        CurrentPlayer.Gui.IsActive = true;
 
         // update GUIs
         UpdateGUI();
+
+        // start up script
+        enabled = true;
     }
 
     /// <summary>
@@ -214,6 +217,8 @@ public class Game : MonoBehaviour
         Map.RestoreMemento(memento.map);
         Players.RestoreMemento(memento.playerManager);
         _currentPlayerId = memento.currentPlayerId;
+
+        enabled = true;
 
         if (MinigameReward != null)
             // if a minigame reward exists, then apply it to the player

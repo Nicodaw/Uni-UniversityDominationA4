@@ -6,6 +6,12 @@ namespace EffectImpl
 {
     public class PVCEffect : Effect
     {
+        #region Private Fields
+
+        Sector _appliedSector;
+
+        #endregion
+
         #region Constructor
 
         public PVCEffect()
@@ -24,9 +30,12 @@ namespace EffectImpl
 
         public override void ProcessSectorCaptured(object sender, UpdateEventArgs<Player> e)
         {
-            Game.MementoToRestore = Game.Instance.CreateMemento(); // save game into static var
-            MinigameManager.CurrentPlayerId = e.NewValue.Id; // store the ID of the player who will get the reward
-            SceneManager.LoadScene("Minigame"); // trigger scene change
+            if ((Sector)sender == _appliedSector)
+            {
+                Game.MementoToRestore = Game.Instance.CreateMemento(); // save game into static var
+                MinigameManager.CurrentPlayerId = e.NewValue.Id; // store the ID of the player who will get the reward
+                SceneManager.LoadScene("Minigame"); // trigger scene change
+            }
         }
 
         #endregion
@@ -36,6 +45,16 @@ namespace EffectImpl
         public override EffectAvailableSelection AvailableSelection(Game game)
         {
             throw new InvalidOperationException();
+        }
+
+        protected override void ApplyToSector(Sector sector)
+        {
+            _appliedSector = sector;
+        }
+
+        protected override void RestoreSector(Sector sector)
+        {
+            _appliedSector = sector;
         }
 
         #endregion

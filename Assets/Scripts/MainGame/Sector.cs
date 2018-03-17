@@ -64,8 +64,8 @@ public class Sector : MonoBehaviour
                 Sector prev = _unit?.Sector; // store previous sector
 
                 _unit = value;
-                _unit.transform.parent = transform; //.SetParent(transform, false);
-                //transform.position = targetTransform.position;
+                _unit.transform.parent = _unitStore.transform;
+                _unit.transform.position = _unitStore.transform.position;
 
                 // if the target sector belonged to a different 
                 // player than the unit, capture it and level up
@@ -98,11 +98,7 @@ public class Sector : MonoBehaviour
 
             // set sector color to the color of the given player
             // or gray if null
-            if (_owner.HasValue)
-                gameObject.GetComponent<Renderer>().material.color = Owner.Color;
-            else
-                gameObject.GetComponent<Renderer>().material.color = Color.gray;
-
+            gameObject.GetComponent<Renderer>().material.color = Owner?.Color ?? Color.gray;
 
             if (prev != Owner)
                 OnCaptured?.Invoke(this, new UpdateEventArgs<Player>(prev, Owner));

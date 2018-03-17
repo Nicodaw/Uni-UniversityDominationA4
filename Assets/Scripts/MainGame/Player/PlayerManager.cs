@@ -50,7 +50,7 @@ public class PlayerManager : MonoBehaviour, ICollection<Player>
         }
     }
 
-                  #endregion
+    #endregion
 
     #region Initialization
 
@@ -82,7 +82,7 @@ public class PlayerManager : MonoBehaviour, ICollection<Player>
         Player currentPlayer = Instantiate(go, transform).GetComponent<Player>();
         PlayerUI playerUI = Instantiate(m_playerUi, m_playerUiParent.transform).GetComponent<PlayerUI>();
         currentPlayer.Init(id, color, playerUI);
-        playerUI.Init(id);
+        playerUI.Init(id, currentPlayer);
         return currentPlayer;
     }
 

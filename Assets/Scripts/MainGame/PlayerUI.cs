@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Linq;
 
 public class PlayerUI : MonoBehaviour
 {
@@ -60,12 +58,12 @@ public class PlayerUI : MonoBehaviour
     /// Loads all the components for a PlayerUI.
     /// </summary>
     /// <param name="playerId">ID of the player.</param>
-    public void Init(int playerId)
+    public void Init(int playerId, Player player)
     {
         _playerId = playerId;
         m_header.text = string.Format(PlayerNameFormat, playerId);
         m_headerHighlight.text = m_header.text;
-        m_headerHighlight.color = Player.Color;
+        m_headerHighlight.color = player.Color;
 
         // player id specified position of UI
         RectTransform rectTransform = GetComponent<RectTransform>();

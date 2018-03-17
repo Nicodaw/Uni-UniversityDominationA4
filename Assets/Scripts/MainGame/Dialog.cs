@@ -6,19 +6,12 @@ public class Dialog : MonoBehaviour
 {
     #region Unity Bindings
 
-    [UnityEngine.Serialization.FormerlySerializedAs("dialogTitle")]
     [SerializeField] GameObject m_dialogTitle;
-    [UnityEngine.Serialization.FormerlySerializedAs("dialogInfo")]
     [SerializeField] GameObject m_dialogInfo;
-    [UnityEngine.Serialization.FormerlySerializedAs("dialogOkay")]
     [SerializeField] GameObject m_dialogOkay;
-    [UnityEngine.Serialization.FormerlySerializedAs("dialogRestart")]
     [SerializeField] GameObject m_dialogRestart;
-    [UnityEngine.Serialization.FormerlySerializedAs("dialogQuit")]
     [SerializeField] GameObject m_dialogQuit;
-    [UnityEngine.Serialization.FormerlySerializedAs("dialogSaveQuit")]
     [SerializeField] GameObject m_dialogSaveQuit;
-    [UnityEngine.Serialization.FormerlySerializedAs("dialogCloseDialogBtn")]
     [SerializeField] GameObject m_dialogCloseDialogBtn;
 
     #endregion

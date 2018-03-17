@@ -83,9 +83,9 @@ public class EffectManager : MonoBehaviour
     public void Init(object owner)
     {
         Type ownerType = owner.GetType();
-        if (ownerType == typeof(Player) ||
-            ownerType == typeof(Sector) ||
-            ownerType == typeof(Unit))
+        if (typeof(Player).IsAssignableFrom(ownerType) ||
+            typeof(Sector).IsAssignableFrom(ownerType) ||
+            typeof(Unit).IsAssignableFrom(ownerType))
             _owner = owner;
         else
             throw new ArgumentException();
