@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Runtime.Serialization;
 using UnityEngine.SceneManagement;
 
@@ -19,11 +20,7 @@ namespace EffectImpl
         public override void ProcessSectorCaptured(object sender, UpdateEventArgs<Player> e)
         {
             if ((Sector)sender == _appliedSector)
-            {
-                Game.MementoToRestore = Game.Instance.CreateMemento(); // save game into static var
-                MinigameManager.CurrentPlayerId = e.NewValue.Id; // store the ID of the player who will get the reward
-                SceneManager.LoadScene("Minigame"); // trigger scene change
-            }
+                Game.Instance.TriggerMinigame(e.NewValue);
         }
 
         #endregion

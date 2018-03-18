@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -408,6 +409,22 @@ public class Game : MonoBehaviour
     {
         Players.UpdateGUIs();
         m_actionsRemaining.text = CurrentPlayer.ActionsRemaining.ToString();
+    }
+
+    public void TriggerMinigame(Player minigamePlayer)
+    {
+        StartCoroutine(TriggerMinigameInternal(minigamePlayer));
+    }
+
+    IEnumerator TriggerMinigameInternal(Player minigamePlayer)
+    {
+        yield return null; // allow events to propagate
+        MementoToRestore = Instance.CreateMemento(); // save game into static var
+        MinigameManager.CurrentPlayerId = minigamePlayer.Id; // store the ID of the player who will get the reward
+        AsyncOperation asyncOp = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("Minigame"); // trigger scene change
+        while (!asyncOp.isDone)
+            // wait for scene change completion
+            yield return null;
     }
 
     /// <summary>
