@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,6 +14,13 @@ public class Menu : MonoBehaviour
     public void Play()
     {
         SceneManager.LoadScene("MainGame");
+    }
+
+    public void PlaySecondary()
+    {
+        // tmp method to support 3 player start game
+        Game.PlayerSetupData = Game.DefaultPlayerData.Take(3).Concat(new[] { Game.DefaultPlayerData[4] });
+        Play();
     }
 
     /// <summary>

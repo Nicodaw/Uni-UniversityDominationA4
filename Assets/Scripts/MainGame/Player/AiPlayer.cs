@@ -51,7 +51,7 @@ public class AiPlayer : Player
 
     IEnumerator PerformTurn()
     {
-        for (; ActionsRemaining > 0; ConsumeAction())
+        for (; ActionsRemaining > 0;)
         {
             yield return new WaitForSeconds(MoveWaitTime);
             DoUnitMove();
@@ -62,10 +62,13 @@ public class AiPlayer : Player
     {
         Sector selection = Units.Random().Sector; // select random unit
         Sector moveTo = selection.AdjacentSectors
-                                 .Random(s => // select random out of available moves
-                                         (s.Owner == null || s.Owner.Kind == PlayerKind.AI) // unowned or owned by AI
-                                         && !s.HasPVC); // doesn't have PVC
-        AttemptMove(selection, moveTo); // move unit
+                                 .RandomOrDefault(s => // select random out of available moves
+                                                  (s.Owner == null || s.Owner.Kind == PlayerKind.AI) // unowned or owned by AI
+                                                  && !s.HasPVC); // doesn't have PVC
+        if (moveTo != null)
+            AttemptMove(selection, moveTo); // move unit
+        else // if we failed to move, consume the action anyway
+            ConsumeAction();
     }
 
     #endregion

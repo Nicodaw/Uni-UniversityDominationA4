@@ -109,6 +109,7 @@ public class EffectManager : MonoBehaviour
         _nextEffectId = memento.nextEffectId;
         foreach (Effect effect in memento.effects)
         {
+            Debug.Log(effect.Id);
             effect.Restore(_owner, this);
             _effects.Add(effect.Id, effect);
         }

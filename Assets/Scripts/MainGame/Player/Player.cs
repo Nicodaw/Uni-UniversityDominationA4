@@ -126,7 +126,7 @@ public abstract class Player : MonoBehaviour
     public virtual void ProcessSectorClick(Sector clickedSector)
     { }
 
-    protected virtual void EndTurn()
+    public virtual void EndTurn()
     {
         OnTurnEnd?.Invoke(this, new EventArgs());
     }
@@ -219,6 +219,9 @@ public abstract class Player : MonoBehaviour
             else
                 from.Unit.Kill(); // destroy current unit, making it null
         }
+
+        // whenever a move it attempted an action is consumed
+        ConsumeAction();
     }
 
     /// <summary>
@@ -248,6 +251,8 @@ public abstract class Player : MonoBehaviour
     {
         _actionsRemaining--;
         OnActionPerformed?.Invoke(this, new EventArgs());
+        if (_actionsRemaining == 0)
+            EndTurn();
     }
 
     #endregion

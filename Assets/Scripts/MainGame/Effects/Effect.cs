@@ -68,6 +68,7 @@ public abstract class Effect : ISerializable
     protected Effect(SerializationInfo info, StreamingContext context)
     {
         _id = info.GetInt32("_id");
+        UnityEngine.Debug.LogFormat("effect id: {0}", _id);
     }
 
     public virtual void GetObjectData(SerializationInfo info, StreamingContext context)

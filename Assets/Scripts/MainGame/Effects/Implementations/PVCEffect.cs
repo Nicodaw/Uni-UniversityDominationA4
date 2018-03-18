@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace EffectImpl
 {
+    [Serializable]
     public class PVCEffect : Effect
     {
         #region Private Fields

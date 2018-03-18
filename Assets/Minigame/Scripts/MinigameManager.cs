@@ -110,7 +110,7 @@ public class MinigameManager : MonoBehaviour
         loseOverlay.SetActive(true);
         loseOverlay.transform.GetChild(0).GetComponent<Text>().text = string.Format(won ? winText : loseText, birdComponent.GetScore());
         int reward = Mathf.FloorToInt((birdComponent.GetScore() + 1f) / 2f);
-        Game.MinigameReward = new MinigameRewardEffect(CurrentPlayerId, reward, reward);
+        Game.MinigameReward = new EffectImpl.MinigameRewardEffect(CurrentPlayerId, reward, reward);
         yield return new WaitForSeconds(3);
         SceneManager.LoadScene("MainGame");
     }

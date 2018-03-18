@@ -149,19 +149,24 @@ public class Dialog : MonoBehaviour
     /// <summary>
     /// Changes to the previous scene
     /// </summary>
-    [System.Obsolete("Use direct scene name")]
     public void Exit()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void SaveExit()
+    {
+        // assume slot 0 for now
+        SaveManager.SaveGame(Game.Instance.CreateMemento(), 0);
+        Exit();
     }
 
     /// <summary>
     /// Loads the main menu scene
     /// </summary>
-    [System.Obsolete("Use direct scene name")]
     public void Restart()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("MainMenu");
     }
 
     #endregion

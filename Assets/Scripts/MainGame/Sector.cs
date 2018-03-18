@@ -53,7 +53,7 @@ public class Sector : MonoBehaviour
     /// </summary>
     public Unit Unit
     {
-        get { return _unit; }
+        get { return _unit == null ? null : _unit; } // explictly return null to allow null-checking
         set
         {
             if (_unit != null)
@@ -66,6 +66,7 @@ public class Sector : MonoBehaviour
                 _unit = value;
                 _unit.transform.parent = _unitStore.transform;
                 _unit.transform.position = _unitStore.transform.position;
+                _unit.Sector = this;
 
                 // if the target sector belonged to a different 
                 // player than the unit, capture it and level up
@@ -129,12 +130,10 @@ public class Sector : MonoBehaviour
                 Color currentColor = rend.material.color;
                 Color offset = new Color(DefaultHighlightAmount, DefaultHighlightAmount, DefaultHighlightAmount);
                 Color newColor;
-                if (value && !_highlighed)
+                if (value)
                     newColor = currentColor + offset;
-                else if (!value && _highlighed)
-                    newColor = currentColor - offset;
                 else
-                    throw new InvalidOperationException();
+                    newColor = currentColor - offset;
                 rend.material.color = newColor;
             }
             _highlighed = value;
@@ -184,6 +183,7 @@ public class Sector : MonoBehaviour
     {
         return new SerializableSector
         {
+            effectManager = _effects.CreateMemento(),
             unit = Unit?.CreateMemento(),
             owner = _owner
         };
@@ -193,13 +193,14 @@ public class Sector : MonoBehaviour
     {
         _owner = memento.owner;
         Owner = Owner; // if owned, apply ownership setup
-        if (Owner != null)
+        if (memento.unit != null)
         {
             // only sectors that have an owner can have a unit
             // this means we can shorthand unit intialization
             Owner.SpawnUnitAt(this); // spawn unit here
             Unit.RestoreMemento(memento.unit); // restore unit
         }
+        _effects.RestoreMemento(memento.effectManager);
     }
 
     #endregion
@@ -211,10 +212,6 @@ public class Sector : MonoBehaviour
         _unitStore = gameObject.transform.Find("Units");
         _effects = GetComponent<EffectManager>();
         _effects.Init(this);
-    }
-
-    void Start()
-    {
         Owner = null;
         _unit = null;
     }
@@ -254,6 +251,23 @@ public class Sector : MonoBehaviour
         Unit tmp = Unit;
         Unit = other.Unit;
         other.Unit = tmp;
+        // since a unit can exist in a sector but be destroyed, we need to check
+        // for null units
+        //Unit thisUnit;
+        //Unit otherUnit;
+        //// get this unit while 
+        //if (Unit == null)
+        //    thisUnit = null;
+        //else
+        //    thisUnit = Unit;
+
+        //if (other.Unit == null)
+        //    otherUnit = null;
+        //else
+        //    otherUnit = other.Unit;
+
+        //Unit = otherUnit;
+        //other.Unit = thisUnit;
     }
 
     #endregion

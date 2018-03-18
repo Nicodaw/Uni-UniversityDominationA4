@@ -19,7 +19,7 @@ public class PlayerUI : MonoBehaviour
     #region Private Fields
 
     const string PlayerNameFormat = "Player {0}";
-    const string PercentOwnedFormat = "{0:P}";
+    const string PercentOwnedFormat = "{0:P0}";
     readonly Color DefaultHeaderColor = new Color(0.2f, 0.2f, 0.2f, 1.0f);
 
     int _playerId;
@@ -61,14 +61,15 @@ public class PlayerUI : MonoBehaviour
     public void Init(int playerId, Player player)
     {
         _playerId = playerId;
-        m_header.text = string.Format(PlayerNameFormat, playerId);
+        m_header.text = string.Format(PlayerNameFormat, playerId + 1);
         m_headerHighlight.text = m_header.text;
         m_headerHighlight.color = player.Color;
 
         // player id specified position of UI
         RectTransform rectTransform = GetComponent<RectTransform>();
-        transform.localPosition = new Vector3(m_edgeOffset.x,
-                                              ((rectTransform.rect.height + m_betweenGap) * playerId) + m_edgeOffset.y);
+        rectTransform.anchoredPosition =
+            new Vector2(0, ((rectTransform.rect.height + m_betweenGap) * -playerId)) +
+            m_edgeOffset;
     }
 
     #endregion

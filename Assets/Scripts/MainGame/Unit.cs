@@ -20,6 +20,7 @@ public class Unit : MonoBehaviour
     int? _owner;
     int _sector;
     int _level;
+    bool _destroyed;
 
     #endregion
 
@@ -108,6 +109,7 @@ public class Unit : MonoBehaviour
         _owner = memento.owner;
         _sector = memento.sector;
         _level = memento.level;
+        UpdateUnitMaterial();
     }
 
     #endregion
@@ -124,12 +126,19 @@ public class Unit : MonoBehaviour
 
     #region Helper Methods
 
+    void DestroyedCheck()
+    {
+        if (_destroyed)
+            throw new NullReferenceException("Unit already destoryed");
+    }
+
     /// <summary>
     /// Increase this units level and update the unit model to display the new level.
     /// Leveling up is capped at level 5.
     /// </summary>
 	public void LevelUp()
     {
+        DestroyedCheck();
         if (Level < Stats.LevelCap)
         {
             // increase level
@@ -140,6 +149,7 @@ public class Unit : MonoBehaviour
 
     public void UpdateUnitMaterial()
     {
+        DestroyedCheck();
         switch (_level)
         {
             case 2:
@@ -174,6 +184,7 @@ public class Unit : MonoBehaviour
     /// <param name="other">The defending unit.</param>
     public bool Attack(Unit other)
     {
+        DestroyedCheck();
         // diff = +ve: attacker advantage 
         // diff = -ve or 0: defender advantage
         int diff =
@@ -210,8 +221,49 @@ public class Unit : MonoBehaviour
 
     public void Kill()
     {
+        DestroyedCheck();
         Destroy(gameObject);
         OnDeath?.Invoke(this, new EventArgs());
+        _destroyed = true;
+    }
+
+    #endregion
+
+    #region Operators
+
+    // allows for immediate null checking
+
+    static UnityEngine.Object[] ActualObjects(Unit x, Unit y)
+    {
+        return new UnityEngine.Object[]
+        {
+            x?._destroyed == true ? null : x,
+            y?._destroyed == true ? null : y
+        };
+    }
+
+    public static bool operator ==(Unit x, Unit y)
+    {
+        var actual = ActualObjects(x, y);
+        return actual[0] == actual[1];
+    }
+
+    public static bool operator !=(Unit x, Unit y)
+    {
+        var actual = ActualObjects(x, y);
+        return actual[0] != actual[1];
+    }
+
+    public override bool Equals(object other)
+    {
+        if (typeof(Unit).IsAssignableFrom(other.GetType()))
+            return this == (Unit)other;
+        return base.Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
     }
 
     #endregion

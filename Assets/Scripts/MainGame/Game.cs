@@ -21,13 +21,13 @@ public class Game : MonoBehaviour
 
     static Game _instance;
     const float _ColorConvert = 255;
-    static readonly List<Tuple<PlayerKind, Color>> DefaultPlayerData = new List<Tuple<PlayerKind, Color>>
+    static Tuple<PlayerKind, Color>[] _defaultPlayerData =
     {
         Tuple.Create(PlayerKind.Human,new Color(205 / _ColorConvert, 0, 0)), // #CD0000
         Tuple.Create(PlayerKind.Human, new Color(177 / _ColorConvert,0, 240 / _ColorConvert)), // #B100F0
         Tuple.Create(PlayerKind.Human, new Color(205 / _ColorConvert, 205 / _ColorConvert, 0)), // #CDCD00
-        Tuple.Create(PlayerKind.Human, new Color(0, 205 / _ColorConvert, 0)) // #00CD00
-        //Tuple.Create(PlayerKind.AI, new Color(1, 1, 1)) // #FFFFFF
+        Tuple.Create(PlayerKind.Human, new Color(0, 205 / _ColorConvert, 0)), // #00CD00
+        Tuple.Create(PlayerKind.AI, new Color(1, 1, 1)) // #FFFFFF
     };
 
     bool _processEvents = true;
@@ -49,6 +49,13 @@ public class Game : MonoBehaviour
     /// The current game instance.
     /// </summary>
     public static Game Instance => _instance;
+
+    /// <summary>
+    /// The default player data.
+    /// Indexes 0-3 are the default players, index 4 is the neutral player.
+    /// </summary>
+    /// <value>The default player data.</value>
+    public static Tuple<PlayerKind, Color>[] DefaultPlayerData => _defaultPlayerData;
 
     /// <summary>
     /// The data to set up the game with.
@@ -74,7 +81,7 @@ public class Game : MonoBehaviour
     /// the system will assume that a minigame justs occured, and will act
     /// accordingly.
     /// </remarks>
-    public static MinigameRewardEffect MinigameReward { get; set; } = null;
+    public static EffectImpl.MinigameRewardEffect MinigameReward { get; set; } = null;
 
     /// <summary>
     /// The current game map.
@@ -148,7 +155,8 @@ public class Game : MonoBehaviour
     public void Init()
     {
         // set up players
-        Players.InitPlayers(PlayerSetupData ?? DefaultPlayerData);
+        Players.InitPlayers(PlayerSetupData ?? DefaultPlayerData.Take(4));
+        PlayerSetupData = null;
 
         // initialize the map and allocate players to landmarks
         InitMap();
@@ -156,6 +164,7 @@ public class Game : MonoBehaviour
         // init starting player
         _currentPlayerId = 0;
         CurrentPlayer.Gui.IsActive = true;
+        CurrentPlayer.ProcessTurnStart();
 
         // update GUIs
         UpdateGUI();
@@ -175,12 +184,22 @@ public class Game : MonoBehaviour
         if (Map.LandmarkedSectors.Count() < Players.Count)
             throw new InvalidOperationException("Not enough landmarks for players to start on");
 
+        // tmp thing for AI setup
+        if (Players[3].Kind == PlayerKind.AI)
+        {
+            Map.Sectors[0].Owner = Players[3];
+            Players[3].SpawnUnits();
+        }
+
         // randomly allocate sectors to players
         foreach (Player player in Players)
         {
-            Sector selected = Map.LandmarkedSectors.Random(s => s.Owner == null);
-            selected.Owner = player;
-            player.SpawnUnits();
+            if (player.Id != 3)
+            {
+                Sector selected = Map.LandmarkedSectors.Random(s => s.Owner == null);
+                selected.Owner = player;
+                player.SpawnUnits();
+            }
         }
 
         // allocate Pro-Vice Chancellor
@@ -213,16 +232,18 @@ public class Game : MonoBehaviour
     public void RestoreMemento(SerializableGame memento)
     {
         _processEvents = memento.processEvents;
-        LoadMapObject(); // just load map object using default system for now
-        Map.RestoreMemento(memento.map);
         Players.RestoreMemento(memento.playerManager);
         _currentPlayerId = memento.currentPlayerId;
+        LoadMapObject(); // just load map object using default system for now
+        Map.RestoreMemento(memento.map);
 
         enabled = true;
 
         if (MinigameReward != null)
             // if a minigame reward exists, then apply it to the player
             ApplyReward();
+
+        UpdateGUI();
     }
 
     #endregion
@@ -286,6 +307,7 @@ public class Game : MonoBehaviour
             return;
 
         OnPlayerTurnStart?.Invoke(sender, e);
+        UpdateGUI();
     }
 
     void Player_OnTurnEnd(object sender, EventArgs e)
@@ -321,7 +343,7 @@ public class Game : MonoBehaviour
             return;
 
         OnSectorCaptured?.Invoke(sender, e);
-        if (e.OldValue.IsEliminated)
+        if (e.OldValue?.IsEliminated ?? false)
             // if the old player is eliminated, it means that this sector was
             // the last one keeping them in the game
             PlayerEliminated(e.OldValue, e.NewValue);
@@ -357,7 +379,7 @@ public class Game : MonoBehaviour
         m_dialog.Toggle();
     }
 
-    public void PlayerEliminated(Player eliminated, Player eliminator)
+    void PlayerEliminated(Player eliminated, Player eliminator)
     {
         OnPlayerEliminated?.Invoke(eliminated, new EliminatedEventArgs(eliminator));
         Player winner = Players.Winner;
@@ -366,10 +388,12 @@ public class Game : MonoBehaviour
         else
         {
             m_dialog.SetDialogType(DialogType.PlayerElimated);
-            m_dialog.SetDialogData(string.Format(PlayerEliminatedFormat, eliminated.Id));
+            m_dialog.SetDialogData(string.Format(PlayerEliminatedFormat, eliminated.Id + 1));
             m_dialog.Show();
         }
     }
+
+    public void EndCurrentTurn() => CurrentPlayer.EndTurn();
 
     /// <summary>
     /// Called when the game is over.

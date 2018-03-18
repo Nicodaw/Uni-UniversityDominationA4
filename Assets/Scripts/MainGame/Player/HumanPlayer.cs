@@ -35,6 +35,7 @@ public class HumanPlayer : Player
             _selectedSector.ApplyHighlightAdjacent(false);
             if (_selectedSector.AdjacentSectors.Contains(clickedSector))
                 AttemptMove(_selectedSector, clickedSector);
+            _selectedSector = null;
         }
     }
 
