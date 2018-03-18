@@ -6,7 +6,6 @@ using System.Runtime.Serialization;
 /// If an effect property is null, then it doesn't count to the overall
 /// value <see cref="T:EffectManager"/> returns.
 /// </summary>
-[Serializable]
 public abstract class Effect
 {
     #region Private Fields
