@@ -39,7 +39,7 @@ public class Game : MonoBehaviour
 
     #region Private Properties
 
-    bool ProcessEvents => _processEvents && !m_dialog.IsShown;
+    bool ProcessEvents => _processEvents; // in case we need to have other constraints
 
     #endregion
 
