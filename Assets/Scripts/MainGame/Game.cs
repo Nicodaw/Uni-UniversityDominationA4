@@ -425,7 +425,7 @@ public class Game : MonoBehaviour
                                                         MinigameReward.DefenceBonus.Value));
         m_dialog.Show();
         UpdateGUI(); // update GUI with new bonuses
-        Debug.Log(string.Format("Player {0} won the minigame, effect was applied", CurrentPlayer));
+        Debug.Log(string.Format("{0} won the minigame, effect was applied", CurrentPlayer));
 
         MinigameReward = null; // clear reward
 

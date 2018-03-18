@@ -72,10 +72,9 @@ public class Sector : MonoBehaviour
                 // player than the unit, capture it and level up
                 if (Owner != _unit.Owner)
                 {
-                    Debug.Log("capuring sector");
-
                     Owner = _unit.Owner;
                     _unit.LevelUp();
+                    Debug.LogFormat("{0} captured sector", Owner);
                 }
 
                 OnUnitMove?.Invoke(_unit, new UpdateEventArgs<Sector>(prev, Unit.Sector));

@@ -109,7 +109,6 @@ public class EffectManager : MonoBehaviour
         {
             effect.Restore(_owner, this, _nextEffectId);
             _effects.Add(_nextEffectId, effect);
-            Debug.LogFormat("effect id: {0}", effect.Id);
             _nextEffectId++;
         }
     }

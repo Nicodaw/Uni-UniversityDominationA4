@@ -115,7 +115,6 @@ public abstract class Effect
             throw new InvalidOperationException();
         _manager = manager;
         _id = id;
-        UnityEngine.Debug.LogFormat("id: {0}", Id);
     }
 
     void SwitchObjectType(object obj,
