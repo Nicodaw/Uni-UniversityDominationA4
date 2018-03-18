@@ -6,11 +6,14 @@ using System.Runtime.Serialization;
 /// If an effect property is null, then it doesn't count to the overall
 /// value <see cref="T:EffectManager"/> returns.
 /// </summary>
-public abstract class Effect : ISerializable
+[Serializable]
+public abstract class Effect
 {
     #region Private Fields
 
+    [NonSerialized]
     int _id;
+    [NonSerialized]
     EffectManager _manager;
 
     #endregion
@@ -20,7 +23,7 @@ public abstract class Effect : ISerializable
     /// <summary>
     /// The ID of the current effect.
     /// </summary>
-    public int Id { get; }
+    public int Id => _id;
 
     #endregion
 
@@ -57,24 +60,6 @@ public abstract class Effect : ISerializable
     public virtual int? MoveRangeBonus { get; } = null;
 
     public virtual int? LevelCapBonus { get; } = null;
-
-    #endregion
-
-    #region Serialization
-
-    protected Effect()
-    { }
-
-    protected Effect(SerializationInfo info, StreamingContext context)
-    {
-        _id = info.GetInt32("_id");
-        UnityEngine.Debug.LogFormat("effect id: {0}", _id);
-    }
-
-    public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-    {
-        info.AddValue("_id", _id);
-    }
 
     #endregion
 
@@ -124,11 +109,13 @@ public abstract class Effect : ISerializable
 
     #region Helper Methods
 
-    void Init(EffectManager manager)
+    void Init(EffectManager manager, int id)
     {
         if (_manager != null)
             throw new InvalidOperationException();
         _manager = manager;
+        _id = id;
+        UnityEngine.Debug.LogFormat("id: {0}", Id);
     }
 
     void SwitchObjectType(object obj,
@@ -151,9 +138,9 @@ public abstract class Effect : ISerializable
     /// </summary>
     /// <param name="obj">Object.</param>
     /// <param name="manager">Manager.</param>
-    public void Restore(object obj, EffectManager manager)
+    public void Restore(object obj, EffectManager manager, int id)
     {
-        Init(manager);
+        Init(manager, id);
         SwitchObjectType(obj, RestorePlayer, RestoreSector, RestoreUnit);
     }
 
@@ -181,8 +168,7 @@ public abstract class Effect : ISerializable
     /// </remarks>
     public void ApplyTo(object obj, EffectManager manager, int id)
     {
-        Init(manager);
-        _id = id;
+        Init(manager, id);
         SwitchObjectType(obj, ApplyToPlayer, ApplyToSector, ApplyToUnit);
     }
 

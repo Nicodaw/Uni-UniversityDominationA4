@@ -99,19 +99,18 @@ public class EffectManager : MonoBehaviour
     {
         return new SerializableEffectManager
         {
-            nextEffectId = _nextEffectId,
             effects = _effects.Values.ToArray()
         };
     }
 
     public void RestoreMemento(SerializableEffectManager memento)
     {
-        _nextEffectId = memento.nextEffectId;
         foreach (Effect effect in memento.effects)
         {
-            Debug.Log(effect.Id);
-            effect.Restore(_owner, this);
-            _effects.Add(effect.Id, effect);
+            effect.Restore(_owner, this, _nextEffectId);
+            _effects.Add(_nextEffectId, effect);
+            Debug.LogFormat("effect id: {0}", effect.Id);
+            _nextEffectId++;
         }
     }
 

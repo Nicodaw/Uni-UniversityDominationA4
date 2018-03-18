@@ -9,21 +9,8 @@ namespace EffectImpl
     {
         #region Private Fields
 
+        [NonSerialized]
         Sector _appliedSector;
-
-        #endregion
-
-        #region Constructor
-
-        public PVCEffect()
-        { }
-
-        #endregion
-
-        #region Serialization
-
-        public PVCEffect(SerializationInfo info, StreamingContext context) : base(info, context)
-        { }
 
         #endregion
 

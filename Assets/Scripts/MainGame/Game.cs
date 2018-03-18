@@ -184,22 +184,12 @@ public class Game : MonoBehaviour
         if (Map.LandmarkedSectors.Count() < Players.Count)
             throw new InvalidOperationException("Not enough landmarks for players to start on");
 
-        // tmp thing for AI setup
-        if (Players[3].Kind == PlayerKind.AI)
-        {
-            Map.Sectors[0].Owner = Players[3];
-            Players[3].SpawnUnits();
-        }
-
         // randomly allocate sectors to players
         foreach (Player player in Players)
         {
-            if (player.Id != 3)
-            {
-                Sector selected = Map.LandmarkedSectors.Random(s => s.Owner == null);
-                selected.Owner = player;
-                player.SpawnUnits();
-            }
+            Sector selected = Map.LandmarkedSectors.Random(s => s.Owner == null);
+            selected.Owner = player;
+            player.SpawnUnits();
         }
 
         // allocate Pro-Vice Chancellor
@@ -243,6 +233,7 @@ public class Game : MonoBehaviour
             // if a minigame reward exists, then apply it to the player
             ApplyReward();
 
+        CurrentPlayer.Gui.IsActive = true;
         UpdateGUI();
     }
 

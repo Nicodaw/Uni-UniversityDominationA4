@@ -41,25 +41,6 @@ namespace EffectImpl
 
         #endregion
 
-        #region Serialization
-
-        public MinigameRewardEffect(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-            _playerId = info.GetInt32("playerId");
-            _attackBonus = info.GetInt32("attackBonus");
-            _defenceBonus = info.GetInt32("defenceBonus");
-        }
-
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            base.GetObjectData(info, context);
-            info.AddValue("playerId", _playerId);
-            info.AddValue("attackBonus", _attackBonus);
-            info.AddValue("defenceBonus", _defenceBonus);
-        }
-
-        #endregion
-
         #region Helper Methods
 
         public override EffectAvailableSelection AvailableSelection(Game game)
