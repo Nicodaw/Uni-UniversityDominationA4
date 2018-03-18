@@ -9,8 +9,7 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] Text m_header;
     [SerializeField] Text m_headerHighlight;
     [SerializeField] Text m_percentOwned;
-    [SerializeField] Text m_attack;
-    [SerializeField] Text m_defence;
+    [SerializeField] Text m_stats;
     [SerializeField] Vector2 m_edgeOffset = new Vector2(10f, 10f);
     [SerializeField] float m_betweenGap = 10f;
 
@@ -19,7 +18,8 @@ public class PlayerUI : MonoBehaviour
     #region Private Fields
 
     const string PlayerNameFormat = "Player {0}";
-    const string PercentOwnedFormat = "{0:P0}";
+    const string StatsFormat = "{0} / {1}";
+    const string PercentOwnedFormat = "Owns: {0:P0}";
     readonly Color DefaultHeaderColor = new Color(0.2f, 0.2f, 0.2f, 1.0f);
 
     int _playerId;
@@ -82,8 +82,7 @@ public class PlayerUI : MonoBehaviour
     public void UpdateDisplay()
     {
         m_percentOwned.text = string.Format(PercentOwnedFormat, Player.OwnedSectors.Count() / (float)Game.Instance.Map.Sectors.Length);
-        m_attack.text = Player.Stats.Attack.ToString();
-        m_defence.text = Player.Stats.Defence.ToString();
+        m_stats.text = string.Format(StatsFormat, Player.Stats.Attack, Player.Stats.Defence);
     }
 
     #endregion
