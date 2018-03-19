@@ -8,56 +8,65 @@ public class BirdController : MonoBehaviour
 {
     #region Unity Bindings
 
-    public float speed;
-    public float gravity;
-    public float jumpForce;
-    public float maxYVelocity = 0.1f;
-    public Material[] states = new Material[2];
+    [SerializeField] Vector3 m_defaultRotation;
+    [SerializeField] int m_maxScore;
+    [SerializeField] float m_jumpForce;
+    [SerializeField] float m_deathTurnTime;
+    [SerializeField] Material[] m_states = new Material[2];
 
     #endregion
 
     #region Private fields
 
-    new MeshRenderer renderer;
-    int score;
-    float yVel;
-    Rigidbody rb;
-    bool dead = false;
-    bool paused = true;
+    MeshRenderer _renderer;
+    Rigidbody _rigidbody;
+    float _rotX;
+    int _score;
+    bool _started;
+    bool _active;
+    bool _done;
+
+    #endregion
+
+    #region Private Properties
+
+    bool JumpFired => Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0);
+
+    float XRotation
+    {
+        get { return _rotX; }
+        set
+        {
+            _rotX = value;
+            transform.eulerAngles = new Vector3(_rotX, m_defaultRotation.y, m_defaultRotation.z);
+        }
+    }
+
+    #endregion
+
+    #region Public Properties
+
+    public int MaxScore => m_maxScore;
 
     #endregion
 
     #region MonoBehaviour
 
-    void Start()
+    void Awake()
     {
-        rb = GetComponent<Rigidbody>();
-        renderer = GetComponent<MeshRenderer>();
+        _rigidbody = GetComponent<Rigidbody>();
+        _renderer = GetComponent<MeshRenderer>();
+        _rotX = m_defaultRotation.x;
     }
 
     void Update()
     {
-        float dx = 0;
-        yVel = Mathf.Min(yVel + gravity, maxYVelocity);
-        if (paused && !dead)
+        if ((_active || !_started) && JumpFired && !_done)
         {
-            rb.velocity = Vector3.zero;
-            return;
+            if (!_started)
+                StartGame();
+            DoFlap();
         }
-        if (dead)
-        {
-            rb.velocity = new Vector3(rb.velocity.x, -yVel, 0);
-            return;
-        }
-        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
-        {
-            yVel = -jumpForce;
-            renderer.material = states[1];
-            StartCoroutine(SwapStates());
-
-        }
-        rb.velocity = new Vector3(-dx, -yVel, 0);
-        Debug.Log(rb.velocity);
     }
 
     /// <summary>
@@ -66,18 +75,20 @@ public class BirdController : MonoBehaviour
     /// <param name="collision">The collision event</param>
     void OnCollisionEnter(Collision collision)
     {
-        //Debug.Log("Collision Detected!");
-        if (collision.transform.tag == "Coin")
+        if (_done)
+            return;
+        switch (collision.transform.tag)
         {
-            Destroy(collision.gameObject);
-            score++;
-        }
-        else if (collision.transform.tag == "Ground")
-        {
-            PillarController.Stop();
-            paused = true;
-            dead = true;
-            rb.constraints = RigidbodyConstraints.FreezePositionZ;
+            case "Coin":
+                Destroy(collision.gameObject);
+                _score++;
+                if (_score == m_maxScore)
+                    EndGame(true);
+                break;
+            case "Ground":
+            case "Pillar":
+                Die();
+                break;
         }
     }
 
@@ -85,56 +96,61 @@ public class BirdController : MonoBehaviour
 
     #region Helper Methods
 
+    void DoFlap()
+    {
+        _rigidbody.velocity = new Vector3(0, m_jumpForce);
+        StartCoroutine(AnimFlap());
+    }
+
     /// <summary>
     /// Sets up bird from scene components
     /// </summary>
-    IEnumerator SwapStates()
+    IEnumerator AnimFlap()
     {
+        _renderer.material = m_states[1];
         yield return new WaitForSeconds(0.1f);
-        renderer.material = states[0];
+        _renderer.material = m_states[0];
     }
 
-    /// <summary>
-    /// Gets the player's current score
-    /// </summary>
-    /// <returns>The player's current score</returns>
-    public int GetScore()
+    void Die()
     {
-        return score;
+        _active = false;
+        StartCoroutine(DeathTurn());
+        EndGame(false);
     }
 
-    /// <summary>
-    /// Returns if the bird is dead or not
-    /// </summary>
-    /// <returns>True if bird is dead, else false</returns>
-    public bool IsDead()
+    void StartGame()
     {
-        return dead;
+        _started = true;
+        _active = true;
+        _rigidbody.useGravity = true;
+        _rigidbody.velocity = Vector3.zero;
+        MinigameManager.Instance.StartGame();
     }
 
-    /// <summary>
-    /// Unpauses the mini game 
-    /// </summary>
-    public void UnPause()
+    void EndGame(bool won)
     {
-        paused = false;
+        if (won)
+        {
+            _rigidbody.useGravity = false;
+            _rigidbody.velocity = Vector3.zero;
+        }
+        PillarController.Stop();
+        _done = true;
+        MinigameManager.Instance.EndGame(won, _score);
     }
 
-    /// <summary>
-    /// Returns if the game is paused or not
-    /// </summary>
-    /// <returns>True if game is paused else false</returns>
-    internal bool IsPaused()
+    IEnumerator DeathTurn()
     {
-        return paused;
-    }
-
-    /// <summary>
-    /// Pauses the game
-    /// </summary>
-    public void Pause()
-    {
-        paused = true;
+        float startRot = XRotation;
+        float endRot = startRot - 90;
+        for (float turnPercent = 0; turnPercent < 1;
+             turnPercent = Mathf.Clamp01(turnPercent + (Time.deltaTime / m_deathTurnTime)))
+        {
+            XRotation = Mathf.SmoothStep(startRot, endRot, turnPercent);
+            yield return null;
+        }
+        XRotation = endRot;
     }
 
     #endregion
