@@ -379,7 +379,7 @@ public class Game : MonoBehaviour
             EndGame(winner);
         else
         {
-            m_dialog.SetDialogType(DialogType.PlayerElimated);
+            m_dialog.SetDialogType(DialogType.PlayerEliminated);
             m_dialog.SetDialogData(string.Format(PlayerEliminatedFormat, eliminated.Id + 1));
             m_dialog.Show();
         }

@@ -45,7 +45,7 @@ public class Dialog : MonoBehaviour
             case DialogType.EndGame:
                 ApplyDialogState("GAME OVER!", false, false, true, true, false, false);
                 break;
-            case DialogType.PlayerElimated:
+            case DialogType.PlayerEliminated:
                 ApplyDialogState("ELIMINATED!", true, true, false, false, false, false);
                 break;
             case DialogType.SaveQuit:
@@ -96,8 +96,8 @@ public class Dialog : MonoBehaviour
             case DialogType.EndGame:
                 m_dialogInfo.GetComponent<Text>().text = player + " WON!";
                 break;
-            case DialogType.PlayerElimated:
-                m_dialogInfo.GetComponent<Text>().text = player + "\nwas eliminated";
+            case DialogType.PlayerEliminated:
+                m_dialogInfo.GetComponent<Text>().text = player + "\n was eliminated";
                 break;
         }
     }

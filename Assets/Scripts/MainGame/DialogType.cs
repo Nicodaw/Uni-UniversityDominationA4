@@ -10,7 +10,7 @@ public enum DialogType
     /// <summary>
     /// The player elimated dialog.
     /// </summary>
-    PlayerElimated,
+    PlayerEliminated,
     /// <summary>
     /// The save &amp; quit dialog.
     /// </summary>
