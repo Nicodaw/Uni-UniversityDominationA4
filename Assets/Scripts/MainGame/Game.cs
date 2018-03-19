@@ -18,8 +18,6 @@ public class Game : MonoBehaviour
 
     #region Private Fields
 
-    const string PlayerEliminatedFormat = "Player {0} was eliminated!";
-
     static Game _instance;
     const float _ColorConvert = 255;
     static Tuple<PlayerKind, Color>[] _defaultPlayerData =
@@ -380,7 +378,7 @@ public class Game : MonoBehaviour
         else
         {
             m_dialog.SetDialogType(DialogType.PlayerEliminated);
-            m_dialog.SetDialogData(string.Format(PlayerEliminatedFormat, eliminated.Id + 1));
+            m_dialog.SetDialogData(eliminated.ToString());
             m_dialog.Show();
         }
     }
@@ -397,7 +395,7 @@ public class Game : MonoBehaviour
         _processEvents = false;
 
         m_dialog.SetDialogType(DialogType.EndGame);
-        m_dialog.SetDialogData(winner.name);
+        m_dialog.SetDialogData(winner.ToString());
         m_dialog.Show();
         Debug.Log("GAME FINISHED");
     }

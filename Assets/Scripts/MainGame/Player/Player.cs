@@ -259,7 +259,7 @@ public abstract class Player : MonoBehaviour
 
     #region Overrides
 
-    public override string ToString() => string.Format("Player({0})", Id);
+    public override string ToString() => string.Format("Player {0}", Id+1);
 
     #endregion
 }

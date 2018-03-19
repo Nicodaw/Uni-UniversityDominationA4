@@ -43,7 +43,7 @@ public class Dialog : MonoBehaviour
         switch (type)
         {
             case DialogType.EndGame:
-                ApplyDialogState("GAME OVER!", false, false, true, true, false, false);
+                ApplyDialogState("GAME OVER!", true, false, true, true, false, false);
                 break;
             case DialogType.PlayerEliminated:
                 ApplyDialogState("ELIMINATED!", true, true, false, false, false, false);
