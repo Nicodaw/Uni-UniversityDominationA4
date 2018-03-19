@@ -4,7 +4,7 @@ using UnityEngine;
 
 //Added by Jack
 [RequireComponent(typeof(Rigidbody))]
-public class Bird : MonoBehaviour
+public class BirdController : MonoBehaviour
 {
     #region Unity Bindings
 
@@ -74,7 +74,7 @@ public class Bird : MonoBehaviour
         }
         else if (collision.transform.tag == "Ground")
         {
-            MovingPillars.Stop();
+            PillarController.Stop();
             paused = true;
             dead = true;
             rb.constraints = RigidbodyConstraints.FreezePositionZ;

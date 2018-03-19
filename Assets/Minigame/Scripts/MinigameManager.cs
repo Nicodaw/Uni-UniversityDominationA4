@@ -31,7 +31,7 @@ public class MinigameManager : MonoBehaviour
     List<GameObject> pillars = new List<GameObject>();
     List<GameObject> clouds = new List<GameObject>();
     bool gameOver = false;
-    Bird birdComponent;
+    BirdController birdComponent;
 
     #endregion
 
@@ -58,7 +58,7 @@ public class MinigameManager : MonoBehaviour
             instance = this;
         else
             Destroy(this);
-        MovingPillars.Reset();
+        PillarController.Reset();
     }
 
     /// <summary>
@@ -69,7 +69,7 @@ public class MinigameManager : MonoBehaviour
         GameObject goBird = Instantiate(birdPrefab, Vector3.zero, Quaternion.identity, startPos.transform);
         goBird.transform.localPosition = Vector3.zero;
         goBird.transform.localRotation = Quaternion.identity;
-        birdComponent = goBird.GetComponent<Bird>();
+        birdComponent = goBird.GetComponent<BirdController>();
         StartCoroutine(Countdown());
     }
 
@@ -112,7 +112,7 @@ public class MinigameManager : MonoBehaviour
         int reward = Mathf.FloorToInt((birdComponent.GetScore() + 1f) / 2f);
         Game.MinigameReward = new EffectImpl.MinigameRewardEffect(CurrentPlayerId, reward, reward);
         yield return new WaitForSeconds(3);
-        SceneManager.LoadScene("MainGame");
+        //SceneManager.LoadScene("MainGame");
     }
 
     /// <summary>
@@ -172,7 +172,7 @@ public class MinigameManager : MonoBehaviour
         if (Random.value < 0.005f)
         {
             clouds.Add(Instantiate(cloudPrefab, new Vector3(10.5f, Random.value * 3 + 1.5f, Random.value * 0.2f - 0.1f + 6.21f), Quaternion.Euler(90, 180, 0)));
-            clouds[clouds.Count - 1].GetComponent<MovingPillars>().SetSpeed(Random.value * 2 + 3);
+            clouds[clouds.Count - 1].GetComponent<PillarController>().SetSpeed(Random.value * 2 + 3);
         }
     }
 

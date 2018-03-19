@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MovingPillars : MonoBehaviour
+public class PillarController : MonoBehaviour
 {
     #region Unity Bindings
 
