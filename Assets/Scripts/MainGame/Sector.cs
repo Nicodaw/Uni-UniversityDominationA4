@@ -250,23 +250,6 @@ public class Sector : MonoBehaviour
         Unit tmp = Unit;
         Unit = other.Unit;
         other.Unit = tmp;
-        // since a unit can exist in a sector but be destroyed, we need to check
-        // for null units
-        //Unit thisUnit;
-        //Unit otherUnit;
-        //// get this unit while 
-        //if (Unit == null)
-        //    thisUnit = null;
-        //else
-        //    thisUnit = Unit;
-
-        //if (other.Unit == null)
-        //    otherUnit = null;
-        //else
-        //    otherUnit = other.Unit;
-
-        //Unit = otherUnit;
-        //other.Unit = thisUnit;
     }
 
     #endregion
