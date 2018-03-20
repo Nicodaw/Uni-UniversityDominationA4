@@ -373,6 +373,10 @@ public class Game : MonoBehaviour
     {
         OnPlayerEliminated?.Invoke(eliminated, new EliminatedEventArgs(eliminator));
         Player winner = Players.Winner;
+        foreach (Sector conqueredSector in eliminated.OwnedSectors)
+        {
+            conqueredSector.Owner = eliminator;
+        }
         if (winner != null)
             EndGame(winner);
         else
