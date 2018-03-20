@@ -44,4 +44,4 @@ archive:
 clean:
 	rm -fR Builds/*
 
-.PHONY: build clean
+.PHONY: release
