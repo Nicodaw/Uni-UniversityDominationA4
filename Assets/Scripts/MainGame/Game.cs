@@ -411,10 +411,11 @@ public class Game : MonoBehaviour
         m_actionsRemaining.text = CurrentPlayer.ActionsRemaining.ToString();
     }
 
-    public void TriggerMinigame(Player minigamePlayer)
-    {
-        StartCoroutine(TriggerMinigameInternal(minigamePlayer));
-    }
+    /// <summary>
+    /// Triggers the minigame with the given player who will receive the reward.
+    /// </summary>
+    /// <param name="minigamePlayer">The player who will receive the reward.</param>
+    public void TriggerMinigame(Player minigamePlayer) => StartCoroutine(TriggerMinigameInternal(minigamePlayer));
 
     IEnumerator TriggerMinigameInternal(Player minigamePlayer)
     {
@@ -428,8 +429,7 @@ public class Game : MonoBehaviour
     }
 
     /// <summary>
-    /// Allocates a reward to the player when they complete the mini game
-    /// Reward = (Number of coins collected + 1) / 2 added to attack and defence bonus
+    /// Allocates a reward to the player when they complete the mini game.
     /// </summary>
     internal void ApplyReward()
     {
