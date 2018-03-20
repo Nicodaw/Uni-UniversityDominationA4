@@ -59,7 +59,8 @@ public class PillarController : MonoBehaviour
     {
         _stopped = true;
     }
-    public static void ResetPillars()
+
+    public static void Reset()
     {
         _stopped = false;
     }

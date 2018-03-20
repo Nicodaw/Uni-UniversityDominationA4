@@ -85,6 +85,7 @@ public class MinigameManager : MonoBehaviour
         m_startOverlay.SetActive(false);
         _active = true;
         _lastPillarSpawnTime = 0;
+        PillarController.Reset();
     }
 
     /// <summary>
@@ -104,7 +105,6 @@ public class MinigameManager : MonoBehaviour
         yield return new WaitForSeconds(3);
         Debug.Log("Switching back to main game");
         SceneManager.LoadScene("MainGame");
-        PillarController.ResetPillars();
     }
 
     /// <summary>
