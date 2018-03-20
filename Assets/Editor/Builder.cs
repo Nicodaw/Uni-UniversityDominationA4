@@ -53,7 +53,7 @@ public static class ProjectBuilder
             scenes = scenes,
             locationPathName = buildPath + name,
             target = target,
-            options = BuildOptions.None
+            options = BuildHelper.CurrentBuildOptions
         });
         Debug.Log("=@= Build complete! =@=");
     }

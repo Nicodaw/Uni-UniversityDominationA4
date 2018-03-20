@@ -1,5 +1,7 @@
 # the path to the Unity application
 UNITY_APP=/Applications/Unity/Unity.app/Contents/MacOS/Unity
+UNITY_BUILD_CMD=$(UNITY_APP) -batchmode -runEditorTests -logFile "Builds/build.log" -quit -executeMethod ProjectBuilder.BuildProject
+UNITY_DEBUG_ARG=-arg-debug
 # dirs
 BUILD_DIR=Builds/
 BUILD_LOG=$(BUILD_DIR)build.log
@@ -14,11 +16,18 @@ BUILD_WIN32=$(BUILD_DIR)win32
 BUILD_WIN64=$(BUILD_DIR)win64
 
 # default action
-all: clean build archive
+release: clean build-release archive
 
-# build action
-build:
-	$(UNITY_APP) -batchmode -runEditorTests -logFile "Builds/build.log" -quit -executeMethod ProjectBuilder.BuildProject
+# debug build action
+debug: clean build-debug archive
+
+# debug builder
+build-debug:
+	$(UNITY_BUILD_CMD) $(UNITY_DEBUG_ARG)
+
+# release builder
+build-release:
+	$(UNITY_BUILD_CMD)
 
 # creates archives for build uploading
 archive:

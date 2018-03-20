@@ -1,9 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 
 public static class BuildHelper
 {
+    static Lazy<BuildOptions> _currentOptions = new Lazy<BuildOptions>(
+        () => System.Environment.GetCommandLineArgs().Contains("-arg-debug") ?
+        BuildOptions.Development | BuildOptions.AllowDebugging :
+        BuildOptions.None);
+
+    public static BuildOptions CurrentBuildOptions => _currentOptions.Value;
+
     public static IEnumerable<Tuple<string, BuildTarget>> BuildNames(bool includeiOS)
     {
 #if UNITY_2017_3_OR_NEWER
