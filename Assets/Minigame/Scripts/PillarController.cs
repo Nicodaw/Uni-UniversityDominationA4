@@ -59,6 +59,10 @@ public class PillarController : MonoBehaviour
     {
         _stopped = true;
     }
+    public static void ResetPillars()
+    {
+        _stopped = false;
+    }
 
     #endregion
 }

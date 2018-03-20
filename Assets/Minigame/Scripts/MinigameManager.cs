@@ -104,6 +104,7 @@ public class MinigameManager : MonoBehaviour
         yield return new WaitForSeconds(3);
         Debug.Log("Switching back to main game");
         SceneManager.LoadScene("MainGame");
+        PillarController.ResetPillars();
     }
 
     /// <summary>
