@@ -34,7 +34,6 @@ public class MinigameManager : MonoBehaviour
     [SerializeField] float m_cloudSpawnChance;
     [SerializeField] Vector3 m_minPos;
     [SerializeField] Vector3 m_maxPos;
-    [SerializeField] float m_maxScore = 10;
 
     #endregion
 

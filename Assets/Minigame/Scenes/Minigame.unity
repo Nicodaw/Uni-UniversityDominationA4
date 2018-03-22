@@ -312,7 +312,6 @@ MonoBehaviour:
   m_cloudSpawnChance: 0.002
   m_minPos: {x: -8.43, y: -4.73, z: 0}
   m_maxPos: {x: 7.96, y: 7.27, z: 0}
-  m_maxScore: 10
 --- !u!4 &215160328
 Transform:
   m_ObjectHideFlags: 0
