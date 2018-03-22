@@ -1,11 +1,11 @@
-# the path to the Unity application
-UNITY_APP=/Applications/Unity/Unity.app/Contents/MacOS/Unity
-UNITY_BUILD_CMD=$(UNITY_APP) -batchmode -runEditorTests -logFile "Builds/build.log" -quit -executeMethod ProjectBuilder.BuildProject
-UNITY_DEBUG_ARG=-arg-debug
 # dirs
 BUILD_DIR=Builds/
 BUILD_LOG=$(BUILD_DIR)build.log
 ARCHIVE_DIR=Archives/
+# the path to the Unity application
+UNITY_APP=/Applications/Unity/Unity.app/Contents/MacOS/Unity
+UNITY_BUILD_CMD=$(UNITY_APP) -batchmode -runEditorTests -logFile "$(BUILD_LOG)" -quit -executeMethod ProjectBuilder.BuildProject
+UNITY_DEBUG_ARG=-arg-debug
 # build paths
 BUILD_ANDROID=$(BUILD_DIR)UniversityDomination.apk
 BUILD_LINUX32=$(BUILD_DIR)linux32
