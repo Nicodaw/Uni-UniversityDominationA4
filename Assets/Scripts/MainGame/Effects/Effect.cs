@@ -85,7 +85,7 @@ public abstract class Effect
     public virtual void ProcessUnitMove(object sender, UpdateEventArgs<Sector> e)
     { }
 
-    public virtual void ProcessUnitDeath(object sender, EventArgs e)
+    public virtual void ProcessUnitDeath(object sender, EliminatedEventArgs e)
     { }
 
     #endregion

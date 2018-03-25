@@ -157,7 +157,7 @@ public class EffectManager : MonoBehaviour
 
     void Game_OnUnitMove(object sender, UpdateEventArgs<Sector> e) => InternalHandler(ef => ef.ProcessUnitMove(sender, e));
 
-    void Game_OnUnitDeath(object sender, EventArgs e) => InternalHandler(ef => ef.ProcessUnitDeath(sender, e));
+    void Game_OnUnitDeath(object sender, EliminatedEventArgs e) => InternalHandler(ef => ef.ProcessUnitDeath(sender, e));
 
     void InternalHandler(Action<Effect> handler)
     {

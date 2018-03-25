@@ -33,6 +33,12 @@ public class Game : MonoBehaviour
     Map _map;
     PlayerManager _players;
     int _currentPlayerId;
+    /// <summary>
+    /// Item1: Eliminated.
+    /// Item2: Eliminator.
+    /// </summary>
+    Queue<Tuple<Player, Player>> _eliminatedPlayers = new Queue<Tuple<Player, Player>>();
+    bool _eliminatedPlayerRoutineActive;
 
     #endregion
 
@@ -142,7 +148,7 @@ public class Game : MonoBehaviour
     /// Raised when a unit dies.
     /// Sender is the unit who died.
     /// </summary>
-    public event EventHandler OnUnitDeath;
+    public event EventHandler<EliminatedEventArgs> OnUnitDeath;
 
     #endregion
 
@@ -333,7 +339,7 @@ public class Game : MonoBehaviour
             return;
 
         OnSectorCaptured?.Invoke(sender, e);
-        if (e.OldValue?.IsEliminated ?? false)
+        if (e.NewValue != null && (e.OldValue?.IsEliminated ?? false))
             // if the old player is eliminated, it means that this sector was
             // the last one keeping them in the game
             PlayerEliminated(e.OldValue, e.NewValue);
@@ -348,12 +354,14 @@ public class Game : MonoBehaviour
         OnUnitMove?.Invoke(sender, e);
     }
 
-    void Sector_OnUnitDeath(object sender, EventArgs e)
+    void Sector_OnUnitDeath(object sender, EliminatedEventArgs e)
     {
         if (!ProcessEvents)
             return;
-
         OnUnitDeath?.Invoke(sender, e);
+        Player owner = ((Unit)sender).Owner;
+        if (owner.IsEliminated)
+            PlayerEliminated(owner, e.Eliminator);
     }
 
     #endregion
@@ -371,18 +379,41 @@ public class Game : MonoBehaviour
 
     void PlayerEliminated(Player eliminated, Player eliminator)
     {
-        OnPlayerEliminated?.Invoke(eliminated, new EliminatedEventArgs(eliminator));
-        foreach (Sector conqueredSector in eliminated.OwnedSectors)
-            conqueredSector.Owner = null;
-        Player winner = Players.Winner;
-        if (winner != null)
-            EndGame(winner);
-        else
+        if (!_eliminatedPlayers.Select(p => p.Item1).Contains(eliminated))
+            _eliminatedPlayers.Enqueue(Tuple.Create(eliminated, eliminator));
+        if (!_eliminatedPlayerRoutineActive)
+            StartCoroutine(PlayerEliminatedInternal());
+    }
+
+    IEnumerator PlayerEliminatedInternal()
+    {
+        _eliminatedPlayerRoutineActive = true;
+        while (_eliminatedPlayers.Count > 0)
         {
-            m_dialog.SetDialogType(DialogType.PlayerEliminated);
-            m_dialog.SetDialogData(eliminated.ToString());
-            m_dialog.Show();
+            Tuple<Player, Player> elim = _eliminatedPlayers.Peek();
+            Player eliminated = elim.Item1;
+            Player eliminator = elim.Item2;
+
+            OnPlayerEliminated?.Invoke(eliminated, new EliminatedEventArgs(eliminator));
+            foreach (Sector conqueredSector in eliminated.OwnedSectors)
+                conqueredSector.Owner = null;
+            Player winner = Players.Winner;
+            if (winner != null)
+                EndGame(winner);
+            else
+            {
+                m_dialog.SetDialogType(DialogType.PlayerEliminated);
+                m_dialog.SetDialogData(eliminated.ToString());
+                m_dialog.Show();
+                if (CurrentPlayer == eliminated)
+                    CurrentPlayer.EndTurn();
+            }
+            while (m_dialog.IsShown)
+                yield return null;
+            // dequeue at end to prevent re-adding
+            _eliminatedPlayers.Dequeue();
         }
+        _eliminatedPlayerRoutineActive = false;
     }
 
     public void EndCurrentTurn() => CurrentPlayer.EndTurn();

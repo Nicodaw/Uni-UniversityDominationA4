@@ -66,7 +66,7 @@ public class Unit : MonoBehaviour
     /// <summary>
     /// Raised when the unit dies.
     /// </summary>
-    public event EventHandler OnDeath;
+    public event EventHandler<EliminatedEventArgs> OnDeath;
 
     #endregion
 
@@ -219,12 +219,12 @@ public class Unit : MonoBehaviour
         return a * (Mathf.Pow(z, (-b * Mathf.Abs(x)) + c));
     }
 
-    public void Kill()
+    public void Kill(Player eliminator)
     {
         DestroyedCheck();
         Destroy(gameObject);
-        OnDeath?.Invoke(this, new EventArgs());
         _destroyed = true;
+        OnDeath?.Invoke(this, new EliminatedEventArgs(eliminator));
     }
 
     #endregion
@@ -268,4 +268,3 @@ public class Unit : MonoBehaviour
 
     #endregion
 }
-

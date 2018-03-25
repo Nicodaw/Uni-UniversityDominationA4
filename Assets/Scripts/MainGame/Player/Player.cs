@@ -213,11 +213,11 @@ public abstract class Player : MonoBehaviour
             bool won = from.Unit.Attack(target.Unit);
             if (won)
             {
-                target.Unit.Kill(); // destroy enemy unit, making it null
+                target.Unit.Kill(this); // destroy enemy unit, making it null
                 from.TransferUnits(target); // since target unit is now null,
             }
             else
-                from.Unit.Kill(); // destroy current unit, making it null
+                from.Unit.Kill(target.Unit.Owner); // destroy current unit, making it null
         }
 
         // whenever a move it attempted an action is consumed

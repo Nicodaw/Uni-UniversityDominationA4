@@ -163,7 +163,7 @@ public class Sector : MonoBehaviour
     /// This event is a pure pass-through to reduce the need to dynamically
     /// re-bind events on unit create/move/death.
     /// </summary>
-    public event EventHandler OnUnitDeath;
+    public event EventHandler<EliminatedEventArgs> OnUnitDeath;
 
     #endregion
 
@@ -221,10 +221,10 @@ public class Sector : MonoBehaviour
 
     #region Handlers
 
-    void Unit_OnDeath(object sender, EventArgs e)
+    void Unit_OnDeath(object sender, EliminatedEventArgs e)
     {
+        _unit.OnDeath -= Unit_OnDeath;
         OnUnitDeath?.Invoke(sender, e);
-        Unit.OnDeath -= Unit_OnDeath;
     }
 
     #endregion
