@@ -377,7 +377,7 @@ public class Game : MonoBehaviour
         m_dialog.Toggle();
     }
 
-    void PlayerEliminated(Player eliminated, Player eliminator)
+    internal void PlayerEliminated(Player eliminated, Player eliminator)
     {
         if (!_eliminatedPlayers.Select(p => p.Item1).Contains(eliminated))
             _eliminatedPlayers.Enqueue(Tuple.Create(eliminated, eliminator));
@@ -423,7 +423,7 @@ public class Game : MonoBehaviour
     /// Displays a Dialog saying which player has won and allows the player to
     /// quit the game or restart the game.
     /// </summary>
-    public void EndGame(Player winner)
+    internal void EndGame(Player winner)
     {
         _processEvents = false;
 

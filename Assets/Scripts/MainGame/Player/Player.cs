@@ -30,11 +30,6 @@ public abstract class Player : MonoBehaviour
     public int Id => _id;
 
     /// <summary>
-    /// The <see cref="Unit"/> prefab object attached to this player.
-    /// </summary>
-    public GameObject UnitPrefab => m_unitPrefab;
-
-    /// <summary>
     /// The <see cref="PlayerUI"/> object attached to this player.
     /// </summary>
     public PlayerUI Gui => _gui;

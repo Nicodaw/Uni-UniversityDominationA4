@@ -25,10 +25,7 @@ public class HumanPlayer : Player
         if (_selectedSector == null)
         {
             if (clickedSector.Unit != null && clickedSector.Unit.Owner == this)
-            {
-                _selectedSector = clickedSector;
-                _selectedSector.ApplyHighlightAdjacent(true);
-            }
+                SelectSector(clickedSector);
         }
         else
         {
