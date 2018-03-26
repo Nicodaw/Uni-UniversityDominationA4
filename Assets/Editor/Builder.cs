@@ -8,7 +8,9 @@ public static class ProjectBuilder
 {
     const string buildPath = "Builds/";
     const string testingResourcesBasePath = "Assets/Resources/Testing";
+    const string testingResourcesBaseMeta = testingResourcesBasePath + ".meta";
     const string testingResourcesTmpPath = "Temp/TestingResources";
+    const string testingResourcesTmpMeta = testingResourcesTmpPath + ".meta";
     static readonly string[] scenes = {
         "Assets/Scenes/MainMenu.unity",
         "Assets/Scenes/MainGame.unity",
@@ -33,8 +35,12 @@ public static class ProjectBuilder
         if (Directory.Exists(testingResourcesBasePath))
         {
             if (Directory.Exists(testingResourcesTmpPath))
+            {
                 Directory.Delete(testingResourcesTmpPath);
+                File.Delete(testingResourcesTmpMeta);
+            }
             Directory.Move(testingResourcesBasePath, testingResourcesTmpPath);
+            File.Move(testingResourcesBaseMeta, testingResourcesTmpMeta);
         }
 
         // perform builds for all platforms
@@ -42,7 +48,10 @@ public static class ProjectBuilder
             PerformBuild(buildItem.Item1, buildItem.Item2, nameMapping[buildItem.Item1]);
 
         if (Directory.Exists(testingResourcesTmpPath))
+        {
             Directory.Move(testingResourcesTmpPath, testingResourcesBasePath);
+            File.Move(testingResourcesTmpMeta, testingResourcesBaseMeta);
+        }
     }
 
     static void PerformBuild(string kind, BuildTarget target, string name)
