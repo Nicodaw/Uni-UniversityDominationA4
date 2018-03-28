@@ -339,7 +339,7 @@ public class Game : MonoBehaviour
             return;
 
         OnSectorCaptured?.Invoke(sender, e);
-        if (e.NewValue != null && (e.OldValue?.IsEliminated ?? false))
+        if (e.OldValue?.IsEliminated ?? false)
             // if the old player is eliminated, it means that this sector was
             // the last one keeping them in the game
             PlayerEliminated(e.OldValue, e.NewValue);

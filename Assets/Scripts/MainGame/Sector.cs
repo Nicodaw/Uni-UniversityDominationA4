@@ -100,7 +100,7 @@ public class Sector : MonoBehaviour
             // or gray if null
             gameObject.GetComponent<Renderer>().material.color = Owner?.Color ?? Color.gray;
 
-            if (prev != Owner)
+            if (Owner != null && prev != Owner)
                 OnCaptured?.Invoke(this, new UpdateEventArgs<Player>(prev, Owner));
         }
     }
