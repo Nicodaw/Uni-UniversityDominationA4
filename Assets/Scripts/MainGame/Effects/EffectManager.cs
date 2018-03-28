@@ -18,34 +18,21 @@ public class EffectManager : MonoBehaviour
 
     #region Public Properties
 
-    public int Attack
-    {
-        get
-        {
-            return 0 + // default value
-                _effects.Values
-                        .Where(ef => ef.AttackBonus.HasValue)
-                        .Sum(ef => ef.AttackBonus.Value);
-        }
-    }
+    public int EffectCount => _effects.Count;
 
-    public int Defence
-    {
-        get
-        {
-            return 0 + // default value
-                _effects.Values.Where(ef => ef.DefenceBonus.HasValue).Sum(ef => ef.DefenceBonus.Value);
-        }
-    }
+    public int Attack =>
+    0 + // default value
+    _effects.Values
+            .Where(ef => ef.AttackBonus.HasValue)
+            .Sum(ef => ef.AttackBonus.Value);
 
-    public int Actions
-    {
-        get
-        {
-            return 2 + // default value
-                _effects.Values.Where(ef => ef.ActionBonus.HasValue).Sum(ef => ef.ActionBonus.Value);
-        }
-    }
+    public int Defence =>
+    0 + // default value
+    _effects.Values.Where(ef => ef.DefenceBonus.HasValue).Sum(ef => ef.DefenceBonus.Value);
+
+    public int Actions =>
+    2 + // default value
+    _effects.Values.Where(ef => ef.ActionBonus.HasValue).Sum(ef => ef.ActionBonus.Value);
 
     public bool Traversable
     {
@@ -58,23 +45,13 @@ public class EffectManager : MonoBehaviour
         }
     }
 
-    public int MoveRange
-    {
-        get
-        {
-            return 1 + // default value
-                _effects.Values.Where(ef => ef.MoveRangeBonus.HasValue).Sum(ef => ef.MoveRangeBonus.Value);
-        }
-    }
+    public int MoveRange =>
+    1 + // default value
+    _effects.Values.Where(ef => ef.MoveRangeBonus.HasValue).Sum(ef => ef.MoveRangeBonus.Value);
 
-    public int LevelCap
-    {
-        get
-        {
-            return 5 + // default value
-                _effects.Values.Where(ef => ef.LevelCapBonus.HasValue).Sum(ef => ef.LevelCapBonus.Value);
-        }
-    }
+    public int LevelCap =>
+    5 + // default value
+    _effects.Values.Where(ef => ef.LevelCapBonus.HasValue).Sum(ef => ef.LevelCapBonus.Value);
 
     #endregion
 
@@ -169,6 +146,8 @@ public class EffectManager : MonoBehaviour
 
     #region Helper Methods
 
+    IEnumerable<Effect> GetEffects<T>() where T : Effect => _effects.Values.Where(ef => typeof(T).IsAssignableFrom(ef.GetType()));
+
     public void ApplyEffect(Effect effect)
     {
         _effects.Add(_nextEffectId, effect);
@@ -176,7 +155,7 @@ public class EffectManager : MonoBehaviour
         _nextEffectId++;
     }
 
-    public bool HasEffect<T>() => GetEffects<T>().Any();
+    public bool HasEffect<T>() where T : Effect => GetEffects<T>().Any();
 
     public void RemoveEffect(Effect effect)
     {
@@ -197,7 +176,7 @@ public class EffectManager : MonoBehaviour
             RemoveEffect(toRemove.Pop());
     }
 
-    IEnumerable<Effect> GetEffects<T>() => _effects.Values.Where(ef => ef.GetType() == typeof(T));
+    public void RemoveAllEffects() => RemoveEffect<Effect>();
 
     #endregion
 }

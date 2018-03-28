@@ -37,7 +37,7 @@ public class Unit : MonoBehaviour
     public Player Owner
     {
         get { return _owner.HasValue ? Game.Instance.Players[_owner.Value] : null; }
-        set { _owner = value?.Id; }
+        private set { _owner = value?.Id; }
     }
 
     /// <summary>

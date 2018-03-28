@@ -65,7 +65,7 @@ public class Sector : MonoBehaviour
 
                 _unit = value;
                 _unit.transform.parent = _unitStore.transform;
-                _unit.transform.position = _unitStore.transform.position;
+                _unit.transform.localPosition = Vector3.zero;
                 _unit.Sector = this;
 
                 // if the target sector belonged to a different 
