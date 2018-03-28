@@ -1,99 +1,151 @@
-﻿#if false
+﻿#if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public abstract class BaseGameTest
 {
     #region Test Environment
 
-    protected Game game;
-    protected Map map;
-    protected PlayerUI[] gui;
+    /// <summary>
+    /// The main game object.
+    /// </summary>
+    protected Game game => Game.Instance;
 
-    protected Player[] Players
-    {
-        get { return game.players; }
-    }
+    /// <summary>
+    /// The current player manager.
+    /// </summary>
+    protected PlayerManager Players => game.Players;
+
+    protected Map map => game.Map;
 
     #endregion
 
     #region Test Management
 
-    const string resourcePath = "Testing/";
-    List<GameObject> unitObjects = new List<GameObject>(); // used to keep track of units
-
     [SetUp]
     public void SetUp()
     {
-        // grab main game assets
-        game = Object.Instantiate(Resources.Load<GameObject>(resourcePath + "GameManager")).GetComponent<Game>();
-        map = Object.Instantiate(Resources.Load<GameObject>(resourcePath + "Map")).GetComponent<Map>();
-
-        // grab GUI asset and extract players UIs
-        GameObject mainGui = Object.Instantiate(Resources.Load<GameObject>(resourcePath + "GUI"));
-        gui = mainGui.GetComponentsInChildren<PlayerUI>();
-
-        // the "Scenery" asset contains the camera and light source of the 4x4 Test
-        // can uncomment to view scene as tests run, but significantly reduces speed
-        //MonoBehaviour.Instantiate(Resources.Load<GameObject>("Scenery"));
-
-        // establish references
-        game.gameMap = map.gameObject;
-        game.actionsRemaining = mainGui.transform.Find("RemainingActionsValue").gameObject.GetComponent<UnityEngine.UI.Text>();
-        game.dialog = mainGui.transform.Find("Dialog").GetComponent<Dialog>();
-
-        map.game = game;
-        //map.Sectors = map.gameObject.GetComponentsInChildren<Sector>();
-
-        // establish references to a PlayerUI and Game for each player & initialize GUI
-        for (int i = 0; i < Players.Length; i++)
-        {
-            Players[i].Gui = gui[i];
-            Players[i].Game = game;
-            Players[i].Gui.Initialize(Players[i], i + 1);
-        }
-        game.neutralPlayer.Gui = gui.Last();
-        game.neutralPlayer.Game = game;
+        // load test scene
+        SceneManager.LoadScene("TestScene", LoadSceneMode.Additive);
     }
 
     [TearDown]
     public void TearDown()
     {
-        Object.Destroy(game.gameObject);
-        Object.Destroy(map.gameObject);
-        Object.Destroy(Players[0].transform.parent.gameObject);
-        Object.Destroy(gui[0].transform.parent.gameObject);
-        foreach (GameObject go in unitObjects)
-            if (go != null)
-                Object.Destroy(go);
+        // destroy main scene object
+        UnityEngine.Object.Destroy(GameObject.Find("Scene"));
+        GameObject mapGobj = GameObject.Find("DefaultMap(Clone)");
+        if (mapGobj != null)
+            UnityEngine.Object.Destroy(mapGobj);
+        SceneManager.UnloadSceneAsync("TestScene");
+    }
+
+    protected IEnumerable<Tuple<PlayerKind, Color>> DefaultPlayerInitData => Game.DefaultPlayerData.Take(4);
+
+    protected IEnumerable<Tuple<PlayerKind, Color>> AiPlayerInitData => Game.DefaultPlayerData.Take(3).Concat(new[] { Game.DefaultPlayerData[4] });
+
+    protected void DefaultPlayerInit() => Players.InitPlayers(DefaultPlayerInitData);
+
+    protected void AiPlayerInit() => Players.InitPlayers(AiPlayerInitData);
+
+    /// <summary>
+    /// Initializes the game object with default player data.
+    /// </summary>
+    protected void DefGameInit()
+    {
+        Game.PlayerSetupData = DefaultPlayerInitData;
+        game.Init();
     }
 
     /// <summary>
-    /// Instantiates a new unit and tracks it for tear-down.
+    /// Initializes the game's map object and the default player data.
+    /// </summary>
+    protected void DefMapInit()
+    {
+        DefaultPlayerInit();
+        game.InitMap();
+    }
+
+    /// <summary>
+    /// Instantiates a new unit at the given sector.
     /// </summary>
     /// <returns>The new unit.</returns>
+    /// <param name="sector">The sector to spawn the unit at.</param>
     /// <param name="player">The player to take the unit prefab from.</param>
-    protected Unit InitUnit(int player = 0)
+    protected Unit InitUnit(Sector sector, int player = 0)
     {
-        GameObject go = Object.Instantiate(Players[player].UnitPrefab);
-        unitObjects.Add(go);
-        return go.GetComponent<Unit>();
+        Players[player].SpawnUnitAt(sector);
+        return sector.Unit;
     }
 
-    /// <summary>
-    /// Instantiates the given number of new units and tracks them for tear-down.
-    /// This will use the unit prefab in the default player.
-    /// </summary>
-    /// <returns>The new units.</returns>
-    /// <param name="amount">Amount of units to instanciate.</param>
-    protected Unit[] InitUnits(int amount)
+    #endregion
+
+    #region Test Data
+
+    protected class CustomEffect : Effect
     {
-        Unit[] units = new Unit[amount];
-        for (int i = 0; i < amount; i++)
-            units[i] = InitUnit();
-        return units;
+        public UnityEngine.Object appliedObject;
+
+        public EffectManager AppliedManager => Manager;
+
+        public int? attackBonus;
+        public override int? AttackBonus => attackBonus;
+
+        public int? defenceBonus;
+        public override int? DefenceBonus => defenceBonus;
+
+        public int? actionBonus;
+        public override int? ActionBonus => actionBonus;
+
+        public bool? traversable;
+        public override bool? Traversable => traversable;
+
+        public int? moveRangeBonus;
+        public override int? MoveRangeBonus => moveRangeBonus;
+
+        public int? levelCapBonus;
+        public override int? LevelCapBonus => levelCapBonus;
+
+        protected override void ApplyToPlayer(Player player)
+        {
+            appliedObject = player;
+        }
+
+        protected override void ApplyToSector(Sector sector)
+        {
+            appliedObject = sector;
+        }
+
+        protected override void ApplyToUnit(Unit unit)
+        {
+            appliedObject = unit;
+        }
+
+        public override EffectAvailableSelection AvailableSelection(Game game)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    protected class CustomSecondaryEffect : Effect
+    {
+        protected override void ApplyToPlayer(Player player)
+        { }
+
+        protected override void ApplyToSector(Sector sector)
+        { }
+
+        protected override void ApplyToUnit(Unit unit)
+        { }
+
+        public override EffectAvailableSelection AvailableSelection(Game game)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     #endregion

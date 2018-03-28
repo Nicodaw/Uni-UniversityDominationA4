@@ -1,212 +1,296 @@
-﻿#if false
+﻿#if UNITY_EDITOR
+using System.Linq;
 using NUnit.Framework;
 
 public class PlayerTest : BaseGameTest
 {
+    [SetUp]
+    public void PlayerTest_SetUp() => DefMapInit();
+
     [Test]
-    public void CaptureSector_ChangesOwner()
+    public void Units_Correct()
     {
-        Player previousOwner = map.Sectors[0].Owner;
-
-        game.players[0].Capture(map.Sectors[0]);
-        Assert.That(map.Sectors[0].Owner, Is.EqualTo(game.players[0])); // owner stored in sector
-        Assert.That(game.players[0].OwnedSectors, Contains.Item(map.Sectors[0])); // sector is stored as owned by the player
-
-        if (previousOwner != null) // if sector had previous owner
-            Assert.That(previousOwner.OwnedSectors, Does.Not.Contains(map.Sectors[0])); // sector has been removed from previous owner list
+        Sector target = map.Sectors.First(s => s.Unit == null);
+        InitUnit(target, 0);
+        Assume.That(target.Unit, Is.Not.Null);
+        Assume.That(target.Unit.Owner, Is.EqualTo(Players[0]));
+        target = map.Sectors.First(s => s.Unit == null);
+        InitUnit(target, 0);
+        Assert.That(Players[0].Units, Is.EquivalentTo(map.Sectors.Select(s => s.Unit).Where(u => u?.Owner == Players[0])));
+        Assert.That(Players[0].Units.Count(), Is.EqualTo(3));
+        Assert.That(Players[1].Units, Is.EquivalentTo(map.Sectors.Select(s => s.Unit).Where(u => u?.Owner == Players[1])));
+        Assert.That(Players[1].Units.Count(), Is.EqualTo(1));
     }
 
     [Test]
-    public void CaptureLandmark_BothPlayersBeerAmountCorrect()
+    public void HasUnits_Correct()
     {
-        // capturing landmark
-        Sector landmarkedSector = map.Sectors[1];
-        landmarkedSector.Initialize();
-
-        Landmark landmark = landmarkedSector.Landmark;
-        Player playerA = game.players[0];
-        Player playerB = game.players[1];
-        playerB.Capture(landmarkedSector);
-
-        // ensure 'landmarkedSector' is a landmark of type Beer
-        Assert.That(landmarkedSector.Landmark, Is.Not.Null);
-        landmark.Resource = ResourceType.Attack;
-
-        // get beer amounts for each player before capture
-        int attackerBeerBeforeCapture = playerA.AttackBonus;
-        int defenderBeerBeforeCapture = playerB.AttackBonus;
-        Player previousOwner = landmarkedSector.Owner;
-
-        playerA.Capture(landmarkedSector);
-
-        // ensure sector is captured correctly
-        Assert.That(landmarkedSector.Owner, Is.EqualTo(playerA));
-        Assert.That(playerA.OwnedSectors, Contains.Item(landmarkedSector));
-
-        // ensure resources are transferred correctly
-        Assert.That(attackerBeerBeforeCapture + landmark.Amount, Is.EqualTo(playerA.AttackBonus));
-        Assert.That(defenderBeerBeforeCapture - landmark.Amount, Is.EqualTo(previousOwner.AttackBonus));
+        Assert.That(Players[0].HasUnits, Is.True);
+        foreach (Unit unit in Players[0].Units)
+            unit.Kill(Players[1]);
+        Assert.That(Players[0].HasUnits, Is.False);
+        Assert.That(Players[1].HasUnits, Is.True);
     }
 
     [Test]
-    public void CaptureLandmark_BothPlayersKnowledgeAmountCorrect()
+    public void OwnedSectors_Correct()
     {
-        // capturing landmark
-        Sector landmarkedSector = map.Sectors[1];
-        landmarkedSector.Initialize();
-
-        Landmark landmark = landmarkedSector.Landmark;
-        Player playerA = game.players[0];
-        Player playerB = game.players[1];
-        playerB.Capture(landmarkedSector);
-
-        // ensure 'landmarkedSector' is a landmark of type Knowledge
-        Assert.That(landmarkedSector.Landmark, Is.Not.Null);
-        landmark.Resource = ResourceType.Defence;
-
-        // get knowledge amounts for each player before capture
-        int attackerKnowledgeBeforeCapture = playerA.DefenceBonus;
-        int defenderKnowledgeBeforeCapture = playerB.DefenceBonus;
-        Player previousOwner = landmarkedSector.Owner;
-
-        playerA.Capture(landmarkedSector);
-
-        // ensure sector is captured correctly
-        Assert.That(landmarkedSector.Owner, Is.EqualTo(playerA));
-        Assert.That(playerA.OwnedSectors, Contains.Item(landmarkedSector));
-
-        // ensure resources are transferred correctly
-        Assert.That(attackerKnowledgeBeforeCapture + landmark.Amount, Is.EqualTo(playerA.DefenceBonus));
-        Assert.That(defenderKnowledgeBeforeCapture - landmark.Amount, Is.EqualTo(previousOwner.DefenceBonus));
+        Sector target = map.Sectors.First(s => s.Owner == null);
+        target.Owner = Players[0];
+        target = map.Sectors.First(s => s.Owner == null);
+        target.Owner = Players[0];
+        Assert.That(Players[0].OwnedSectors, Is.EquivalentTo(map.Sectors.Where(s => s.Owner == Players[0])));
+        Assert.That(Players[0].OwnedSectors.Count(), Is.EqualTo(3));
+        Assert.That(Players[1].OwnedSectors, Is.EquivalentTo(map.Sectors.Where(s => s.Owner == Players[1])));
+        Assert.That(Players[1].OwnedSectors.Count(), Is.EqualTo(1));
     }
 
     [Test]
-    public void CaptureLandmark_NeutralLandmarkPlayerBeerAmountCorrect()
+    public void OwnedLandmarkedSectors_Correct()
     {
-        // capturing landmark
-        Sector landmarkedSector = map.Sectors[1];
-        landmarkedSector.Initialize();
-
-        Landmark landmark = landmarkedSector.Landmark;
-        Player playerA = game.players[0];
-
-        // ensure 'landmarkedSector' is a landmark of type Beer
-        Assert.That(landmarkedSector.Landmark, Is.Not.Null);
-        landmark.Resource = ResourceType.Attack;
-
-        // get player beer amount before capture
-        int oldBeer = playerA.AttackBonus;
-
-        playerA.Capture(landmarkedSector);
-
-        // ensure sector is captured correctly
-        Assert.That(landmarkedSector.Owner, Is.EqualTo(playerA));
-        Assert.That(playerA.OwnedSectors, Contains.Item(landmarkedSector));
-
-        // ensure resources are gained correctly
-        Assert.That(playerA.AttackBonus - oldBeer, Is.EqualTo(landmark.Amount));
+        Sector target = map.Sectors.First(s => s.Landmark != null && s.Owner != Players[0] && s.Owner != Players[1]);
+        target.Owner = Players[0];
+        Assume.That(target.Owner, Is.EqualTo(Players[0]));
+        Assert.That(Players[0].OwnedLandmarkSectors, Is.EquivalentTo(map.LandmarkedSectors.Where(s => s.Owner == Players[0])));
+        Assert.That(Players[0].OwnedLandmarkSectors.Count(), Is.EqualTo(2));
+        Assert.That(Players[1].OwnedLandmarkSectors, Is.EquivalentTo(map.LandmarkedSectors.Where(s => s.Owner == Players[1])));
+        Assert.That(Players[1].OwnedLandmarkSectors.Count(), Is.EqualTo(1));
     }
 
     [Test]
-    public void CaptureLandmark_NeutralLandmarkPlayerKnowledgeAmountCorrect()
+    public void OwnsLandmark_Correct()
     {
-        // capturing landmark
-        Sector landmarkedSector = map.Sectors[1];
-        landmarkedSector.Initialize();
-
-        Landmark landmark = landmarkedSector.Landmark;
-        Player playerA = game.players[0];
-
-        // ensure 'landmarkedSector' is a landmark of type Knowledge
-        Assert.That(landmarkedSector.Landmark, Is.Not.Null);
-        landmark.Resource = ResourceType.Defence;
-
-        // get player knowledge amount before capture
-        int oldKnowledge = playerA.DefenceBonus;
-
-        playerA.Capture(landmarkedSector);
-
-        // ensure sector is captured correctly
-        Assert.That(landmarkedSector.Owner, Is.EqualTo(playerA));
-        Assert.That(playerA.OwnedSectors, Contains.Item(landmarkedSector));
-
-        // ensure resources are gained correctly
-        Assert.That(playerA.DefenceBonus - oldKnowledge, Is.EqualTo(landmark.Amount));
+        Assume.That(map.LandmarkedSectors.Where(s => s.Owner == Players[0]).Count(), Is.EqualTo(1));
+        Assert.That(Players[0].OwnsLandmark, Is.True);
+        foreach (Sector sector in map.LandmarkedSectors.Where(s => s.Owner == Players[0]))
+            sector.Owner = null;
+        Assume.That(map.LandmarkedSectors.Where(s => s.Owner == Players[0]).Any(), Is.False);
+        Assert.That(Players[0].OwnsLandmark, Is.False);
+        Assert.That(Players[1].OwnsLandmark, Is.True);
     }
 
     [Test]
-    public void SpawnUnits_SpawnedWhenLandmarkOwnedAndUnoccupied()
+    public void IsEliminated_Correct()
     {
-        Sector landmarkedSector = map.Sectors[1];
-        Player playerA = game.players[0];
-
-        // ensure that 'landmarkedSector' is a landmark and does not contain a unit
-        landmarkedSector.Initialize();
-        landmarkedSector.Unit = null;
-        Assert.That(landmarkedSector.Landmark, Is.Not.Null);
-
-        playerA.Capture(landmarkedSector);
-        playerA.SpawnUnits();
-
-        // ensure a unit has been spawned for playerA in landmarkedSector
-        Assert.That(playerA.Units, Contains.Item(landmarkedSector.Unit));
+        Assert.That(Players[0].IsEliminated, Is.False);
+        foreach (Sector sector in map.Sectors.Where(s => s.Owner == Players[0]))
+        {
+            sector.Unit?.Kill(Players[1]);
+            sector.Owner = null;
+        }
+        Assume.That(map.Sectors.Where(s => s.Owner == Players[0]).Any(), Is.False);
+        Assume.That(map.Sectors.Where(s => s.Unit?.Owner == Players[0]).Any(), Is.False);
+        Assert.That(Players[0].IsEliminated, Is.True);
+        Assert.That(Players[1].IsEliminated, Is.False);
     }
 
     [Test]
-    public void SpawnUnits_NotSpawnedWhenLandmarkOwnedAndOccupied()
+    public void AttemptMove_UnownedSector()
     {
-        Sector landmarkedSector = map.Sectors[1];
-        Player playerA = game.players[0];
+        // set up move
+        Sector origin = Players[0].Units.First().Sector;
+        Sector target = origin.AdjacentSectors.First(s => s.Owner == null);
+        Unit unit = origin.Unit;
+        int startActions = Players[0].ActionsRemaining;
 
-        // ensure that 'landmarkedSector' is a landmark and contains a Level 5 unit
-        landmarkedSector.Initialize();
-        landmarkedSector.Unit = InitUnit(0);
-        landmarkedSector.Unit.Level = 5;
-        landmarkedSector.Unit.Owner = playerA;
-        Assert.That(landmarkedSector.Landmark, Is.Not.Null);
+        Assert.That(origin.Owner, Is.EqualTo(Players[0]));
+        Assert.That(origin.Unit, Is.EqualTo(unit));
+        Assert.That(target.Owner, Is.Null);
+        Assert.That(target.Unit, Is.Null);
 
-        playerA.Capture(landmarkedSector);
-        playerA.SpawnUnits();
+        // do move
+        Players[0].AttemptMove(origin, target);
 
-        // ensure a Level 1 unit has not spawned over the Level 5 unit already in landmarkedSector
-        Assert.That(landmarkedSector.Unit.Level, Is.EqualTo(5));
+        Assert.That(origin.Owner, Is.EqualTo(Players[0]));
+        Assert.That(origin.Unit, Is.Null);
+        Assert.That(target.Owner, Is.EqualTo(Players[0]));
+        Assert.That(target.Unit, Is.EqualTo(unit));
+        Assert.That(Players[0].ActionsRemaining, Is.EqualTo(startActions - 1));
     }
 
     [Test]
-    public void SpawnUnits_NotSpawnedWhenLandmarkNotOwned()
+    public void AttemptMove_SelfOwnedSector()
     {
-        Sector landmarkedSector = map.Sectors[1];
-        Player playerA = game.players[0];
-        Player playerB = game.players[1];
-        landmarkedSector.Unit = null;
+        // set up move
+        Sector origin = Players[0].Units.First().Sector;
+        Sector target = origin.AdjacentSectors.First(s => s.Owner == null);
+        Unit unit = origin.Unit;
+        int startActions = Players[0].ActionsRemaining;
 
-        // ensure that 'landmarkedSector' is a landmark and does not contain a unit
-        landmarkedSector.Initialize();
-        landmarkedSector.Unit = null;
-        Assert.That(landmarkedSector.Landmark, Is.Not.Null);
+        // set owner to test player
+        target.Owner = Players[0];
 
-        playerB.Capture(landmarkedSector);
-        playerA.SpawnUnits();
+        Assert.That(origin.Owner, Is.EqualTo(Players[0]));
+        Assert.That(origin.Unit, Is.EqualTo(unit));
+        Assert.That(target.Owner, Is.EqualTo(Players[0]));
+        Assert.That(target.Unit, Is.Null);
 
-        // ensure no unit is spawned at landmarkedSector
-        Assert.That(landmarkedSector.Unit, Is.Null);
+        // do move
+        Players[0].AttemptMove(origin, target);
+
+        Assert.That(origin.Owner, Is.EqualTo(Players[0]));
+        Assert.That(origin.Unit, Is.Null);
+        Assert.That(target.Owner, Is.EqualTo(Players[0]));
+        Assert.That(target.Unit, Is.EqualTo(unit));
+        Assert.That(Players[0].ActionsRemaining, Is.EqualTo(startActions - 1));
     }
 
     [Test]
-    public void IsEliminated_PlayerWithNoUnitsAndNoLandmarksEliminated()
+    public void AttemptMove_OtherOwnedSector()
     {
-        Player playerA = game.players[0];
+        // set up move
+        Sector origin = Players[0].Units.First().Sector;
+        Sector target = origin.AdjacentSectors.First(s => s.Owner == null);
+        Unit unit = origin.Unit;
+        int startActions = Players[0].ActionsRemaining;
 
-        Assert.That(playerA.IsEliminated(), Is.False); // not eliminated because they have units
+        // set owner to secondary test player
+        target.Owner = Players[1];
 
-        for (int i = 0; i < playerA.Units.Count; i++)
-            playerA.Units[i].DestroySelf(); // removes units
-        Assert.That(playerA.IsEliminated(), Is.False); // not eliminated because they still have a landmark
+        Assert.That(origin.Owner, Is.EqualTo(Players[0]));
+        Assert.That(origin.Unit, Is.EqualTo(unit));
+        Assert.That(target.Owner, Is.EqualTo(Players[1]));
+        Assert.That(target.Unit, Is.Null);
 
-        // player[0] needs to lose their landmark
-        for (int i = 0; i < playerA.OwnedSectors.Count; i++)
-            playerA.OwnedSectors[i].Landmark = null; // player[0] no longer has landmarks
-        Assert.That(playerA.IsEliminated());
+        // do move
+        Players[0].AttemptMove(origin, target);
+
+        Assert.That(origin.Owner, Is.EqualTo(Players[0]));
+        Assert.That(origin.Unit, Is.Null);
+        Assert.That(target.Owner, Is.EqualTo(Players[0]));
+        Assert.That(target.Unit, Is.EqualTo(unit));
+        Assert.That(Players[0].ActionsRemaining, Is.EqualTo(startActions - 1));
+    }
+
+    [Test]
+    public void AttemptMove_SelfOwnedSectorUnit()
+    {
+        // set up move
+        Sector origin = Players[0].Units.First().Sector;
+        Sector target = origin.AdjacentSectors.First(s => s.Owner == null);
+        Unit firstUnit = origin.Unit;
+        Unit secondUnit = InitUnit(target, 0);
+        int startActions = Players[0].ActionsRemaining;
+
+        Assert.That(origin.Owner, Is.EqualTo(Players[0]));
+        Assert.That(origin.Unit, Is.EqualTo(firstUnit));
+        Assert.That(target.Owner, Is.EqualTo(Players[0]));
+        Assert.That(target.Unit, Is.EqualTo(secondUnit));
+
+        // do move
+        Players[0].AttemptMove(origin, target);
+
+        Assert.That(origin.Owner, Is.EqualTo(Players[0]));
+        Assert.That(origin.Unit, Is.EqualTo(secondUnit));
+        Assert.That(target.Owner, Is.EqualTo(Players[0]));
+        Assert.That(target.Unit, Is.EqualTo(firstUnit));
+        Assert.That(Players[0].ActionsRemaining, Is.EqualTo(startActions - 1));
+    }
+
+    [Test]
+    public void AttemptMove_OtherOwnedSectorUnitWin()
+    {
+        // set up move
+        Sector origin = Players[0].Units.First().Sector;
+        Sector target = origin.AdjacentSectors.First(s => s.Owner == null);
+        Unit firstUnit = origin.Unit;
+        Unit secondUnit = InitUnit(target, 1);
+        int startActions = Players[0].ActionsRemaining;
+
+        Assert.That(origin.Owner, Is.EqualTo(Players[0]));
+        Assert.That(origin.Unit, Is.EqualTo(firstUnit));
+        Assert.That(target.Owner, Is.EqualTo(Players[1]));
+        Assert.That(target.Unit, Is.EqualTo(secondUnit));
+
+        // do move
+        Players[0].AttemptMove(origin, target, true);
+
+        Assert.That(origin.Owner, Is.EqualTo(Players[0]));
+        Assert.That(origin.Unit, Is.Null);
+        Assert.That(target.Owner, Is.EqualTo(Players[0]));
+        Assert.That(target.Unit, Is.EqualTo(firstUnit));
+        Assert.That(Players[0].ActionsRemaining, Is.EqualTo(startActions - 1));
+        Assert.That(secondUnit == null); // force usage on overridden operator
+    }
+
+    [Test]
+    public void AttemptMove_OtherOwnedSectorUnitLose()
+    {
+        // set up move
+        Sector origin = Players[0].Units.First().Sector;
+        Sector target = origin.AdjacentSectors.First(s => s.Owner == null);
+        Unit firstUnit = origin.Unit;
+        Unit secondUnit = InitUnit(target, 1);
+        int startActions = Players[0].ActionsRemaining;
+
+        Assert.That(origin.Owner, Is.EqualTo(Players[0]));
+        Assert.That(origin.Unit, Is.EqualTo(firstUnit));
+        Assert.That(target.Owner, Is.EqualTo(Players[1]));
+        Assert.That(target.Unit, Is.EqualTo(secondUnit));
+
+        // do move
+        Players[0].AttemptMove(origin, target, false);
+
+        Assert.That(origin.Owner, Is.EqualTo(Players[0]));
+        Assert.That(origin.Unit, Is.Null);
+        Assert.That(target.Owner, Is.EqualTo(Players[1]));
+        Assert.That(target.Unit, Is.EqualTo(secondUnit));
+        Assert.That(Players[0].ActionsRemaining, Is.EqualTo(startActions - 1));
+        Assert.That(firstUnit == null); // force usage on overridden operator
+    }
+
+    [Test]
+    public void AttemptMove_ActionPerformedFired()
+    {
+        // set up move
+        Sector origin = Players[0].Units.First().Sector;
+        Sector target = origin.AdjacentSectors.First(s => s.Owner == null);
+        Unit unit = origin.Unit;
+        int startActions = Players[0].ActionsRemaining;
+        bool onActionPerformedFired = false;
+
+        Players[0].OnActionPerformed += (sender, e) => onActionPerformedFired = true;
+
+        // do move
+        Players[0].AttemptMove(origin, target);
+
+        Assert.That(onActionPerformedFired, Is.True);
+    }
+
+    [Test]
+    public void SpawnUnits_AreSpawned()
+    {
+        foreach (Unit unit in Players[0].Units)
+            unit.Kill(Players[1]); // remove all units
+        Assume.That(map.Sectors.Where(s => s.Unit?.Owner == Players[0]).Any(), Is.False);
+
+        var availableSectors = Players[0].OwnedLandmarkSectors.Where(s => s.Unit == null).ToArray();
+        Players[0].SpawnUnits();
+        Assert.That(Players[0].Units.Select(u => u.Sector), Is.EquivalentTo(availableSectors));
+    }
+
+    [Test]
+    public void SpawnUnits_NoRespawns()
+    {
+        Unit original = Players[0].Units.First();
+        Players[0].SpawnUnits();
+        Assert.That(Players[0].Units.Count(), Is.EqualTo(1));
+        Assert.That(Players[0].Units.First(), Is.EqualTo(original));
+    }
+
+    [Test]
+    public void SpawnUnitAt_Spawns()
+    {
+        // get first unowned sector
+        Sector target = map.Sectors.First(s => s.Owner == null);
+        int unitCount = Players[0].Units.Count();
+        // spawn unit
+        Players[0].SpawnUnitAt(target);
+
+        Assert.That(target.Owner, Is.EqualTo(Players[0]));
+        Assert.That(target.Unit, Is.Not.Null);
+        Assert.That(target.Unit.Owner, Is.EqualTo(Players[0]));
+        Assert.That(Players[0].Units.Count(), Is.EqualTo(unitCount + 1));
     }
 }
 #endif

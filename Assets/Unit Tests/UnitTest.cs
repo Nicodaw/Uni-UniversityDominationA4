@@ -1,166 +1,60 @@
-﻿#if false
+﻿#if UNITY_EDITOR
+using System.Collections;
+using System.Linq;
 using NUnit.Framework;
+using UnityEngine.TestTools;
 
 public class UnitTest : BaseGameTest
 {
+    [SetUp]
+    public void UnitTest_SetUp() => DefMapInit();
+
     [Test]
-    public void MoveToFriendlyFromNull_UnitInCorrectSector()
+    public void Sector_Sets()
     {
-        Unit unit = InitUnit();
-        Sector sectorA = map.Sectors[0];
-        Player playerA = Players[0];
-
-        // test moving from null
-        unit.Sector = null;
-        sectorA.Unit = null;
-        unit.Owner = playerA;
-        sectorA.Owner = playerA;
-
-        unit.MoveTo(sectorA);
-        Assert.That(unit.Sector, Is.EqualTo(sectorA));
-        Assert.That(sectorA.Unit, Is.EqualTo(unit));
+        Sector target = map.Sectors.First(s => s.Unit == null);
+        Unit unit = InitUnit(target);
+        target = map.Sectors.First(s => s.Unit == null);
+        unit.Sector = target;
+        Assert.That(unit.Sector, Is.EqualTo(target));
     }
 
     [Test]
-    public void MoveToNeutral_UnitInCorrectSector()
+    public void LevelUp_IncreasesLevel()
     {
-        Unit unit = InitUnit();
-        Sector sectorA = map.Sectors[0];
-        Sector sectorB = map.Sectors[1];
-        Player playerA = Players[0];
-
-        // test moving from one sector to another
-        unit.Sector = sectorA;
-        unit.Owner = playerA;
-        sectorA.Unit = unit;
-        sectorB.Unit = null;
-        sectorA.Owner = playerA;
-        sectorB.Owner = playerA;
-
-        unit.MoveTo(sectorB);
-        Assert.That(unit.Sector, Is.EqualTo(sectorB));
-        Assert.That(sectorB.Unit, Is.EqualTo(unit));
-        Assert.That(sectorA.Unit, Is.Null);
-    }
-
-    [Test]
-    public void MoveToFriendly_UnitInCorrectSector()
-    {
-        Unit unit = InitUnit();
-        Sector sectorA = map.Sectors[0];
-        Player playerA = Players[0];
-
-        // test moving into a friendly sector (no level up)
-        unit.Level = 1;
-        unit.Sector = null;
-        sectorA.Unit = null;
-        unit.Owner = playerA;
-        sectorA.Owner = playerA;
-
-        unit.MoveTo(sectorA);
+        Unit unit = map.Sectors.Select(s => s.Unit).First(u => u != null);
         Assert.That(unit.Level, Is.EqualTo(1));
-    }
-
-    public void MoveToHostile_UnitInCorrectSectorAndLevelUp()
-    {
-        Unit unit = InitUnit();
-        Sector sectorA = map.Sectors[0];
-        Player playerA = Players[0];
-        Player playerB = Players[1];
-
-        // test moving into a non-friendly sector (level up)
-        unit.Level = 1;
-        unit.Sector = null;
-        sectorA.Unit = null;
-        unit.Owner = playerA;
-        sectorA.Owner = playerB;
-
-        unit.MoveTo(sectorA);
-        Assert.That(unit.Level, Is.EqualTo(2));
-        Assert.That(sectorA.Owner, Is.EqualTo(unit.Owner));
-    }
-
-    [Test]
-    public void SwapPlaces_UnitsInCorrectNewSectors()
-    {
-        Unit[] units = InitUnits(2);
-
-        Sector sectorA = map.Sectors[0];
-        Sector sectorB = map.Sectors[1];
-        Player player = Players[0];
-
-        // places players unitA in sectorA
-        units[0].Owner = player;
-        units[0].Sector = sectorA;
-        sectorA.Unit = units[0];
-
-        // places players unitB in sectorB
-        units[1].Owner = player;
-        units[1].Sector = sectorB;
-        sectorB.Unit = units[1];
-
-        units[0].SwapPlacesWith(units[1]);
-        Assert.That(units[0].Sector, Is.EqualTo(sectorB)); // unitA in sectorB
-        Assert.That(sectorB.Unit, Is.EqualTo(units[0])); // sectorB has unitA
-        Assert.That(units[1].Sector, Is.EqualTo(sectorA)); // unitB in sectorA
-        Assert.That(sectorA.Unit, Is.EqualTo(units[1])); // sectorA has unitB
-    }
-
-    [Test]
-    public void LevelUp_UnitLevelIncreasesByOne()
-    {
-        Unit unit = InitUnit();
-
-        // ensure LevelUp increments level as expected
-        unit.Level = 1;
         unit.LevelUp();
         Assert.That(unit.Level, Is.EqualTo(2));
-    }
-
-    [Test]
-    public void LevelUp_UnitLevelDoesNotPastFive()
-    {
-        Unit unit = InitUnit();
-
-        // ensure LevelUp does not increment past 5
-        unit.Level = 5;
         unit.LevelUp();
-        Assert.That(unit.Level, Is.EqualTo(5));
+        Assert.That(unit.Level, Is.EqualTo(3));
     }
 
     [Test]
-    public void SelectAndDeselect_SelectedTrueWhenSelectedFalseWhenDeselected()
+    public void LevelUp_ObeysLevelCap()
     {
-        Unit unit = InitUnit();
-        Sector sector = map.Sectors[0];
-
-        unit.Sector = sector;
-        unit.IsSelected = false;
-
-        unit.Select();
-        Assert.That(unit.IsSelected);
-
-        unit.Deselect();
-        Assert.That(unit.IsSelected, Is.False);
+        Unit unit = map.Sectors.Select(s => s.Unit).First(u => u != null);
+        for (; unit.Level < unit.Stats.LevelCap; unit.LevelUp()) // level up to cap
+        { }
+        Assert.That(unit.Level, Is.EqualTo(unit.Stats.LevelCap));
+        unit.LevelUp();
+        Assert.That(unit.Level, Is.EqualTo(unit.Stats.LevelCap));
     }
 
-    [Test]
-    public void DestroySelf_UnitNotInSectorAndNotInPlayersUnitsList()
+    [UnityTest]
+    public IEnumerator Kill_DestroysAndRaises()
     {
-        Unit unit = InitUnit();
-        Sector sector = map.Sectors[0];
-        Player player = Players[0];
+        Unit unit = map.Sectors.Select(s => s.Unit).First(u => u != null);
+        bool onDeathRaised = false;
+        unit.OnDeath += (sender, e) => onDeathRaised = true;
 
-        unit.Sector = sector;
-        sector.Unit = unit;
-
-        unit.Owner = player;
-        player.Units.Add(unit);
-
-        unit.DestroySelf();
-
-        Assert.That(sector.Unit, Is.Null); // unit not on sector 
-        Assert.That(player.Units, Does.Not.Contains(unit)); // unit not in list of players units
+        Assert.That(unit, Is.Not.Null);
+        Assert.That(unit != null); // operator check
+        unit.Kill(Players[0]);
+        Assert.That(unit == null); // operator check
+        Assert.That(onDeathRaised, Is.True);
+        yield return null; // allow unit to carry out GameObject destruction
+        Assert.That((UnityEngine.MonoBehaviour)unit == null); // monobehaviour check
     }
 }
 #endif
