@@ -475,6 +475,7 @@ public class Game : MonoBehaviour
     internal void ApplyReward()
     {
         Players[MinigameReward.ApplyPlayer].Stats.ApplyEffect(MinigameReward); // apply reward
+        bool currentPlayerIsRewardee = Players[MinigameReward.ApplyPlayer] == CurrentPlayer;
 
         // set up UI
         m_dialog.SetDialogType(DialogType.ShowText);
@@ -487,8 +488,8 @@ public class Game : MonoBehaviour
 
         MinigameReward = null; // clear reward
 
-        // reallocate PVC
-        Map.AllocatePVC();
+        // reset PVC allocation
+        Map.ResetPVCAllocateWait(currentPlayerIsRewardee);
     }
 
     #endregion
