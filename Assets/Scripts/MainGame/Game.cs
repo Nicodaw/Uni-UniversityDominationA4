@@ -419,7 +419,11 @@ public class Game : MonoBehaviour
     public void EndCurrentTurn()
     {
         if (CurrentPlayer.Kind != PlayerKind.AI)
+        {
+            HumanPlayer temp = (HumanPlayer)CurrentPlayer;
+            temp.DeselectSector();
             CurrentPlayer.EndTurn();
+        }
     }
 
     /// <summary>

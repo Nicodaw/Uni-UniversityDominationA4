@@ -29,7 +29,7 @@ public class HumanPlayer : Player
         }
         else
         {
-            _selectedSector.ApplyHighlightAdjacent(false);
+            DeselectSector();
             if (_selectedSector.AdjacentSectors.Contains(clickedSector))
                 AttemptMove(_selectedSector, clickedSector);
             _selectedSector = null;
@@ -45,6 +45,8 @@ public class HumanPlayer : Player
         _selectedSector = sector;
         _selectedSector.ApplyHighlightAdjacent(true);
     }
+
+    public void DeselectSector() => _selectedSector.ApplyHighlightAdjacent(false);
 
     #endregion
 }
