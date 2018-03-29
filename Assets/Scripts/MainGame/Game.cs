@@ -416,7 +416,11 @@ public class Game : MonoBehaviour
         _eliminatedPlayerRoutineActive = false;
     }
 
-    public void EndCurrentTurn() => CurrentPlayer.EndTurn();
+    public void EndCurrentTurn()
+    {
+        if (CurrentPlayer.Kind != PlayerKind.AI)
+            CurrentPlayer.EndTurn();
+    }
 
     /// <summary>
     /// Called when the game is over.
