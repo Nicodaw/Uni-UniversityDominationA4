@@ -8,6 +8,7 @@ public class PlayerManagerTest : BaseGameTest
     public void Winner_NoWinnerUnits()
     {
         DefMapInit();
+        SpawnAllPlayerUnits();
 
         // only make players 0 and 1 non-eliminated
         foreach (Unit unit in Players.Skip(2).SelectMany(p => p.Units))
@@ -29,6 +30,7 @@ public class PlayerManagerTest : BaseGameTest
     public void Winner_NoWinnerSectors()
     {
         DefMapInit();
+        SpawnAllPlayerUnits();
 
         // only make players 0 and 1 non-eliminated
         foreach (Sector sector in Players.Skip(2).SelectMany(p => p.Units).Select(u => u.Sector))
@@ -50,6 +52,7 @@ public class PlayerManagerTest : BaseGameTest
     public void Winner_WinnerUnits()
     {
         DefMapInit();
+        SpawnAllPlayerUnits();
 
         // only make players 0 and 1 non-eliminated
         foreach (Unit unit in Players.Skip(1).SelectMany(p => p.Units))
@@ -72,6 +75,7 @@ public class PlayerManagerTest : BaseGameTest
     public void Winner_WinnerSectors()
     {
         DefMapInit();
+        SpawnAllPlayerUnits();
 
         // only make players 0 and 1 non-eliminated
         foreach (Sector sector in Players.Skip(1).SelectMany(p => p.Units).Select(u => u.Sector))

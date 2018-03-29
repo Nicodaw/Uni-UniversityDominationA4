@@ -7,7 +7,11 @@ using UnityEngine.TestTools;
 public class UnitTest : BaseGameTest
 {
     [SetUp]
-    public void UnitTest_SetUp() => DefMapInit();
+    public void UnitTest_SetUp()
+    {
+        DefMapInit();
+        SpawnAllPlayerUnits();
+    }
 
     [Test]
     public void Sector_Sets()

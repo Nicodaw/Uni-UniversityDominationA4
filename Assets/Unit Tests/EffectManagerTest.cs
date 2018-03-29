@@ -20,7 +20,11 @@ public class EffectManagerTest : BaseGameTest
     UnityEngine.Object statsObj => Players[0];
 
     [SetUp]
-    public void EffectManagerTest_SetUp() => DefMapInit();
+    public void EffectManagerTest_SetUp()
+    {
+        DefaultPlayerInit();
+        game.LoadMapObject();
+    }
 
     [Test]
     public void Attack_ValueCorrect()

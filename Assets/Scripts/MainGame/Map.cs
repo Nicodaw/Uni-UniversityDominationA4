@@ -35,6 +35,8 @@ public class Map : MonoBehaviour
     /// </summary>
     public IEnumerable<Sector> LandmarkedSectors => Sectors.Where(s => s.Landmark != null);
 
+    public int PVCAllocateWait => _pvcAllocateWait;
+
     #endregion
 
     #region Serialization

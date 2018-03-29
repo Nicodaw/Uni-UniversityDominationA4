@@ -96,7 +96,7 @@ public class SectorTest : BaseGameTest
         target.OnCaptured += (sender, e) => onCapturedRaised = true;
         target.Owner = null;
         Assert.That(target.Owner, Is.Null);
-        Assert.That(onCapturedRaised, Is.False);
+        Assert.That(onCapturedRaised, Is.True);
     }
 
     [Test]

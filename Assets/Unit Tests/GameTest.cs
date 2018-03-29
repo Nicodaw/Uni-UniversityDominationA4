@@ -74,7 +74,7 @@ public class GameTest_MapInit : BaseGameTest
     }
 
     [Test]
-    public void InitMap_OneLandmarkAllocatedWithUnitPerPlayer()
+    public void InitMap_OneLandmarkAllocatedPerPlayer()
     {
         // ensure that each player owns 1 sector and has 1 unit at that sector
         List<Sector> allocatedSectors = new List<Sector>();
@@ -82,9 +82,7 @@ public class GameTest_MapInit : BaseGameTest
         {
             Assert.That(player.OwnedSectors.Count(), Is.EqualTo(1));
             Assert.That(player.OwnedSectors.First().Landmark, Is.Not.Null);
-            Assert.That(player.Units.Count(), Is.EqualTo(1));
-
-            Assert.That(player.OwnedSectors.First(), Is.EqualTo(player.Units.First().Sector));
+            Assert.That(player.Units.Count(), Is.Zero);
 
             allocatedSectors.Add(player.OwnedSectors.First());
         }
@@ -149,17 +147,22 @@ public class GameTest_MapInit : BaseGameTest
     [Test]
     public void ApplyReward_RewardApplied()
     {
+        int prevAtt = Players[0].Stats.Attack;
+        int prevDef = Players[0].Stats.Defence;
         Game.MinigameReward = new EffectImpl.MinigameRewardEffect(0, 6, 8);
         game.ApplyReward();
         Assert.That(Players[0].Stats.HasEffect<EffectImpl.MinigameRewardEffect>(), Is.True);
-        Assert.That(Players[0].Stats.Attack, Is.EqualTo(6));
-        Assert.That(Players[0].Stats.Defence, Is.EqualTo(8));
+        Assert.That(Players[0].Stats.Attack, Is.EqualTo(prevAtt + 6));
+        Assert.That(Players[0].Stats.Defence, Is.EqualTo(prevDef + 8));
 
+        map.AllocatePVC();
+        prevAtt = Players[2].Stats.Attack;
+        prevDef = Players[2].Stats.Defence;
         Game.MinigameReward = new EffectImpl.MinigameRewardEffect(2, 4, 3);
         game.ApplyReward();
         Assert.That(Players[2].Stats.HasEffect<EffectImpl.MinigameRewardEffect>(), Is.True);
-        Assert.That(Players[2].Stats.Attack, Is.EqualTo(4));
-        Assert.That(Players[2].Stats.Defence, Is.EqualTo(3));
+        Assert.That(Players[2].Stats.Attack, Is.EqualTo(prevAtt + 4));
+        Assert.That(Players[2].Stats.Defence, Is.EqualTo(prevDef + 3));
     }
 
     [Test]
@@ -179,12 +182,13 @@ public class GameTest_MapInit : BaseGameTest
     }
 
     [Test]
-    public void ApplyReward_PvcAllocated()
+    public void ApplyReward_PvcAllocateWaitReset()
     {
         Sector allocatedSector = map.Sectors.First(s => s.HasPVC);
         Game.MinigameReward = new EffectImpl.MinigameRewardEffect(0, 1, 1);
         game.ApplyReward();
-        Assert.That(map.Sectors.First(s => s.HasPVC), Is.Not.EqualTo(allocatedSector));
+        Assert.That(map.Sectors.Any(s => s.HasPVC), Is.False);
+        Assert.That(map.PVCAllocateWait, Is.GreaterThan(0));
     }
 }
 #endif

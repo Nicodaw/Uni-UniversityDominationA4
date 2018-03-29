@@ -70,6 +70,12 @@ public abstract class BaseGameTest
         game.InitMap();
     }
 
+    protected void SpawnAllPlayerUnits()
+    {
+        foreach (Player player in Players)
+            player.SpawnUnits();
+    }
+
     /// <summary>
     /// Instantiates a new unit at the given sector.
     /// </summary>

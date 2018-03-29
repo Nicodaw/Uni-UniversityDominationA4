@@ -5,7 +5,11 @@ using NUnit.Framework;
 public class PlayerTest : BaseGameTest
 {
     [SetUp]
-    public void PlayerTest_SetUp() => DefMapInit();
+    public void PlayerTest_SetUp()
+    {
+        DefMapInit();
+        SpawnAllPlayerUnits();
+    }
 
     [Test]
     public void Units_Correct()
@@ -72,6 +76,7 @@ public class PlayerTest : BaseGameTest
     [Test]
     public void IsEliminated_Correct()
     {
+        Players[0].SpawnUnits();
         Assert.That(Players[0].IsEliminated, Is.False);
         foreach (Sector sector in map.Sectors.Where(s => s.Owner == Players[0]))
         {
