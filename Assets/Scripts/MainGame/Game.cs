@@ -360,6 +360,7 @@ public class Game : MonoBehaviour
     {
         if (!ProcessEvents)
             return;
+        
         OnUnitDeath?.Invoke(sender, e);
         Player owner = ((Unit)sender).Owner;
         if (owner.IsEliminated)
