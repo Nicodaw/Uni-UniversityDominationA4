@@ -100,7 +100,7 @@ public class Sector : MonoBehaviour
             // or gray if null
             gameObject.GetComponent<Renderer>().material.color = Owner?.Color ?? Color.gray;
 
-            if (Owner != null && prev != Owner)
+            if (prev != Owner)
                 OnCaptured?.Invoke(this, new UpdateEventArgs<Player>(prev, Owner));
         }
     }
@@ -192,6 +192,8 @@ public class Sector : MonoBehaviour
     {
         _owner = memento.owner;
         Owner = Owner; // if owned, apply ownership setup
+        if (Owner != null)
+            Landmark?.Sector_OnCaptured(this, new UpdateEventArgs<Player>(null, Owner));
         if (memento.unit != null)
         {
             // only sectors that have an owner can have a unit
@@ -216,6 +218,18 @@ public class Sector : MonoBehaviour
     }
 
     internal void OnMouseUpAsButton() => OnClick?.Invoke(this, new EventArgs());
+
+    void OnEnable()
+    {
+        if (Landmark != null)
+            OnCaptured += Landmark.Sector_OnCaptured;
+    }
+
+    void OnDisable()
+    {
+        if (Landmark != null)
+            OnCaptured -= Landmark.Sector_OnCaptured;
+    }
 
     #endregion
 
