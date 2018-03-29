@@ -461,6 +461,8 @@ public class Game : MonoBehaviour
     IEnumerator TriggerMinigameInternal(Player minigamePlayer)
     {
         yield return null; // allow events to propagate
+        if (!_processEvents)
+            yield break; // if process events is disabled, then we don't want to trigger the minigame
         MementoToRestore = Instance.CreateMemento(); // save game into static var
         MinigameManager.CurrentPlayerId = minigamePlayer.Id; // store the ID of the player who will get the reward
         AsyncOperation asyncOp = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("Minigame"); // trigger scene change
