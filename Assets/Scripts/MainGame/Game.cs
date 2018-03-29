@@ -194,14 +194,13 @@ public class Game : MonoBehaviour
         {
             Sector selected = Map.LandmarkedSectors.Random(s => s.Owner == null);
             selected.Owner = player;
-            player.SpawnUnits();
         }
 
         // allocate Pro-Vice Chancellor
         Map.AllocatePVC();
     }
 
-    void LoadMapObject()
+    internal void LoadMapObject()
     {
         if (_map != null)
             throw new InvalidOperationException(); // only allow loading map once

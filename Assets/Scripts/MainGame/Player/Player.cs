@@ -114,6 +114,7 @@ public abstract class Player : MonoBehaviour
     public virtual void ProcessTurnStart()
     {
         _actionsRemaining = Stats.Actions;
+        LevelUpLandmarkedUnits();
         SpawnUnits();
         OnTurnStart?.Invoke(this, new EventArgs());
     }
@@ -227,6 +228,12 @@ public abstract class Player : MonoBehaviour
     {
         foreach (Sector sector in OwnedLandmarkSectors.Where(s => s.Unit == null))
             SpawnUnitAt(sector);
+    }
+
+    public void LevelUpLandmarkedUnits()
+    {
+        foreach (Unit unit in OwnedLandmarkSectors.Select(s => s.Unit).Where(u => u != null))
+            unit.LevelUp();
     }
 
     /// <summary>
