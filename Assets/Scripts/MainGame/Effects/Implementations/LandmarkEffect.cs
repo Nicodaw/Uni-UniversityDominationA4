@@ -10,6 +10,7 @@ namespace EffectImpl
     {
         #region Private Fields
 
+        int _sector;
         int _attackBonus;
         int _defenceBonus;
 
@@ -25,8 +26,9 @@ namespace EffectImpl
 
         #region Constructor
 
-        public LandmarkEffect(int attackBonus, int defenceBonus)
+        public LandmarkEffect(int sector, int attackBonus, int defenceBonus)
         {
+            _sector = sector;
             _attackBonus = attackBonus;
             _defenceBonus = defenceBonus;
         }
@@ -43,6 +45,12 @@ namespace EffectImpl
         protected override void ApplyToPlayer(Player player)
         { }
 
-        #endregion
-    }
+		protected override void RestorePlayer(Player player)
+		{
+            // register the effect so it can be managed by landmark
+            Game.Instance.Map.Sectors[_sector].Landmark.RegisterPlayerEffect(this);
+		}
+
+		#endregion
+	}
 }

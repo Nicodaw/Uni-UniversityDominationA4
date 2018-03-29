@@ -192,8 +192,6 @@ public class Sector : MonoBehaviour
     {
         _owner = memento.owner;
         Owner = Owner; // if owned, apply ownership setup
-        if (Owner != null)
-            Landmark?.Sector_OnCaptured(this, new UpdateEventArgs<Player>(null, Owner));
         if (memento.unit != null)
         {
             // only sectors that have an owner can have a unit

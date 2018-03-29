@@ -227,9 +227,12 @@ public class Game : MonoBehaviour
     public void RestoreMemento(SerializableGame memento)
     {
         _processEvents = memento.processEvents;
+        // load map so we have access to actual sectors
+        LoadMapObject(); // just load map object using default system for now
+        // restore all the players
         Players.RestoreMemento(memento.playerManager);
         _currentPlayerId = memento.currentPlayerId;
-        LoadMapObject(); // just load map object using default system for now
+        // restore all the sectors
         Map.RestoreMemento(memento.map);
 
         enabled = true;

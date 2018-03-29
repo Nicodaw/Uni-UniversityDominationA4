@@ -1,4 +1,5 @@
-﻿using EffectImpl;
+﻿using System;
+using EffectImpl;
 using UnityEngine;
 
 public class Landmark : MonoBehaviour
@@ -27,9 +28,14 @@ public class Landmark : MonoBehaviour
 
     #region Handlers
 
-#pragma warning disable RECS0154 // Parameter is never used
+    internal void RegisterPlayerEffect(LandmarkEffect effect)
+    {
+        if (_effect != null)
+            throw new InvalidOperationException();
+        _effect = effect;
+    }
+
     public void Sector_OnCaptured(object sender, UpdateEventArgs<Player> e)
-#pragma warning restore RECS0154 // Parameter is never used
     {
         e.OldValue?.Stats.RemoveEffect(_effect);
         _effect = null;
@@ -38,10 +44,10 @@ public class Landmark : MonoBehaviour
             switch (Resource)
             {
                 case ResourceType.Attack:
-                    _effect = new LandmarkEffect(Amount, 0);
+                    _effect = new LandmarkEffect(((Sector)sender).Id, Amount, 0);
                     break;
                 case ResourceType.Defence:
-                    _effect = new LandmarkEffect(0, Amount);
+                    _effect = new LandmarkEffect(((Sector)sender).Id, 0, Amount);
                     break;
             }
             e.NewValue.Stats.ApplyEffect(_effect);
