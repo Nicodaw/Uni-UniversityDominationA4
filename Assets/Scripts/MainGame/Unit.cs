@@ -85,7 +85,7 @@ public class Unit : MonoBehaviour
         _level = 1;
 
         // set the material color to the player color
-        GetComponent<Renderer>().material.color = Color;
+        GetComponentInChildren<Renderer>().material.color = Color;
     }
 
     #endregion
@@ -153,24 +153,24 @@ public class Unit : MonoBehaviour
         switch (_level)
         {
             case 2:
-                gameObject.GetComponent<MeshRenderer>().material = m_level2Material;
+                gameObject.GetComponentInChildren<MeshRenderer>().material = m_level2Material;
                 break;
             case 3:
-                gameObject.GetComponent<MeshRenderer>().material = m_level3Material;
+                gameObject.GetComponentInChildren<MeshRenderer>().material = m_level3Material;
                 break;
             case 4:
-                gameObject.GetComponent<MeshRenderer>().material = m_level4Material;
+                gameObject.GetComponentInChildren<MeshRenderer>().material = m_level4Material;
                 break;
             case 5:
-                gameObject.GetComponent<MeshRenderer>().material = m_level5Material;
+                gameObject.GetComponentInChildren<MeshRenderer>().material = m_level5Material;
                 break;
             default:
-                gameObject.GetComponent<MeshRenderer>().material = m_level1Material;
+                gameObject.GetComponentInChildren<MeshRenderer>().material = m_level1Material;
                 break;
         }
 
         // set material color to match owner color
-        GetComponent<Renderer>().material.color = Color;
+        GetComponentInChildren<Renderer>().material.color = Color;
     }
 
     /// <summary>
