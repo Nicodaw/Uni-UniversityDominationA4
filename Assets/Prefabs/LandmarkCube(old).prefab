@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 23195195787872328}
   - component: {fileID: 114786906048818158}
   m_Layer: 2
-  m_Name: LandmarkCube
+  m_Name: LandmarkCube(old)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
