@@ -198,7 +198,6 @@ GameObject:
   - component: {fileID: 399101339}
   - component: {fileID: 399101338}
   - component: {fileID: 399101337}
-  - component: {fileID: 399101336}
   m_Layer: 2
   m_Name: Unit Camera
   m_TagString: MainCamera
@@ -206,13 +205,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &399101336
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 399101335}
-  m_Enabled: 1
 --- !u!124 &399101337
 Behaviour:
   m_ObjectHideFlags: 0
@@ -683,14 +675,14 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1926160056}
-  m_LocalRotation: {x: 0, y: 0.8870109, z: -0.46174863, w: 0}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: -0.7071068, w: 0}
   m_LocalPosition: {x: -42.9, y: 33, z: 64}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 399101339}
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 55, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 180, z: 0}
 --- !u!1 &2011269127
 GameObject:
   m_ObjectHideFlags: 0
