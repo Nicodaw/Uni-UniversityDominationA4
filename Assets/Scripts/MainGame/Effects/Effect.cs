@@ -96,7 +96,10 @@ public abstract class Effect
     /// </summary>
     /// <returns>The available selection the effect can be applied to.</returns>
     /// <param name="game">The current game object.</param>
-    public abstract EffectAvailableSelection AvailableSelection(Game game);
+    public virtual EffectAvailableSelection AvailableSelection(Game game)
+    {
+        throw new InvalidOperationException();
+    }
 
     /// <summary>
     /// Called when the effect is removed from the manager.

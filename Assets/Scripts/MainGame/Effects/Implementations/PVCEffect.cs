@@ -24,11 +24,6 @@ namespace EffectImpl
 
         #region Helper Methods
 
-        public override EffectAvailableSelection AvailableSelection(Game game)
-        {
-            throw new InvalidOperationException();
-        }
-
         protected override void ApplyToSector(Sector sector)
         {
             _appliedSector = sector;
