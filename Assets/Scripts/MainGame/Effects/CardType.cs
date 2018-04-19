@@ -1,4 +1,21 @@
 public enum CardType
 {
-    Graduate
+    Graduate,
+    AdderalSupply,
+    Kuda,
+    Breadcrumbs,
+    KudaWithTheLads,
+    BreadcrumbFactory,
+    FirstYearInTheLibrary,
+    NightBeforeExams,
+    ArguingOverBars,
+    BadIntentionsSTYC,
+    Resits,
+    IndustrialAction,
+    Hangover,
+    SummerBreak,
+    CopyNotes,
+    ChristianUnionLeaflet,
+    DropOut,
+    StudentDebt
 }

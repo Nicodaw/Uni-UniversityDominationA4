@@ -79,7 +79,8 @@ public abstract class Player : MonoBehaviour
     /// <summary>
     /// The number of actions remaining for the current player.
     /// </summary>
-    public int ActionsRemaining => _actionsRemaining;
+    public int ActionsRemaining { get { return _actionsRemaining; } set { _actionsRemaining = value; } }
+    
 
     #endregion
 
