@@ -8,16 +8,23 @@ namespace EffectImpl
     {
         #region Private Fields
 
+        string _name;
+        string _description;
         int _attackModifier;
         int _defenceModifier;
-        string _description;
         bool _friendly; // adhoc gallore. True: target friendly, False: target hostile;
 
         #endregion
 
         #region Override Properties
 
+        public override string CardName => _name;
+
         public override string CardDescription => _description;
+
+        public override CardCornerIcon CardCornerIcon => CardCornerIcon.SelfUnit;
+
+        public override CardBorder CardBorder => CardBorder.Tier1;
 
         public override int? AttackBonus => _attackModifier;
 
@@ -32,23 +39,27 @@ namespace EffectImpl
             switch (type)
             {
                 case CardType.Kuda:
-                    _attackModifier = 1;
+                    _name = "Kuda";
                     _description = "Increase the attack of a unit by 1";
+                    _attackModifier = 1;
                     _friendly = true;
                     break;
                 case CardType.Breadcrumbs:
-                    _defenceModifier = 1;
+                    _name = "Breadcrumbs";
                     _description = "Increase the defence of a unit by 1";
+                    _defenceModifier = 1;
                     _friendly = true;
                     break;
                 case CardType.FirstYearInTheLibrary:
-                    _attackModifier = -1;
+                    _name = "First Year In The Library";
                     _description = "Decrease the attack of a unit by 1";
+                    _attackModifier = -1;
                     _friendly = false;
                     break;
                 case CardType.NightBeforeExams:
-                    _defenceModifier = -1;
+                    _name = "Night Before Exams";
                     _description = "Decrease the defence of a unit by 1";
+                    _defenceModifier = -1;
                     _friendly = false;
                     break;
                 default:

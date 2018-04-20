@@ -38,10 +38,25 @@ public abstract class Effect
     #region Override Properties
 
     /// <summary>
-    /// The description that this effect will display on the card it
-    /// is on.
+    /// The name of the effect that will be displayed on the card.
+    /// </summary>
+    /// <value>The name of the card.</value>
+    public virtual string CardName { get; } = null;
+
+    /// <summary>
+    /// The description that this effect will display on the card.
     /// </summary>
     public virtual string CardDescription { get; } = null;
+
+    /// <summary>
+    /// The corner icon that this effect will display on the card.
+    /// </summary>
+    public virtual CardCornerIcon CardCornerIcon { get; }
+
+    /// <summary>
+    /// The border that this effect will display on the card.
+    /// </summary>
+    public virtual CardBorder CardBorder { get; }
 
     // the following effects are all mirrored from EffectManager
     // with the only difference being that they are nullable.

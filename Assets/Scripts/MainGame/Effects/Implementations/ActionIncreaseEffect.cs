@@ -5,11 +5,17 @@ namespace EffectImpl
     [Serializable]
     public class ActionIncreaseEffect : Effect
     {
-        #region Override Properties
+		#region Override Properties
 
-        public override string CardDescription => "Increase amount of actions you can perform this turn by one";
+		public override string CardName => "Adderall Supply";
 
-        public override int? ActionBonus => 1;
+		public override string CardDescription => "Increase amount of actions you can perform this turn by one";
+
+		public override CardCornerIcon CardCornerIcon => CardCornerIcon.SelfPlayer;
+
+		public override CardBorder CardBorder => CardBorder.Tier1;
+
+		public override int? ActionBonus => 1;
 
         #endregion
 

@@ -5,9 +5,15 @@ namespace EffectImpl
     [Serializable]
     public class GraduateEffect : Effect
     {
-        #region Override Properties
+		#region Override Properties
 
-        public override string CardDescription { get { return "Upgrade an undergraduate to a postgraduate"; } }
+		public override string CardName => "Graduate";
+
+        public override string CardDescription => "Upgrade an undergraduate to a postgraduate";
+
+        public override CardCornerIcon CardCornerIcon => CardCornerIcon.SelfUnit;
+
+        public override CardBorder CardBorder => CardBorder.Tier1;
 
         public override int? AttackBonus => 2;
 
