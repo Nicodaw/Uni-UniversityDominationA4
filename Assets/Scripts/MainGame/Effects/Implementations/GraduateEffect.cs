@@ -17,7 +17,7 @@ namespace EffectImpl
 
         #region Override Properties
 
-        public override string CardDescription { get { return "Upgrade an undergraduate to a postgraduate";}}
+        public override string CardDescription { get { return "Upgrade an undergraduate to a postgraduate"; } }
 
         public override int? AttackBonus => _postgradAttack;
 
