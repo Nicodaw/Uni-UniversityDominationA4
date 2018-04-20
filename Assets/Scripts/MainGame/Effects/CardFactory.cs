@@ -13,12 +13,12 @@ public static class CardFactory
     readonly static Dictionary<CardType, Func<object[], Effect>> _cardBuilder =
         new Dictionary<CardType, Func<object[], Effect>>
     {
-        { CardType.Graduate, data => new GraduateEffect() },
-        { CardType.AdderallSupply, data => new ActionIncreaseEffect() },
-        { CardType.Kuda, data => new UnitStatsEffect(CardType.Kuda) },
-        { CardType.Breadcrumbs, data => new UnitStatsEffect(CardType.Breadcrumbs) },
+        { CardType.Graduate,              data => new GraduateEffect() },
+        { CardType.AdderallSupply,        data => new ActionIncreaseEffect() },
+        { CardType.Kuda,                  data => new UnitStatsEffect(CardType.Kuda) },
+        { CardType.Breadcrumbs,           data => new UnitStatsEffect(CardType.Breadcrumbs) },
         { CardType.FirstYearInTheLibrary, data => new UnitStatsEffect(CardType.FirstYearInTheLibrary) },
-        { CardType.NightBeforeExams, data => new UnitStatsEffect(CardType.NightBeforeExams) }
+        { CardType.NightBeforeExams,      data => new UnitStatsEffect(CardType.NightBeforeExams) }
     };
 
     /// <summary>
