@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using EffectImpl;
 
 public static class CardFactory
 {
@@ -12,7 +13,12 @@ public static class CardFactory
     readonly static Dictionary<CardType, Func<object[], Effect>> _cardBuilder =
         new Dictionary<CardType, Func<object[], Effect>>
     {
-        { CardType.Graduate, data => null }
+        { CardType.Graduate, data => new GraduateEffect() },
+        { CardType.AdderalSupply, data => new ActionIncreaseEffect() },
+        { CardType.Kuda, data => new UnitStatsEffect(CardType.Kuda) },
+        { CardType.Breadcrumbs, data => new UnitStatsEffect(CardType.Breadcrumbs) },
+        { CardType.FirstYearInTheLibrary, data => new UnitStatsEffect(CardType.FirstYearInTheLibrary) },
+        { CardType.NightBeforeExams, data => new UnitStatsEffect(CardType.NightBeforeExams) }
     };
 
     /// <summary>
@@ -20,7 +26,11 @@ public static class CardFactory
     /// </summary>
     readonly static CardType[] _availableRandomPool =
     {
-        CardType.Graduate
+        CardType.Graduate,
+        CardType.Kuda,
+        CardType.Breadcrumbs,
+        CardType.FirstYearInTheLibrary,
+        CardType.NightBeforeExams
     };
 
     #endregion
