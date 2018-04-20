@@ -1,7 +1,7 @@
 public enum CardType
 {
     Graduate,
-    AdderalSupply,
+    AdderallSupply,
     Kuda,
     Breadcrumbs,
     KudaWithTheLads,
