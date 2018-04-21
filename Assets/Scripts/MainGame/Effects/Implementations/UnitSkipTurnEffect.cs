@@ -33,6 +33,11 @@ namespace EffectImpl
             Units = game.Map.Sectors.Select(s => s.Unit).Where(u => u != null && u.Owner != game.CurrentPlayer)
         };
 
+        public override void ProcessEffectRemove()
+        {
+            //TBD: restore normal movement
+        }
+
         #endregion
 
         #region Handlers
@@ -40,7 +45,7 @@ namespace EffectImpl
         public override void ProcessPlayerTurnEnd(object sender, EventArgs e)
         {
             if ((Player)sender == _appliedUnit.Owner) //Release the lock after the turn of the player who owns the locked unit ends
-                RestoreMovement();
+                ProcessEffectRemove();
         }
 
         #endregion
@@ -53,10 +58,6 @@ namespace EffectImpl
             _appliedUnit = unit;
         }
 
-        void RestoreMovement()
-        {
-            //TBD: Restore normal movement
-        }
 
         protected override void ApplyToUnit(Unit unit) => ForbidMovement(unit);
 

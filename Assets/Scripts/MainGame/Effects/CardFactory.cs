@@ -19,7 +19,6 @@ public static class CardFactory
         { CardType.Kuda,                  data => new UnitStatsEffect(CardType.Kuda) },
         { CardType.Breadcrumbs,           data => new UnitStatsEffect(CardType.Breadcrumbs) },
         { CardType.FirstYearInTheLibrary, data => new UnitStatsEffect(CardType.FirstYearInTheLibrary) },
-        { CardType.Resits,                data => new LevelEffect() },
         { CardType.IndustrialAction,      data => new BlockSectorEffect() },
         { CardType.Hangover,              data => new UnitSkipTurnEffect() },
         // tier 2
@@ -27,7 +26,9 @@ public static class CardFactory
         { CardType.KudaWithTheLads,       data => new PlayerStatsEffect(CardType.KudaWithTheLads) },
         { CardType.BreadcrumbFactory,     data => new PlayerStatsEffect(CardType.BreadcrumbFactory) },
         { CardType.ArguingOverBars,       data => new PlayerStatsEffect(CardType.ArguingOverBars) },
-        { CardType.BadIntentionsSTYC,     data => new PlayerStatsEffect(CardType.BadIntentionsSTYC) }
+        { CardType.BadIntentionsSTYC,     data => new PlayerStatsEffect(CardType.BadIntentionsSTYC) },
+        { CardType.Resits,                data => new LevelEffect() },
+        { CardType.SummerBreak,           data => new PlayerSkipTurnEffect()}
         // tier 3
     };
 
@@ -45,20 +46,30 @@ public static class CardFactory
                 CardType.Breadcrumbs,
                 CardType.FirstYearInTheLibrary,
                 CardType.NightBeforeExams,
+                CardType.IndustrialAction,
+                CardType.Hangover,
+                CardType.CopyNotes,
+                CardType.DropOut,
+            }
+        },
+        { CardTier.Tier2,
+            new[]
+            {
                 CardType.KudaWithTheLads,
                 CardType.BreadcrumbFactory,
                 CardType.ArguingOverBars,
                 CardType.BadIntentionsSTYC,
                 CardType.Resits,
-                CardType.IndustrialAction,
-                CardType.Hangover,
                 CardType.SummerBreak,
-                CardType.CopyNotes,
                 CardType.ChristianUnionLeaflet,
-                CardType.DropOut,
+            }
+        },
+        { CardTier.Tier3,
+            new[]
+            {
                 CardType.StudentDebt
             }
-        }
+        },
     };
 
     #endregion
