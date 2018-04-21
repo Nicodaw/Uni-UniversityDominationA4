@@ -1,29 +1,33 @@
 fileFormatVersion: 2
-guid: 1fd5910eb70cc4945b0b00755668e6ac
-timeCreated: 1522587623
+guid: 5ccea808bbe52924d81cdd4810a32b54
+timeCreated: 1524305151
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2100000: Card_Mat__card-uv_png
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Plane
-    7400000: Default Take
-    9500000: //RootNode
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Card_Mat__card-uv_png
-    second: {fileID: 2100000, guid: 1c2658e62357a9f40b93b9a717bcbcb9, type: 2}
+    100000: Border
+    100002: Card
+    100004: //RootNode
+    100006: Point
+    400000: Border
+    400002: Card
+    400004: //RootNode
+    400006: Point
+    2100000: Card
+    2100002: Tier 1
+    2300000: Border
+    2300002: Card
+    3300000: Border
+    3300002: Card
+    4300000: Card
+    4300002: Border
+    10800000: Point
+  externalObjects: {}
   materials:
     importMaterials: 1
-    materialName: 0
+    materialName: 1
     materialSearch: 1
-    materialLocation: 1
+    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
@@ -92,7 +96,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 0
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
