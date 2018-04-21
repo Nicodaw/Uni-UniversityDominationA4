@@ -7,6 +7,8 @@ TagManager:
   - Coin
   - Ground
   - Pillar
+  - Postgrad
+  - Undergrad
   layers:
   - Default
   - TransparentFX

@@ -11,6 +11,9 @@ public class Unit : MonoBehaviour
     [SerializeField] Material m_level3Material;
     [SerializeField] Material m_level4Material;
     [SerializeField] Material m_level5Material;
+    [SerializeField] Material m_level6Material;
+    [SerializeField] Material m_level7Material;
+    [SerializeField] Material m_level8Material;
 
     #endregion
 

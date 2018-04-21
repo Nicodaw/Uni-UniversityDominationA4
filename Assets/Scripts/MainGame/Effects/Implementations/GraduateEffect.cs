@@ -1,13 +1,21 @@
 ﻿using System;
+using UnityEngine;
 
 namespace EffectImpl
 {
     [Serializable]
     public class GraduateEffect : Effect
     {
-		#region Override Properties
+        #region Private Fields
 
-		public override string CardName => "Graduate";
+        GameObject _postgradModel = GameObject.FindGameObjectWithTag("Postgrad");
+        GameObject _undergradModel = GameObject.FindGameObjectWithTag("Undergrad");
+
+        #endregion
+
+        #region Override Properties
+
+        public override string CardName => "Graduate";
 
         public override string CardDescription => "Upgrade an undergraduate to a postgraduate";
 
@@ -45,6 +53,8 @@ namespace EffectImpl
         void GraduateUnit(Unit unit)
         {
             // do graduate add
+            GameObject.Instantiate(_postgradModel, unit.transform.position, Quaternion.identity);
+            GameObject.Destroy(unit.gameObject);
         }
 
         void UnGraduateUnit()
