@@ -21,6 +21,7 @@ public static class CardFactory
         { CardType.FirstYearInTheLibrary, data => new UnitStatsEffect(CardType.FirstYearInTheLibrary) },
         { CardType.IndustrialAction,      data => new BlockSectorEffect() },
         { CardType.Hangover,              data => new UnitSkipTurnEffect() },
+        { CardType.CopyNotes,             data => new TakeCardEffect()},
         // tier 2
         { CardType.NightBeforeExams,      data => new UnitStatsEffect(CardType.NightBeforeExams) },
         { CardType.KudaWithTheLads,       data => new PlayerStatsEffect(CardType.KudaWithTheLads) },
