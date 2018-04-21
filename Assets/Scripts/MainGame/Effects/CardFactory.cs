@@ -22,6 +22,7 @@ public static class CardFactory
         { CardType.IndustrialAction,      data => new BlockSectorEffect() },
         { CardType.Hangover,              data => new UnitSkipTurnEffect() },
         { CardType.CopyNotes,             data => new TakeCardEffect()},
+        { CardType.DropOut,               data => new SacrificeEffect()},
         // tier 2
         { CardType.NightBeforeExams,      data => new UnitStatsEffect(CardType.NightBeforeExams) },
         { CardType.KudaWithTheLads,       data => new PlayerStatsEffect(CardType.KudaWithTheLads) },
