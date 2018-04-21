@@ -20,7 +20,7 @@ namespace EffectImpl
 
         public override CardCornerIcon CardCornerIcon => CardCornerIcon.EnemyUnit;
 
-        public override CardBorder CardBorder => CardBorder.Tier2;
+        public override CardTier CardTier => CardTier.Tier2;
 
         public override int? LevelCapBonus => -2;
 

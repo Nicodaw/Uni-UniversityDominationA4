@@ -22,9 +22,9 @@ namespace EffectImpl
 
         public override string CardDescription => _description;
 
-        public override CardCornerIcon CardCornerIcon => (_friendly)? CardCornerIcon.SelfUnit : CardCornerIcon.EnemyUnit;
+        public override CardCornerIcon CardCornerIcon => _friendly ? CardCornerIcon.SelfUnit : CardCornerIcon.EnemyUnit;
 
-        public override CardBorder CardBorder => CardBorder.Tier1;
+        public override CardTier CardTier => CardTier.Tier1;
 
         public override int? AttackBonus => _attackModifier;
 
