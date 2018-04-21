@@ -24,7 +24,7 @@ public static class CardFactory
         { CardType.ArguingOverBars,       data => new PlayerStatsEffect(CardType.ArguingOverBars) },   //tier 2
         { CardType.BadIntentionsSTYC,     data => new PlayerStatsEffect(CardType.BadIntentionsSTYC) }, //tier 2
         { CardType.Resits,                data => new LevelEffect()},
-        { CardType.IndustrialAction,      data => new BlockSector() },
+        { CardType.IndustrialAction,      data => new BlockSectorEffect() },
         { CardType.Hangover,              data => new UnitSkipTurnEffect() }
     };
 

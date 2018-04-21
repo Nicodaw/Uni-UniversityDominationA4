@@ -5,7 +5,7 @@ using UnityEngine;
 namespace EffectImpl
 {
     [Serializable]
-    public class BlockSector : Effect
+    public class BlockSectorEffect : Effect
     {
         #region Private Fields
         Player playedBy = Game.Instance.CurrentPlayer;
