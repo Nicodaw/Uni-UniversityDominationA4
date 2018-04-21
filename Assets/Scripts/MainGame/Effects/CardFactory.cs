@@ -24,6 +24,8 @@ public static class CardFactory
         { CardType.ArguingOverBars,       data => new PlayerStatsEffect(CardType.ArguingOverBars) },   //tier 2
         { CardType.BadIntentionsSTYC,     data => new PlayerStatsEffect(CardType.BadIntentionsSTYC) }, //tier 2
         { CardType.Resits,                data => new LevelEffect()},
+        { CardType.IndustrialAction,      data => new BlockSector() },
+        { CardType.Hangover,              data => new UnitSkipTurn() }
     };
 
     /// <summary>
@@ -39,7 +41,15 @@ public static class CardFactory
         CardType.KudaWithTheLads,
         CardType.BreadcrumbFactory,
         CardType.ArguingOverBars,
-        CardType.BadIntentionsSTYC
+        CardType.BadIntentionsSTYC,
+        CardType.Resits,
+        CardType.IndustrialAction,
+        CardType.Hangover,
+        CardType.SummerBreak,
+        CardType.CopyNotes,
+        CardType.ChristianUnionLeaflet,
+        CardType.DropOut,
+        CardType.StudentDebt
     };
 
     #endregion
