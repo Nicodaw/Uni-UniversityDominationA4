@@ -25,7 +25,7 @@ public static class CardFactory
         { CardType.BadIntentionsSTYC,     data => new PlayerStatsEffect(CardType.BadIntentionsSTYC) }, //tier 2
         { CardType.Resits,                data => new LevelEffect()},
         { CardType.IndustrialAction,      data => new BlockSector() },
-        { CardType.Hangover,              data => new UnitSkipTurn() }
+        { CardType.Hangover,              data => new UnitSkipTurnEffect() }
     };
 
     /// <summary>

@@ -23,7 +23,7 @@ namespace EffectImpl
 
         public override CardCornerIcon CardCornerIcon => CardCornerIcon.Sector;
 
-        public override CardBorder CardBorder => CardBorder.Tier1;
+        public override CardTier CardTier => CardTier.Tier1;
 
         public override bool? Traversable => false;
 
