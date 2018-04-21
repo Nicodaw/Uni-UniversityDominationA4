@@ -31,25 +31,31 @@ public static class CardFactory
     /// <summary>
     /// A list of all of the cards that can be selected at random.
     /// </summary>
-    readonly static CardType[] _availableRandomPool =
+    readonly static Dictionary<CardTier, CardType[]> _availableRandomPool =
+        new Dictionary<CardTier, CardType[]>
     {
-        CardType.Graduate,
-        CardType.Kuda,
-        CardType.Breadcrumbs,
-        CardType.FirstYearInTheLibrary,
-        CardType.NightBeforeExams,
-        CardType.KudaWithTheLads,
-        CardType.BreadcrumbFactory,
-        CardType.ArguingOverBars,
-        CardType.BadIntentionsSTYC,
-        CardType.Resits,
-        CardType.IndustrialAction,
-        CardType.Hangover,
-        CardType.SummerBreak,
-        CardType.CopyNotes,
-        CardType.ChristianUnionLeaflet,
-        CardType.DropOut,
-        CardType.StudentDebt
+        { CardTier.Tier1,
+            new []
+            {
+                CardType.Graduate,
+                CardType.Kuda,
+                CardType.Breadcrumbs,
+                CardType.FirstYearInTheLibrary,
+                CardType.NightBeforeExams,
+                CardType.KudaWithTheLads,
+                CardType.BreadcrumbFactory,
+                CardType.ArguingOverBars,
+                CardType.BadIntentionsSTYC,
+                CardType.Resits,
+                CardType.IndustrialAction,
+                CardType.Hangover,
+                CardType.SummerBreak,
+                CardType.CopyNotes,
+                CardType.ChristianUnionLeaflet,
+                CardType.DropOut,
+                CardType.StudentDebt
+            }
+        }
     };
 
     #endregion
@@ -68,7 +74,7 @@ public static class CardFactory
     /// Creates a random effect from the allowed pool. Data defaults to empty list.
     /// </summary>
     /// <returns>The random effect.</returns>
-    public static Effect GetRandomEffect() => CreateEffect(_availableRandomPool.Random());
+    public static Effect GetRandomEffect(CardTier tier) => CreateEffect(_availableRandomPool[tier].Random());
 
     #endregion
 }
