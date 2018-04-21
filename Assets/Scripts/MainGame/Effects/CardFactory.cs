@@ -22,7 +22,8 @@ public static class CardFactory
         { CardType.KudaWithTheLads,       data => new PlayerStatsEffect(CardType.KudaWithTheLads) } ,  //tier 2
         { CardType.BreadcrumbFactory,     data => new PlayerStatsEffect(CardType.BreadcrumbFactory) }, //tier 2
         { CardType.ArguingOverBars,       data => new PlayerStatsEffect(CardType.ArguingOverBars) },   //tier 2
-        { CardType.BadIntentionsSTYC,     data => new PlayerStatsEffect(CardType.BadIntentionsSTYC) }  //tier 2
+        { CardType.BadIntentionsSTYC,     data => new PlayerStatsEffect(CardType.BadIntentionsSTYC) }, //tier 2
+        { CardType.Resits,                data => new LevelEffect()},
     };
 
     /// <summary>
