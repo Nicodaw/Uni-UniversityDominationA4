@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace EffectImpl
 {
     [Serializable]
-    public class UnitStatsEffect : Effect
+    public class PlayerStatsEffect : Effect
     {
         #region Private Fields
 
@@ -22,9 +23,9 @@ namespace EffectImpl
 
         public override string CardDescription => _description;
 
-        public override CardCornerIcon CardCornerIcon => (_friendly)? CardCornerIcon.SelfUnit : CardCornerIcon.EnemyUnit;
+        public override CardCornerIcon CardCornerIcon => (_friendly)?CardCornerIcon.SelfPlayer:CardCornerIcon.EnemyPlayer;
 
-        public override CardBorder CardBorder => CardBorder.Tier1;
+        public override CardBorder CardBorder => CardBorder.Tier2;
 
         public override int? AttackBonus => _attackModifier;
 
@@ -34,31 +35,31 @@ namespace EffectImpl
 
         #region Constructor
 
-        public UnitStatsEffect(CardType type)
+        public PlayerStatsEffect(CardType type)
         {
             switch (type)
             {
-                case CardType.Kuda:
-                    _name = "Kuda";
-                    _description = "Increase the attack of a unit by 1";
+                case CardType.KudaWithTheLads:
+                    _name = "Kuda With The Lads";
+                    _description = "Increase the attack of your units by 1";
                     _attackModifier = 1;
                     _friendly = true;
                     break;
-                case CardType.Breadcrumbs:
-                    _name = "Breadcrumbs";
-                    _description = "Increase the defence of a unit by 1";
+                case CardType.BreadcrumbFactory:
+                    _name = "Breadcrumb factory";
+                    _description = "Increase the defence of your units by 1";
                     _defenceModifier = 1;
                     _friendly = true;
                     break;
-                case CardType.FirstYearInTheLibrary:
-                    _name = "First Year In The Library";
-                    _description = "Decrease the attack of a unit by 1";
+                case CardType.ArguingOverBars:
+                    _name = "Arguing Over Bars";
+                    _description = "Decrease target player's units attack by 1 ";
                     _attackModifier = -1;
                     _friendly = false;
                     break;
-                case CardType.NightBeforeExams:
-                    _name = "Night Before Exams";
-                    _description = "Decrease the defence of a unit by 1";
+                case CardType.BadIntentionsSTYC:
+                    _name = "Bad Intentions STYC";
+                    _description = "Decrease target player's units defence by 1";
                     _defenceModifier = -1;
                     _friendly = false;
                     break;
@@ -73,11 +74,11 @@ namespace EffectImpl
 
         public override EffectAvailableSelection AvailableSelection(Game game) => new EffectAvailableSelection
         {
-            Units = _friendly ?
+            Players = _friendly ?
                     // get friendly units
-                    game.CurrentPlayer.Units :
+                    game.Players.Where(p => game.CurrentPlayer):
                     // get enemy units
-                    game.Map.Sectors.Select(s => s.Unit).Where(u => u != null && u.Owner != game.CurrentPlayer)
+                   game.Players.Where(p => !p.IsEliminated && p != game.CurrentPlayer)
 
         };
 

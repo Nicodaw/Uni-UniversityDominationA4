@@ -10,6 +10,7 @@ namespace EffectImpl
 
         GameObject _postgradModel = GameObject.FindGameObjectWithTag("Postgrad");
         GameObject _undergradModel = GameObject.FindGameObjectWithTag("Undergrad");
+        Unit _target;
 
         #endregion
 
@@ -53,6 +54,7 @@ namespace EffectImpl
         void GraduateUnit(Unit unit)
         {
             // do graduate add
+            _target = unit;
             GameObject.Instantiate(_postgradModel, unit.transform.position, Quaternion.identity);
             GameObject.Destroy(unit.gameObject);
         }
@@ -60,6 +62,8 @@ namespace EffectImpl
         void UnGraduateUnit()
         {
             // do graduation remove
+            GameObject.Instantiate(_undergradModel, _target.transform.position, Quaternion.identity);
+            GameObject.Destroy(_target.gameObject);
         }
 
         protected override void ApplyToUnit(Unit unit) => GraduateUnit(unit);

@@ -18,7 +18,11 @@ public static class CardFactory
         { CardType.Kuda,                  data => new UnitStatsEffect(CardType.Kuda) },
         { CardType.Breadcrumbs,           data => new UnitStatsEffect(CardType.Breadcrumbs) },
         { CardType.FirstYearInTheLibrary, data => new UnitStatsEffect(CardType.FirstYearInTheLibrary) },
-        { CardType.NightBeforeExams,      data => new UnitStatsEffect(CardType.NightBeforeExams) }
+        { CardType.NightBeforeExams,      data => new UnitStatsEffect(CardType.NightBeforeExams) },    //tier 2
+        { CardType.KudaWithTheLads,       data => new PlayerStatsEffect(CardType.KudaWithTheLads) } ,  //tier 2
+        { CardType.BreadcrumbFactory,     data => new PlayerStatsEffect(CardType.BreadcrumbFactory) }, //tier 2
+        { CardType.ArguingOverBars,       data => new PlayerStatsEffect(CardType.ArguingOverBars) },   //tier 2
+        { CardType.BadIntentionsSTYC,     data => new PlayerStatsEffect(CardType.BadIntentionsSTYC) }  //tier 2
     };
 
     /// <summary>
@@ -30,7 +34,11 @@ public static class CardFactory
         CardType.Kuda,
         CardType.Breadcrumbs,
         CardType.FirstYearInTheLibrary,
-        CardType.NightBeforeExams
+        CardType.NightBeforeExams,
+        CardType.KudaWithTheLads,
+        CardType.BreadcrumbFactory,
+        CardType.ArguingOverBars,
+        CardType.BadIntentionsSTYC
     };
 
     #endregion

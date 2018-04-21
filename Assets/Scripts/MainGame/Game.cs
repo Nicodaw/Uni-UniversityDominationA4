@@ -94,7 +94,7 @@ public class Game : MonoBehaviour
     public Map Map => _map;
 
     /// <summary>
-    /// The player in the game.
+    /// The players in the game.
     /// </summary>
     public PlayerManager Players => _players;
 

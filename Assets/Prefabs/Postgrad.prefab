@@ -291,6 +291,9 @@ MonoBehaviour:
   m_level3Material: {fileID: 2100000, guid: 4d31fd3ec9caa5b4e86440f66c8075f8, type: 2}
   m_level4Material: {fileID: 2100000, guid: c02e95c0f38911a4087d00286a9e7677, type: 2}
   m_level5Material: {fileID: 2100000, guid: b38b8448320a2aa46a1b16ec9b19c9ca, type: 2}
+  m_level6Material: {fileID: 2100000, guid: dfd15c5c266cc054d82c4713d78a882e, type: 2}
+  m_level7Material: {fileID: 2100000, guid: 728ac03520b205d469ac11cde60bffaf, type: 2}
+  m_level8Material: {fileID: 2100000, guid: 41d177334cda1f745bd36469aedaa1d4, type: 2}
 --- !u!114 &114483161518998056
 MonoBehaviour:
   m_ObjectHideFlags: 1
