@@ -8,6 +8,7 @@ namespace EffectImpl
     public class UnitSkipTurnEffect : Effect
     {
         #region Private Fields
+
         Unit _appliedUnit;
         GameObject _hangoverModel; //tbd: add UI indication for locked unit
 
@@ -23,9 +24,7 @@ namespace EffectImpl
 
         public override CardTier CardTier => CardTier.Tier1;
 
-
         #endregion
-
 
         #region Concrete Methods
 
@@ -37,13 +36,13 @@ namespace EffectImpl
         #endregion
 
         #region Handlers
+
         public override void ProcessPlayerTurnEnd(object sender, EventArgs e)
         {
             if ((Player)sender == _appliedUnit.Owner) //Release the lock after the turn of the player who owns the locked unit ends
-            {
                 RestoreMovement();
-            }
         }
+
         #endregion
 
         #region Helper Methods
@@ -58,7 +57,6 @@ namespace EffectImpl
         {
             //TBD: Restore normal movement
         }
-
 
         protected override void ApplyToUnit(Unit unit) => ForbidMovement(unit);
 

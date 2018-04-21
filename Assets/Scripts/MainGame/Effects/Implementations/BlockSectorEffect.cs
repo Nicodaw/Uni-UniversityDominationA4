@@ -8,6 +8,7 @@ namespace EffectImpl
     public class BlockSectorEffect : Effect
     {
         #region Private Fields
+
         Player playedBy = Game.Instance.CurrentPlayer;
         int _turnsLeft = 2;
         Sector _appliedSector;
@@ -29,7 +30,6 @@ namespace EffectImpl
 
         #endregion
 
-
         #region Concrete Methods
 
         public override EffectAvailableSelection AvailableSelection(Game game) => new EffectAvailableSelection
@@ -40,34 +40,36 @@ namespace EffectImpl
         #endregion
 
         #region Handlers
+
         public override void ProcessPlayerTurnStart(object sender, EventArgs e)
         {
             if ((Player) sender == playedBy) //if at the start of the 
             {
                 _turnsLeft = _turnsLeft - 1;
                 if (_turnsLeft == 0)
-                {
                     UnBlock();
-                }
             }
         }
+
         #endregion
 
         #region Helper Methods
+
         void Block(Sector sector)
         {
             //apply barricade 
             _appliedSector = sector;
-            GameObject.Instantiate(_barricadeModel, _appliedSector.Unit.transform); //append the barricade as a child element on the Unit placeholder
+            UnityEngine.Object.Instantiate(_barricadeModel, _appliedSector.Unit.transform); //append the barricade as a child element on the Unit placeholder
 
         }
 
         void UnBlock()
         {
-            GameObject.Destroy(_appliedSector.Unit.transform.GetChild(0)); //remove the barricade
+            UnityEngine.Object.Destroy(_appliedSector.Unit.transform.GetChild(0)); //remove the barricade
         }
 
         protected override void ApplyToSector(Sector sector) => Block(sector);
+
         protected override void RestoreSector(Sector sector) => Block(sector);
 
         #endregion

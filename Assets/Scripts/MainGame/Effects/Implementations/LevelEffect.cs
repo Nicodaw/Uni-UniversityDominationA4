@@ -26,7 +26,6 @@ namespace EffectImpl
 
         #endregion
 
-
         #region Concrete Methods
 
         public override EffectAvailableSelection AvailableSelection(Game game) => new EffectAvailableSelection
