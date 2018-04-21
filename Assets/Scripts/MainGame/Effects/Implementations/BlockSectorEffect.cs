@@ -60,12 +60,12 @@ namespace EffectImpl
             //apply barricade 
             _appliedSector = sector;
             UnityEngine.Object.Instantiate(_barricadeModel, _appliedSector.Unit.transform); //append the barricade as a child element on the Unit placeholder
-
         }
 
         void UnBlock()
         {
             UnityEngine.Object.Destroy(_appliedSector.Unit.transform.GetChild(0)); //remove the barricade
+            RemoveSelf();
         }
 
         protected override void ApplyToSector(Sector sector) => Block(sector);

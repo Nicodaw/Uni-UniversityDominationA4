@@ -29,7 +29,8 @@ public static class CardFactory
         { CardType.ArguingOverBars,       data => new PlayerStatsEffect(CardType.ArguingOverBars) },
         { CardType.BadIntentionsSTYC,     data => new PlayerStatsEffect(CardType.BadIntentionsSTYC) },
         { CardType.Resits,                data => new LevelEffect() },
-        { CardType.SummerBreak,           data => new PlayerSkipTurnEffect()}
+        { CardType.SummerBreak,           data => new PlayerSkipTurnEffect()},
+        { CardType.ChristianUnionLeaflet, data => new TemporaryLandmarkEffect()}
         // tier 3
     };
 
