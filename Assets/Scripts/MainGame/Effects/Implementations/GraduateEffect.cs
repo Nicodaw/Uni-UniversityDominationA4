@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEditor;
 using UnityEngine;
 
 namespace EffectImpl
@@ -55,15 +56,13 @@ namespace EffectImpl
         {
             // do graduate add
             _target = unit;
-            GameObject.Instantiate(_postgradModel, unit.transform.position, Quaternion.identity);
-            GameObject.Destroy(unit.gameObject);
+            PrefabUtility.ReplacePrefab(_postgradModel, unit.gameObject, ReplacePrefabOptions.ConnectToPrefab);
         }
 
         void UnGraduateUnit()
         {
             // do graduation remove
-            GameObject.Instantiate(_undergradModel, _target.transform.position, Quaternion.identity);
-            GameObject.Destroy(_target.gameObject);
+            PrefabUtility.ReplacePrefab(_undergradModel, _target.gameObject, ReplacePrefabOptions.ConnectToPrefab);
         }
 
         protected override void ApplyToUnit(Unit unit) => GraduateUnit(unit);

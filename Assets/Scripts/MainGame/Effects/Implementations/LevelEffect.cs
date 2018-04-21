@@ -42,6 +42,9 @@ namespace EffectImpl
         protected override void ApplyToUnit(Unit unit)
         { }
 
+        protected override void RestoreUnit(Unit unit)
+        { }
+
         #endregion
     }
 }
