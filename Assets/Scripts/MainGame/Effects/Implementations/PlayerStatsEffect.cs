@@ -25,7 +25,7 @@ namespace EffectImpl
 
         public override CardCornerIcon CardCornerIcon => (_friendly)?CardCornerIcon.SelfPlayer:CardCornerIcon.EnemyPlayer;
 
-        public override CardBorder CardBorder => CardBorder.Tier2;
+        public override CardTier CardTier => CardTier.Tier2;
 
         public override int? AttackBonus => _attackModifier;
 

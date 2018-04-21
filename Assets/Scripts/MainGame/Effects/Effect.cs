@@ -56,7 +56,7 @@ public abstract class Effect
     /// <summary>
     /// The border that this effect will display on the card.
     /// </summary>
-    public virtual CardBorder CardBorder { get; }
+    public virtual CardTier CardTier { get; }
 
     // the following effects are all mirrored from EffectManager
     // with the only difference being that they are nullable.
