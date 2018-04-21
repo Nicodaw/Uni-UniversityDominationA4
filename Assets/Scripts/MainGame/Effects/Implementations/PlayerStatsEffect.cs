@@ -23,7 +23,7 @@ namespace EffectImpl
 
         public override string CardDescription => _description;
 
-        public override CardCornerIcon CardCornerIcon => (_friendly)?CardCornerIcon.SelfPlayer:CardCornerIcon.EnemyPlayer;
+        public override CardCornerIcon CardCornerIcon => _friendly ? CardCornerIcon.SelfPlayer : CardCornerIcon.EnemyPlayer;
 
         public override CardTier CardTier => CardTier.Tier2;
 
@@ -75,10 +75,10 @@ namespace EffectImpl
         public override EffectAvailableSelection AvailableSelection(Game game) => new EffectAvailableSelection
         {
             Players = _friendly ?
-                    // get friendly units
-                    game.Players.Where(p => game.CurrentPlayer):
-                    // get enemy units
-                   game.Players.Where(p => !p.IsEliminated && p != game.CurrentPlayer)
+                      // get friendly units
+                      new[] { game.CurrentPlayer } :
+                      // get enemy units
+                      game.Players.Where(p => !p.IsEliminated && p != game.CurrentPlayer)
 
         };
 
