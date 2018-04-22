@@ -159,6 +159,7 @@ public abstract class Player : MonoBehaviour
     {
         // kind is used for instantiation
         // id, color and gui are set on Init()
+        _effects.RemoveEffect<EffectImpl.LandmarkWrapperEffect>();
         _effects.RestoreMemento(memento.effectManager);
         _actionsRemaining = memento.actionsRemaining;
     }
@@ -171,6 +172,8 @@ public abstract class Player : MonoBehaviour
     {
         _effects = GetComponent<EffectManager>();
         _effects.Init(this);
+        if (!_effects.HasEffect<EffectImpl.LandmarkWrapperEffect>())
+            _effects.ApplyEffect(new EffectImpl.LandmarkWrapperEffect());
     }
 
     #endregion

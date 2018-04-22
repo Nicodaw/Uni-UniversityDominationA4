@@ -153,7 +153,7 @@ public class EffectManager : MonoBehaviour
 
     #region Helper Methods
 
-    IEnumerable<Effect> GetEffects<T>() where T : Effect => _effects.Values.Where(ef => typeof(T).IsAssignableFrom(ef.GetType()));
+    public IEnumerable<T> GetEffects<T>() where T : Effect => _effects.Values.Where(ef => typeof(T).IsAssignableFrom(ef.GetType())).Select(ef => (T)ef);
 
     public void ApplyEffect(Effect effect)
     {

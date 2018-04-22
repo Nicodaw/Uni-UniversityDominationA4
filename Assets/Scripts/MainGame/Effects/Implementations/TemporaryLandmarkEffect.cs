@@ -5,19 +5,25 @@ using UnityEngine;
 namespace EffectImpl
 {
     [Serializable]
-    public class TemporaryLandmarkEffect : Effect
+    public class TemporaryLandmarkEffect : TurnedEffect
     {
         #region Private Fields
-        Player playedBy = Game.Instance.CurrentPlayer;
-        int _sector;
-        int _turnsLeft;
+
+        int _playedBy;
+        [NonSerialized]
+        Sector _sector;
+        [NonSerialized]
         GameObject _landmarkModel;
 
         #endregion
 
         #region Override Properties
 
-        public override string CardName => "Christian Union Leaflet guy";
+        protected override int TurnsLeft { get; set; } = 5;
+
+		protected override Player TurnedPlayer => Game.Instance.Players[_playedBy];
+
+		public override string CardName => "Christian Union Leaflet guy";
 
         public override string CardDescription => "Put a marker on an unoccupied sector. Owner gets +1/+1 on all units";
 
@@ -25,13 +31,13 @@ namespace EffectImpl
 
         public override CardTier CardTier => CardTier.Tier2;
 
-        public override int? AttackBonus => 1;
-
-        public override int? DefenceBonus => 1;
-
         #endregion
 
-        #region Handlers
+        #region Public Properties
+
+        public int PlayerAttackBonus => 1;
+
+        public int PlayerDefenceBonus => 1;
 
         #endregion
 
@@ -39,18 +45,8 @@ namespace EffectImpl
 
         public override EffectAvailableSelection AvailableSelection(Game game) => new EffectAvailableSelection
         {
-            Sectors = game.Map.Sectors.Where(s => s.AllowPVC)
+            Sectors = game.Map.Sectors.Where(s => s.Landmark == null && s.Unit == null && !s.Stats.HasEffect<TemporaryLandmarkEffect>())
         };
-
-        public override void ProcessPlayerTurnStart(object sender, EventArgs e)
-        {
-            if ((Player)sender == playedBy) //if at the start of the 
-            {
-                _turnsLeft = _turnsLeft - 1;
-                if (_turnsLeft == 0)
-                    RemoveLandmark();
-            }
-        }
 
         #endregion
 
@@ -58,19 +54,23 @@ namespace EffectImpl
 
         void PutLandmark(Sector sector)
         {
-            _sector = sector.Id;
-            LandmarkEffect tempEffect = new LandmarkEffect(_sector, (int)AttackBonus, (int)DefenceBonus);
-            Game.Instance.Map.Sectors[_sector].Landmark.RegisterPlayerEffect(tempEffect);
+            _sector = sector;
+            //LandmarkEffect tempEffect = new LandmarkEffect(_sector.Id, (int)AttackBonus, (int)DefenceBonus);
+            //_sector.Landmark.RegisterPlayerEffect(tempEffect);
             UnityEngine.Object.Instantiate(_landmarkModel, sector.transform);
-
         }
+
         void RemoveLandmark()
         {
-            UnityEngine.Object.Destroy(Game.Instance.Map.Sectors[_sector].transform.GetChild(0));
+            UnityEngine.Object.Destroy(_sector.transform.GetChild(0));
             RemoveSelf();
         }
 
-        protected override void ApplyToSector(Sector sector) => PutLandmark(sector);
+        protected override void ApplyToSector(Sector sector)
+        {
+            _playedBy = Game.Instance.CurrentPlayer.Id;
+            PutLandmark(sector);
+        }
 
         protected override void RestoreSector(Sector sector) => PutLandmark(sector);
 

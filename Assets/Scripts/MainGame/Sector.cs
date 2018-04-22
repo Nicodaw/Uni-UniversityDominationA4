@@ -217,18 +217,6 @@ public class Sector : MonoBehaviour
 
     internal void OnMouseUpAsButton() => OnClick?.Invoke(this, new EventArgs());
 
-    void OnEnable()
-    {
-        if (Landmark != null)
-            OnCaptured += Landmark.Sector_OnCaptured;
-    }
-
-    void OnDisable()
-    {
-        if (Landmark != null)
-            OnCaptured -= Landmark.Sector_OnCaptured;
-    }
-
     #endregion
 
     #region Handlers
