@@ -20,38 +20,43 @@ public class EffectManager : MonoBehaviour
 
     public int EffectCount => _effects.Count;
 
-    public int Attack =>
-    0 + // default value
+    #region Property Helpers
+
+    /// <summary>
+    /// Does the standard effect sum.
+    /// </summary>
+    /// <returns>The total value.</returns>
+    /// <param name="val">The function used to get the value.</param>
+    /// <param name="def">The default value.</param>
+    int EffectSum(Func<Effect, int?> val, int def) =>
+    // default value
+    def +
+    // sum up valid values
     _effects.Values
-            .Where(ef => ef.AttackBonus.HasValue)
-            .Sum(ef => ef.AttackBonus.Value);
+            .Where(ef => val(ef).HasValue)
+            .Sum(ef => val(ef).Value);
 
-    public int Defence =>
-    0 + // default value
-    _effects.Values.Where(ef => ef.DefenceBonus.HasValue).Sum(ef => ef.DefenceBonus.Value);
-
-    public int Actions =>
-    2 + // default value
-    _effects.Values.Where(ef => ef.ActionBonus.HasValue).Sum(ef => ef.ActionBonus.Value);
-
-    public bool Traversable
+    bool EffectAnd(Func<Effect, bool?> val, bool def = true)
     {
-        get
-        {
-            bool traversable = true; // default value
-            foreach (bool trav in _effects.Values.Where(ef => ef.Traversable.HasValue).Select(ef => ef.Traversable.Value))
-                traversable &= trav;
-            return traversable;
-        }
+        bool final = def;
+        foreach (bool b in _effects.Values.Where(ef => val(ef).HasValue).Select(ef => val(ef).Value))
+            final &= b;
+        return final;
     }
 
-    public int MoveRange =>
-    1 + // default value
-    _effects.Values.Where(ef => ef.MoveRangeBonus.HasValue).Sum(ef => ef.MoveRangeBonus.Value);
+    #endregion
 
-    public int LevelCap =>
-    5 + // default value
-    _effects.Values.Where(ef => ef.LevelCapBonus.HasValue).Sum(ef => ef.LevelCapBonus.Value);
+    public int Attack => EffectSum(ef => ef.AttackBonus, 0);
+
+    public int Defence => EffectSum(ef => ef.DefenceBonus, 0);
+
+    public int Actions => EffectSum(ef => ef.ActionBonus, 2);
+
+    public bool Traversable => EffectAnd(ef => ef.Traversable);
+
+    public int MoveRange => EffectSum(ef => ef.MoveRangeBonus, 1);
+
+    public int LevelCap => EffectSum(ef => ef.LevelCapBonus, 5);
 
     #endregion
 
