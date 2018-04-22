@@ -21,9 +21,9 @@ namespace EffectImpl
 
         protected override int TurnsLeft { get; set; } = 5;
 
-		protected override Player TurnedPlayer => Game.Instance.Players[_playedBy];
+        protected override Player TurnedPlayer => Game.Instance.Players[_playedBy];
 
-		public override string CardName => "Christian Union Leaflet guy";
+        public override string CardName => "Christian Union Leaflet guy";
 
         public override string CardDescription => "Put a marker on an unoccupied sector. Owner gets +1/+1 on all units";
 
