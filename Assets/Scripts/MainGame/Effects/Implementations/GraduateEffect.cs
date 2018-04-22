@@ -1,6 +1,4 @@
 ﻿using System;
-using UnityEditor;
-using UnityEngine;
 
 namespace EffectImpl
 {
@@ -9,8 +7,7 @@ namespace EffectImpl
     {
         #region Private Fields
 
-        GameObject _postgradModel = GameObject.FindGameObjectWithTag("Postgrad");
-        GameObject _undergradModel = GameObject.FindGameObjectWithTag("Undergrad");
+        [NonSerialized]
         Unit _target;
 
         #endregion
@@ -31,7 +28,7 @@ namespace EffectImpl
 
         public override int? MoveRangeBonus => 2;
 
-        public override int? LevelCapBonus => 8;
+        public override int? LevelCapBonus => 3;
 
         #endregion
 
@@ -56,13 +53,13 @@ namespace EffectImpl
         {
             // do graduate add
             _target = unit;
-            PrefabUtility.ReplacePrefab(_postgradModel, unit.gameObject, ReplacePrefabOptions.ConnectToPrefab);
+            _target.UsePostGradModel = true;
         }
 
         void UnGraduateUnit()
         {
             // do graduation remove
-            PrefabUtility.ReplacePrefab(_undergradModel, _target.gameObject, ReplacePrefabOptions.ConnectToPrefab);
+            _target.UsePostGradModel = false;
         }
 
         protected override void ApplyToUnit(Unit unit) => GraduateUnit(unit);

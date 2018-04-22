@@ -62,6 +62,15 @@ public class Unit : MonoBehaviour
     /// </summary>
     public Color Color => Owner.Color;
 
+    /// <summary>
+    /// Whether the unit should use the post-grad model or not.
+    /// </summary>
+    public bool UsePostGradModel
+    {
+        get { throw new NotImplementedException(); }
+        set { throw new NotImplementedException(); }
+    }
+
     #endregion
 
     #region Events
