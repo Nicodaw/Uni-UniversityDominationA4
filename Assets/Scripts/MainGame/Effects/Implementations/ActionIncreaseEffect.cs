@@ -26,6 +26,8 @@ namespace EffectImpl
             Players = new[] { game.CurrentPlayer }
         };
 
+        public override void ProcessPlayerTurnEnd(object sender, EventArgs e) => RemoveSelf();
+
         #endregion
 
         #region Helper Methods

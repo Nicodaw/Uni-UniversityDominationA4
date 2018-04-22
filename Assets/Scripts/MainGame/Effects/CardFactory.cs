@@ -31,8 +31,9 @@ public static class CardFactory
         { CardType.BadIntentionsSTYC,     data => new PlayerStatsEffect(CardType.BadIntentionsSTYC) },
         { CardType.Resits,                data => new LevelEffect() },
         { CardType.SummerBreak,           data => new PlayerSkipTurnEffect()},
-        { CardType.ChristianUnionLeaflet, data => new TemporaryLandmarkEffect()}
+        { CardType.ChristianUnionLeaflet, data => new TemporaryLandmarkEffect()},
         // tier 3
+        { CardType.StudentDebt,           data => new DestroyUnitsEffect() }
     };
 
     /// <summary>
