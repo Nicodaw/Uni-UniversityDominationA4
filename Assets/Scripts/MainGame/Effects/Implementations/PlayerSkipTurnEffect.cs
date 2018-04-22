@@ -6,13 +6,6 @@ namespace EffectImpl
     [Serializable]
     public class PlayerSkipTurnEffect : Effect
     {
-        #region Private Fields
-
-        [NonSerialized]
-        Player _appliedPlayer;
-
-        #endregion
-
         #region Override Properties
 
         public override string CardName => "Summer break";
@@ -32,29 +25,26 @@ namespace EffectImpl
             Players = game.Players.Where(p => p != game.CurrentPlayer)
         };
 
-		#endregion
+        #endregion
 
-		#region Handlers
+        #region Handlers
 
-		public override void ProcessPlayerTurnStart(object sender, EventArgs e)
-		{
+        public override void ProcessPlayerTurnStart(object sender, EventArgs e)
+        {
             // if the applied player's turn starts, end it and remove
-            if ((Player)sender == _appliedPlayer)
+            if ((Player)sender == AppliedPlayer)
             {
-                _appliedPlayer.EndTurn();
+                AppliedPlayer.EndTurn();
                 RemoveSelf();
-			}
+            }
         }
 
-		#endregion
+        #endregion
 
-		#region Helper Methods
+        #region Helper Methods
 
-		void SetAppliedPlayer(Player player) => _appliedPlayer = player;
-
-        protected override void ApplyToPlayer(Player player) => SetAppliedPlayer(player);
-
-        protected override void RestorePlayer(Player player) => SetAppliedPlayer(player);
+        protected override void ApplyToPlayer()
+        { }
 
         #endregion
     }

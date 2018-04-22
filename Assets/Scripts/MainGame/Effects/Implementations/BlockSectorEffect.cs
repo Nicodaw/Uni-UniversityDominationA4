@@ -11,8 +11,6 @@ namespace EffectImpl
 
         int _playedBy;
         [NonSerialized]
-        Sector _appliedSector;
-        [NonSerialized]
         GameObject _barricadeModel; //tbd: add barricade model
 
         #endregion
@@ -50,26 +48,24 @@ namespace EffectImpl
 
         #region Helper Methods
 
-        void Block(Sector sector)
+        void Block()
         {
-            //apply barricade
-            _appliedSector = sector;
-            UnityEngine.Object.Instantiate(_barricadeModel, _appliedSector.Unit.transform); //append the barricade as a child element on the Unit placeholder
+            UnityEngine.Object.Instantiate(_barricadeModel, AppliedSector.Unit.transform); //append the barricade as a child element on the Unit placeholder
         }
 
         void UnBlock()
         {
-            UnityEngine.Object.Destroy(_appliedSector.Unit.transform.GetChild(0)); //remove the barricade
+            UnityEngine.Object.Destroy(AppliedSector.Unit.transform.GetChild(0)); //remove the barricade
             RemoveSelf();
         }
 
-        protected override void ApplyToSector(Sector sector)
+        protected override void ApplyToSector()
         {
             _playedBy = Game.Instance.CurrentPlayer.Id;
-            Block(sector);
+            Block();
         }
 
-        protected override void RestoreSector(Sector sector) => Block(sector);
+        protected override void RestoreSector() => Block();
 
         #endregion
     }

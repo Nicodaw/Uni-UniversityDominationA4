@@ -11,6 +11,12 @@ public abstract class Effect
     #region Private Fields
 
     [NonSerialized]
+    Player _appliedPlayer;
+    [NonSerialized]
+    Sector _appliedSector;
+    [NonSerialized]
+    Unit _appliedUnit;
+    [NonSerialized]
     int _id;
     [NonSerialized]
     EffectManager _manager;
@@ -32,6 +38,12 @@ public abstract class Effect
     /// The effect manager the Effect is in.
     /// </summary>
     protected EffectManager Manager => _manager;
+
+    protected Player AppliedPlayer => _appliedPlayer;
+
+    protected Sector AppliedSector => _appliedSector;
+
+    protected Unit AppliedUnit => _appliedUnit;
 
     #endregion
 
@@ -137,16 +149,25 @@ public abstract class Effect
     }
 
     void SwitchObjectType(object obj,
-                          Action<Player> playerAction,
-                          Action<Sector> sectorAction,
-                          Action<Unit> unitAction)
+                          Action playerAction,
+                          Action sectorAction,
+                          Action unitAction)
     {
         if (obj as Player != null)
-            playerAction((Player)obj);
+        {
+            _appliedPlayer = (Player)obj;
+            playerAction();
+        }
         else if (obj as Sector != null)
-            sectorAction((Sector)obj);
+        {
+            _appliedSector = (Sector)obj;
+            sectorAction();
+        }
         else if (obj as Unit != null)
-            unitAction((Unit)obj);
+        {
+            _appliedUnit = (Unit)obj;
+            unitAction();
+        }
         else
             throw new ArgumentException("Invalid type");
     }
@@ -162,13 +183,13 @@ public abstract class Effect
         SwitchObjectType(obj, RestorePlayer, RestoreSector, RestoreUnit);
     }
 
-    protected virtual void RestorePlayer(Player player)
+    protected virtual void RestorePlayer()
     { }
 
-    protected virtual void RestoreSector(Sector sector)
+    protected virtual void RestoreSector()
     { }
 
-    protected virtual void RestoreUnit(Unit unit)
+    protected virtual void RestoreUnit()
     { }
 
     /// <summary>
@@ -190,17 +211,17 @@ public abstract class Effect
         SwitchObjectType(obj, ApplyToPlayer, ApplyToSector, ApplyToUnit);
     }
 
-    protected virtual void ApplyToPlayer(Player player)
+    protected virtual void ApplyToPlayer()
     {
         throw new InvalidOperationException("Cannot apply effect to Player");
     }
 
-    protected virtual void ApplyToSector(Sector sector)
+    protected virtual void ApplyToSector()
     {
         throw new InvalidOperationException("Cannot apply effect to Sector");
     }
 
-    protected virtual void ApplyToUnit(Unit unit)
+    protected virtual void ApplyToUnit()
     {
         throw new InvalidOperationException("Cannot apply effect to Unit");
     }

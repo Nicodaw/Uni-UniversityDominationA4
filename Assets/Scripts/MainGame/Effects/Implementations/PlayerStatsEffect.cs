@@ -85,7 +85,7 @@ namespace EffectImpl
 
         #region Helper Methods
 
-        protected override void ApplyToUnit(Unit unit)
+        protected override void ApplyToUnit()
         { }
 
         #endregion

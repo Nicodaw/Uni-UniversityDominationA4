@@ -33,7 +33,7 @@ namespace EffectImpl
 
         #region Helper Methods
 
-        protected override void ApplyToPlayer(Player player)
+        protected override void ApplyToPlayer()
         { }
 
         #endregion

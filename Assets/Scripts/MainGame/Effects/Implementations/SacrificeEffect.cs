@@ -28,12 +28,12 @@ namespace EffectImpl
 
         #region Helper Methods
 
-        void GetCard(Unit unit)
+        void GetCard()
         {
             //TBD
         }
 
-        protected override void ApplyToUnit(Unit unit) => GetCard(unit);
+        protected override void ApplyToUnit() => GetCard();
 
         #endregion
     }

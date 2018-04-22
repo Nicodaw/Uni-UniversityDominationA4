@@ -94,7 +94,7 @@ public abstract class BaseGameTest
 
     protected class CustomEffect : Effect
     {
-        public UnityEngine.Object appliedObject;
+        public UnityEngine.Object appliedObject => (UnityEngine.Object)AppliedPlayer ?? (UnityEngine.Object)AppliedSector ?? (UnityEngine.Object)AppliedUnit;
 
         public EffectManager AppliedManager => Manager;
 
@@ -116,20 +116,14 @@ public abstract class BaseGameTest
         public int? levelCapBonus;
         public override int? LevelCapBonus => levelCapBonus;
 
-        protected override void ApplyToPlayer(Player player)
-        {
-            appliedObject = player;
-        }
+        protected override void ApplyToPlayer()
+        { }
 
-        protected override void ApplyToSector(Sector sector)
-        {
-            appliedObject = sector;
-        }
+        protected override void ApplyToSector()
+        { }
 
-        protected override void ApplyToUnit(Unit unit)
-        {
-            appliedObject = unit;
-        }
+        protected override void ApplyToUnit()
+        { }
 
         public override EffectAvailableSelection AvailableSelection(Game game)
         {
@@ -139,13 +133,13 @@ public abstract class BaseGameTest
 
     protected class CustomSecondaryEffect : Effect
     {
-        protected override void ApplyToPlayer(Player player)
+        protected override void ApplyToPlayer()
         { }
 
-        protected override void ApplyToSector(Sector sector)
+        protected override void ApplyToSector()
         { }
 
-        protected override void ApplyToUnit(Unit unit)
+        protected override void ApplyToUnit()
         { }
 
         public override EffectAvailableSelection AvailableSelection(Game game)

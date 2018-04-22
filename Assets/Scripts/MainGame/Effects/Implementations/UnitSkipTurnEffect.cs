@@ -11,8 +11,6 @@ namespace EffectImpl
 
         int _playedBy;
         [NonSerialized]
-        Unit _appliedUnit;
-        [NonSerialized]
         GameObject _hangoverModel; //tbd: add UI indication for locked unit
 
         #endregion
@@ -27,13 +25,13 @@ namespace EffectImpl
 
         public override CardTier CardTier => CardTier.Tier1;
 
-		public override bool? CanMove => false;
+        public override bool? CanMove => false;
 
-		#endregion
+        #endregion
 
-		#region Concrete Methods
+        #region Concrete Methods
 
-		public override EffectAvailableSelection AvailableSelection(Game game) => new EffectAvailableSelection
+        public override EffectAvailableSelection AvailableSelection(Game game) => new EffectAvailableSelection
         {
             Units = game.Map.Sectors.Select(s => s.Unit).Where(u => u != null && u.Owner != game.CurrentPlayer)
         };
@@ -42,9 +40,8 @@ namespace EffectImpl
 
         #region Helper Methods
 
-        void EnableHangover(Unit unit)
+        void EnableHangover()
         {
-            _appliedUnit = unit;
             // set hangover UI state
         }
 
@@ -53,9 +50,9 @@ namespace EffectImpl
             // set handover UI state
         }
 
-        protected override void ApplyToUnit(Unit unit) => EnableHangover(unit);
+        protected override void ApplyToUnit() => EnableHangover();
 
-        protected override void RestoreUnit(Unit unit) => EnableHangover(unit);
+        protected override void RestoreUnit() => EnableHangover();
 
         #endregion
     }

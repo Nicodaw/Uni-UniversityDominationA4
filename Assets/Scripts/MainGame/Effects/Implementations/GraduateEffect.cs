@@ -5,13 +5,6 @@ namespace EffectImpl
     [Serializable]
     public class GraduateEffect : Effect
     {
-        #region Private Fields
-
-        [NonSerialized]
-        Unit _target;
-
-        #endregion
-
         #region Override Properties
 
         public override string CardName => "Graduate";
@@ -49,22 +42,21 @@ namespace EffectImpl
 
         #region Helper Methods
 
-        void GraduateUnit(Unit unit)
+        void GraduateUnit()
         {
             // do graduate add
-            _target = unit;
-            _target.UsePostGradModel = true;
+            AppliedUnit.UsePostGradModel = true;
         }
 
         void UnGraduateUnit()
         {
             // do graduation remove
-            _target.UsePostGradModel = false;
+            AppliedUnit.UsePostGradModel = false;
         }
 
-        protected override void ApplyToUnit(Unit unit) => GraduateUnit(unit);
+        protected override void ApplyToUnit() => GraduateUnit();
 
-        protected override void RestoreUnit(Unit unit) => GraduateUnit(unit);
+        protected override void RestoreUnit() => GraduateUnit();
 
         #endregion
     }

@@ -7,12 +7,6 @@ namespace EffectImpl
     [Serializable]
     public class DestroyUnitsEffect : Effect
     {
-        #region Private Fields
-
-        Player _appliedPlayer;
-
-        #endregion
-
         #region Override Properties
 
         public override string CardName => "Student Debt";
@@ -36,16 +30,15 @@ namespace EffectImpl
 
         #region Helper Methods
 
-        void DestroyPostgrads(Player player)
+        void DestroyPostgrads()
         {
-            _appliedPlayer = player;
-            IEnumerable<Unit> toBeDestroyed = _appliedPlayer.Units.Where(u => u.CompareTag("Postgrad"));
+            IEnumerable<Unit> toBeDestroyed = AppliedPlayer.Units.Where(u => u.Stats.HasEffect<GraduateEffect>());
             foreach (Unit victim in toBeDestroyed)
                 victim.Kill(Game.Instance.CurrentPlayer);
             RemoveSelf();
         }
 
-        protected override void ApplyToPlayer(Player player) => DestroyPostgrads(player);
+        protected override void ApplyToPlayer() => DestroyPostgrads();
 
         #endregion
     }

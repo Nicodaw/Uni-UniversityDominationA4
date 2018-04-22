@@ -11,8 +11,6 @@ namespace EffectImpl
 
         int _playedBy;
         [NonSerialized]
-        Sector _sector;
-        [NonSerialized]
         GameObject _landmarkModel;
 
         #endregion
@@ -52,27 +50,26 @@ namespace EffectImpl
 
         #region Helper Methods
 
-        void PutLandmark(Sector sector)
+        void PutLandmark()
         {
-            _sector = sector;
             //LandmarkEffect tempEffect = new LandmarkEffect(_sector.Id, (int)AttackBonus, (int)DefenceBonus);
             //_sector.Landmark.RegisterPlayerEffect(tempEffect);
-            UnityEngine.Object.Instantiate(_landmarkModel, sector.transform);
+            UnityEngine.Object.Instantiate(_landmarkModel, AppliedSector.transform);
         }
 
         void RemoveLandmark()
         {
-            UnityEngine.Object.Destroy(_sector.transform.GetChild(0));
+            UnityEngine.Object.Destroy(AppliedSector.transform.GetChild(0));
             RemoveSelf();
         }
 
-        protected override void ApplyToSector(Sector sector)
+        protected override void ApplyToSector()
         {
             _playedBy = Game.Instance.CurrentPlayer.Id;
-            PutLandmark(sector);
+            PutLandmark();
         }
 
-        protected override void RestoreSector(Sector sector) => PutLandmark(sector);
+        protected override void RestoreSector() => PutLandmark();
 
         #endregion
     }
