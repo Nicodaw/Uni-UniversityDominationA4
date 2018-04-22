@@ -56,6 +56,8 @@ public class EffectManager : MonoBehaviour
 
     public int MoveRange => EffectSum(ef => ef.MoveRangeBonus, 1);
 
+    public bool CanMove => EffectAnd(ef => ef.CanMove);
+
     public int LevelCap => EffectSum(ef => ef.LevelCapBonus, 5);
 
     #endregion

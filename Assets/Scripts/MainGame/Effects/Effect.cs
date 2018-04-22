@@ -73,6 +73,8 @@ public abstract class Effect
 
     public virtual int? MoveRangeBonus { get; } = null;
 
+    public virtual bool? CanMove { get; } = null;
+
     public virtual int? LevelCapBonus { get; } = null;
 
     #endregion
