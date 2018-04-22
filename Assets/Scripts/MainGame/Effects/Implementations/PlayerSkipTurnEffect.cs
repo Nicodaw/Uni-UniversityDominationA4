@@ -8,6 +8,7 @@ namespace EffectImpl
     {
         #region Private Fields
 
+        [NonSerialized]
         Player _appliedPlayer;
 
         #endregion
@@ -31,34 +32,29 @@ namespace EffectImpl
             Players = game.Players.Where(p => p != game.CurrentPlayer)
         };
 
-        public override void ProcessEffectRemove()
-        {
-            RemoveSelf();
+		#endregion
+
+		#region Handlers
+
+		public override void ProcessPlayerTurnStart(object sender, EventArgs e)
+		{
+            // if the applied player's turn starts, end it and remove
+            if ((Player)sender == _appliedPlayer)
+            {
+                _appliedPlayer.EndTurn();
+                RemoveSelf();
+			}
         }
 
-        #endregion
+		#endregion
 
-        #region Handlers
+		#region Helper Methods
 
-        public override void ProcessPlayerTurnEnd(object sender, EventArgs e)
-        {
-            if ((Player)sender == _appliedPlayer) //Release the lock after the turn of the player who owns the locked unit ends
-                ProcessEffectRemove();
-        }
+		void SetAppliedPlayer(Player player) => _appliedPlayer = player;
 
-        #endregion
+        protected override void ApplyToPlayer(Player player) => SetAppliedPlayer(player);
 
-        #region Helper Methods
-
-        void SkipNextTurn(Player player)
-        {
-            _appliedPlayer = player;
-            player.EndTurn();
-        }
-
-        protected override void ApplyToPlayer(Player player) => SkipNextTurn(player);
-
-        protected override void RestorePlayer(Player player) => SkipNextTurn(player);
+        protected override void RestorePlayer(Player player) => SetAppliedPlayer(player);
 
         #endregion
     }

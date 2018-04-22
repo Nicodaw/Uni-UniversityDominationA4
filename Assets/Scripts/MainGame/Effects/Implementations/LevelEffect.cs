@@ -6,12 +6,6 @@ namespace EffectImpl
     [Serializable]
     public class LevelEffect : Effect
     {
-        #region Private Fields
-
-        int _levelModifier;
-
-        #endregion
-
         #region Override Properties
 
         public override string CardName => "Resits";
@@ -31,7 +25,6 @@ namespace EffectImpl
         public override EffectAvailableSelection AvailableSelection(Game game) => new EffectAvailableSelection
         {
             Units = game.Map.Sectors.Select(s => s.Unit).Where(u => u != null && u.Owner != game.CurrentPlayer)
-
         };
 
         #endregion

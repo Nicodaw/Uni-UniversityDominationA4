@@ -29,11 +29,6 @@ namespace EffectImpl
             Players = game.Players.Where(p => p != game.CurrentPlayer)
         };
 
-        public override void ProcessEffectRemove()
-        {
-            RemoveSelf();
-        }
-
         #endregion
 
         #region Helper Methods

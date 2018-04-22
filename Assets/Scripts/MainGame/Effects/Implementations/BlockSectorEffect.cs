@@ -5,18 +5,27 @@ using UnityEngine;
 namespace EffectImpl
 {
     [Serializable]
-    public class BlockSectorEffect : Effect
+    public class BlockSectorEffect : TurnedEffect
     {
         #region Private Fields
 
-        Player playedBy = Game.Instance.CurrentPlayer;
-        int _turnsLeft = 2;
+        int _playedBy;
+        [NonSerialized]
         Sector _appliedSector;
+        [NonSerialized]
         GameObject _barricadeModel; //tbd: add barricade model
 
         #endregion
 
+        #region Private Properties
+
+        Player PlayedBy => Game.Instance.Players[_playedBy];
+
+        #endregion
+
         #region Override Properties
+
+        protected override int TurnsLeft { get; set; } = 2;
 
         public override string CardName => "Industrial action";
 
@@ -39,25 +48,11 @@ namespace EffectImpl
 
         #endregion
 
-        #region Handlers
-
-        public override void ProcessPlayerTurnStart(object sender, EventArgs e)
-        {
-            if ((Player) sender == playedBy) //if at the start of the 
-            {
-                _turnsLeft = _turnsLeft - 1;
-                if (_turnsLeft == 0)
-                    UnBlock();
-            }
-        }
-
-        #endregion
-
         #region Helper Methods
 
         void Block(Sector sector)
         {
-            //apply barricade 
+            //apply barricade
             _appliedSector = sector;
             UnityEngine.Object.Instantiate(_barricadeModel, _appliedSector.Unit.transform); //append the barricade as a child element on the Unit placeholder
         }
@@ -68,7 +63,11 @@ namespace EffectImpl
             RemoveSelf();
         }
 
-        protected override void ApplyToSector(Sector sector) => Block(sector);
+        protected override void ApplyToSector(Sector sector)
+        {
+            _playedBy = Game.Instance.CurrentPlayer.Id;
+            Block(sector);
+        }
 
         protected override void RestoreSector(Sector sector) => Block(sector);
 

@@ -32,8 +32,6 @@ namespace EffectImpl
             Players = game.Players.Where(p => p != game.CurrentPlayer)
         };
 
-        public override void ProcessEffectRemove() => RemoveSelf();
-
         #endregion
 
         #region Helper Methods
@@ -44,7 +42,7 @@ namespace EffectImpl
             IEnumerable<Unit> toBeDestroyed = _appliedPlayer.Units.Where(u => u.CompareTag("Postgrad"));
             foreach (Unit victim in toBeDestroyed)
                 victim.Kill(Game.Instance.CurrentPlayer);
-            ProcessEffectRemove();
+            RemoveSelf();
         }
 
         protected override void ApplyToPlayer(Player player) => DestroyPostgrads(player);

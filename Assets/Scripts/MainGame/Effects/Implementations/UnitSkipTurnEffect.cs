@@ -9,7 +9,10 @@ namespace EffectImpl
     {
         #region Private Fields
 
+        int _playedBy;
+        [NonSerialized]
         Unit _appliedUnit;
+        [NonSerialized]
         GameObject _hangoverModel; //tbd: add UI indication for locked unit
 
         #endregion
@@ -24,43 +27,35 @@ namespace EffectImpl
 
         public override CardTier CardTier => CardTier.Tier1;
 
-        #endregion
+		public override bool? CanMove => false;
 
-        #region Concrete Methods
+		#endregion
 
-        public override EffectAvailableSelection AvailableSelection(Game game) => new EffectAvailableSelection
+		#region Concrete Methods
+
+		public override EffectAvailableSelection AvailableSelection(Game game) => new EffectAvailableSelection
         {
             Units = game.Map.Sectors.Select(s => s.Unit).Where(u => u != null && u.Owner != game.CurrentPlayer)
         };
-
-        public override void ProcessEffectRemove()
-        {
-            //TBD: restore normal movement
-        }
-
-        #endregion
-
-        #region Handlers
-
-        public override void ProcessPlayerTurnEnd(object sender, EventArgs e)
-        {
-            if ((Player)sender == _appliedUnit.Owner) //Release the lock after the turn of the player who owns the locked unit ends
-                ProcessEffectRemove();
-        }
 
         #endregion
 
         #region Helper Methods
 
-        void ForbidMovement(Unit unit)
+        void EnableHangover(Unit unit)
         {
-            //TBD: Lock up a unit to not be interactable
             _appliedUnit = unit;
+            // set hangover UI state
         }
 
-        protected override void ApplyToUnit(Unit unit) => ForbidMovement(unit);
+        void DisableHangover()
+        {
+            // set handover UI state
+        }
 
-        protected override void RestoreUnit(Unit unit) => ForbidMovement(unit);
+        protected override void ApplyToUnit(Unit unit) => EnableHangover(unit);
+
+        protected override void RestoreUnit(Unit unit) => EnableHangover(unit);
 
         #endregion
     }
