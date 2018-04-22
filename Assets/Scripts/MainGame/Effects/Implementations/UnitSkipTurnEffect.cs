@@ -58,7 +58,6 @@ namespace EffectImpl
             _appliedUnit = unit;
         }
 
-
         protected override void ApplyToUnit(Unit unit) => ForbidMovement(unit);
 
         protected override void RestoreUnit(Unit unit) => ForbidMovement(unit);

@@ -36,6 +36,7 @@ namespace EffectImpl
         #endregion
 
         #region Concrete methods
+
         public override EffectAvailableSelection AvailableSelection(Game game) => new EffectAvailableSelection
         {
             Sectors = game.Map.Sectors.Where(s => s.AllowPVC)
@@ -55,10 +56,10 @@ namespace EffectImpl
 
         #region Helper Methods
 
-        void PutLandmark (Sector sector)
+        void PutLandmark(Sector sector)
         {
             _sector = sector.Id;
-            LandmarkEffect tempEffect = new LandmarkEffect(_sector, (int)AttackBonus,(int)DefenceBonus);
+            LandmarkEffect tempEffect = new LandmarkEffect(_sector, (int)AttackBonus, (int)DefenceBonus);
             Game.Instance.Map.Sectors[_sector].Landmark.RegisterPlayerEffect(tempEffect);
             UnityEngine.Object.Instantiate(_landmarkModel, sector.transform);
 

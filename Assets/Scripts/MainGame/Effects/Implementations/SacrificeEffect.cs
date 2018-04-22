@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Linq;
-using UnityEngine;
 
 namespace EffectImpl
 {
     [Serializable]
     public class SacrificeEffect : Effect
     {
-
         #region Override Properties
 
         public override string CardName => "Drop Out";
@@ -29,14 +26,12 @@ namespace EffectImpl
 
         #endregion
 
-
         #region Helper Methods
 
         void GetCard(Unit unit)
         {
             //TBD
         }
-
 
         protected override void ApplyToUnit(Unit unit) => GetCard(unit);
 

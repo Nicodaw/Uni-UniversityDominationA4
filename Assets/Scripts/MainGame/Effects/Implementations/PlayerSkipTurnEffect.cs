@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using UnityEngine;
 
 namespace EffectImpl
 {
@@ -37,7 +36,6 @@ namespace EffectImpl
             RemoveSelf();
         }
 
-
         #endregion
 
         #region Handlers
@@ -47,7 +45,6 @@ namespace EffectImpl
             if ((Player)sender == _appliedPlayer) //Release the lock after the turn of the player who owns the locked unit ends
                 ProcessEffectRemove();
         }
-       
 
         #endregion
 

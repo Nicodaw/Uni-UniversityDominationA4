@@ -37,12 +37,12 @@ namespace EffectImpl
         protected override void ApplyToPlayer(Player player)
         { }
 
-		protected override void RestorePlayer(Player player)
-		{
+        protected override void RestorePlayer(Player player)
+        {
             // register the effect so it can be managed by landmark
             Game.Instance.Map.Sectors[_sector].Landmark.RegisterPlayerEffect(this);
-		}
+        }
 
-		#endregion
-	}
+        #endregion
+    }
 }
