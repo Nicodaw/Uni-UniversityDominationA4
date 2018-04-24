@@ -62,6 +62,20 @@ public class EffectManager : MonoBehaviour
 
     #endregion
 
+    #region Events
+
+    /// <summary>
+    /// Raised when an effect is added to the manager.
+    /// </summary>
+    public event EventHandler OnEffectAdd;
+
+    /// <summary>
+    /// Raised when an effect is removed from the manager.
+    /// </summary>
+    public event EventHandler OnEffectRemove;
+
+    #endregion
+
     #region Initialization
 
     public void Init(object owner)
@@ -160,6 +174,7 @@ public class EffectManager : MonoBehaviour
         _effects.Add(_nextEffectId, effect);
         effect.ApplyTo(_owner, this, _nextEffectId);
         _nextEffectId++;
+        OnEffectAdd?.Invoke(this, new EventArgs());
     }
 
     public bool HasEffect<T>() where T : Effect => GetEffects<T>().Any();
@@ -172,6 +187,7 @@ public class EffectManager : MonoBehaviour
 
         _effects.Remove(effect.Id);
         effect.ProcessEffectRemove();
+        OnEffectRemove?.Invoke(this, new EventArgs());
     }
 
     public void RemoveEffect<T>() where T : Effect

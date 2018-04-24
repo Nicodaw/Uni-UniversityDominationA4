@@ -1,28 +1,29 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(EffectManager))]
 public class Unit : MonoBehaviour
 {
     #region Unity Bindings
 
-    [SerializeField] Material m_level1Material;
-    [SerializeField] Material m_level2Material;
-    [SerializeField] Material m_level3Material;
-    [SerializeField] Material m_level4Material;
-    [SerializeField] Material m_level5Material;
-    [SerializeField] Material m_level6Material;
-    [SerializeField] Material m_level7Material;
-    [SerializeField] Material m_level8Material;
+    [SerializeField] Text m_statText;
+    [SerializeField] Text m_levelText;
+    [SerializeField] GameObject m_undergrad;
+    [SerializeField] GameObject m_postgrad;
+    [SerializeField] Renderer[] m_renderers;
 
     #endregion
 
     #region Private Fields
 
+    const string StatsFormat = "{0}/{1}";
+
     EffectManager _effects;
     int? _owner;
     int _sector;
     int _level;
+    bool _usingPostgrad;
     bool _destroyed;
 
     #endregion
@@ -40,7 +41,16 @@ public class Unit : MonoBehaviour
     public Player Owner
     {
         get { return _owner.HasValue ? Game.Instance.Players[_owner.Value] : null; }
-        private set { _owner = value?.Id; }
+        private set
+        {
+            EventOwnerBinder(false);
+            _owner = value?.Id;
+            EventOwnerBinder(true);
+
+            // set the material color to the player color
+            foreach (Renderer rend in m_renderers)
+                rend.material.color = Color;
+        }
     }
 
     /// <summary>
@@ -55,7 +65,37 @@ public class Unit : MonoBehaviour
     /// <summary>
     /// The unit's level
     /// </summary>
-    public int Level => _level;
+    public int Level
+    {
+        get { return _level; }
+        private set
+        {
+            if (value > Stats.LevelCap)
+                throw new InvalidOperationException();
+            _level = value;
+            UpdateStats();
+        }
+    }
+
+    /// <summary>
+    /// Gets the unit's attack stat from its level.
+    /// </summary>
+    public int AttackFromLevel => Level;
+
+    /// <summary>
+    /// Gets the unit's defence stat from its level.
+    /// </summary>
+    public int DefenceFromLevel => Level;
+
+    /// <summary>
+    /// Gets the unit's total attack value.
+    /// </summary>
+    public int TotalAttack => AttackFromLevel + Stats.Attack + Owner.Stats.Attack;
+
+    /// <summary>
+    /// Gets the unit's total defence value.
+    /// </summary>
+    public int TotalDefence => DefenceFromLevel + Stats.Defence + Owner.Stats.Defence;
 
     /// <summary>
     /// The colour of the unit
@@ -67,8 +107,13 @@ public class Unit : MonoBehaviour
     /// </summary>
     public bool UsePostGradModel
     {
-        get { throw new NotImplementedException(); }
-        set { throw new NotImplementedException(); }
+        get { return _usingPostgrad; }
+        set
+        {
+            _usingPostgrad = value;
+            m_undergrad.SetActive(!_usingPostgrad);
+            m_postgrad.SetActive(_usingPostgrad);
+        }
     }
 
     #endregion
@@ -92,12 +137,12 @@ public class Unit : MonoBehaviour
     /// <param name="player">The player the unit belongs to.</param>
     public void Init(Player player)
     {
-        // set the owner, level, and color of the unit
+        // set the owner and level
         Owner = player;
         _level = 1;
 
-        // set the material color to the player color
-        GetComponentInChildren<Renderer>().material.color = Color;
+        // update stats
+        UpdateStats();
     }
 
     #endregion
@@ -111,7 +156,8 @@ public class Unit : MonoBehaviour
             effectManager = _effects.CreateMemento(),
             owner = _owner,
             sector = _sector,
-            level = _level
+            level = Level,
+            usingPostgrad = UsePostGradModel
         };
     }
 
@@ -120,8 +166,9 @@ public class Unit : MonoBehaviour
         _effects.RestoreMemento(memento.effectManager);
         _owner = memento.owner;
         _sector = memento.sector;
-        _level = memento.level;
-        UpdateUnitMaterial();
+        Level = memento.level;
+        UsePostGradModel = memento.usingPostgrad;
+        UpdateStats();
     }
 
     #endregion
@@ -134,6 +181,30 @@ public class Unit : MonoBehaviour
         _effects.Init(this);
     }
 
+    void OnEnable()
+    {
+        Stats.OnEffectAdd += EffectManager_OnEffectChange;
+        Stats.OnEffectRemove += EffectManager_OnEffectChange;
+        Game.Instance.OnSectorCaptured += Game_OnSectorCapture;
+        EventOwnerBinder(true);
+    }
+
+    void OnDisable()
+    {
+        Stats.OnEffectAdd -= EffectManager_OnEffectChange;
+        Stats.OnEffectRemove -= EffectManager_OnEffectChange;
+        Game.Instance.OnSectorCaptured -= Game_OnSectorCapture;
+        EventOwnerBinder(false);
+    }
+
+    #endregion
+
+    #region Handlers
+
+    void EffectManager_OnEffectChange(object sender, EventArgs e) => UpdateStats();
+
+    void Game_OnSectorCapture(object sender, UpdateEventArgs<Player> e) => UpdateStats();
+
     #endregion
 
     #region Helper Methods
@@ -144,6 +215,28 @@ public class Unit : MonoBehaviour
             throw new NullReferenceException("Unit already destoryed");
     }
 
+    void UpdateStats()
+    {
+        m_levelText.text = _level.ToString();
+        m_statText.text = string.Format(StatsFormat, TotalAttack, TotalDefence);
+    }
+
+    void EventOwnerBinder(bool bind)
+    {
+        if (Owner == null)
+            return;
+        if (bind)
+        {
+            Owner.Stats.OnEffectAdd += EffectManager_OnEffectChange;
+            Owner.Stats.OnEffectRemove += EffectManager_OnEffectChange;
+        }
+        else
+        {
+            Owner.Stats.OnEffectAdd -= EffectManager_OnEffectChange;
+            Owner.Stats.OnEffectRemove -= EffectManager_OnEffectChange;
+        }
+    }
+
     /// <summary>
     /// Increase this units level and update the unit model to display the new level.
     /// Leveling up is capped at level 5.
@@ -152,37 +245,7 @@ public class Unit : MonoBehaviour
     {
         DestroyedCheck();
         if (Level < Stats.LevelCap)
-        {
-            // increase level
-            _level++;
-            UpdateUnitMaterial();
-        }
-    }
-
-    public void UpdateUnitMaterial()
-    {
-        DestroyedCheck();
-        switch (_level)
-        {
-            case 2:
-                gameObject.GetComponentInChildren<MeshRenderer>().material = m_level2Material;
-                break;
-            case 3:
-                gameObject.GetComponentInChildren<MeshRenderer>().material = m_level3Material;
-                break;
-            case 4:
-                gameObject.GetComponentInChildren<MeshRenderer>().material = m_level4Material;
-                break;
-            case 5:
-                gameObject.GetComponentInChildren<MeshRenderer>().material = m_level5Material;
-                break;
-            default:
-                gameObject.GetComponentInChildren<MeshRenderer>().material = m_level1Material;
-                break;
-        }
-
-        // set material color to match owner color
-        GetComponentInChildren<Renderer>().material.color = Color;
+            Level++;
     }
 
     /// <summary>
@@ -200,8 +263,8 @@ public class Unit : MonoBehaviour
         // diff = +ve: attacker advantage 
         // diff = -ve or 0: defender advantage
         int diff =
-            (Level + Stats.Attack + Owner.Stats.Attack) - // attacker value
-            (other.Level + Stats.Defence + other.Owner.Stats.Defence); // defender value
+            TotalAttack - // attacker value
+            other.TotalDefence; // defender value
 
         if (UnityEngine.Random.Range(0f, 1f) < CalculateAttackUncertainty(diff))
             // disadvantaged side won
