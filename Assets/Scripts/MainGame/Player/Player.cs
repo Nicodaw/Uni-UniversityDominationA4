@@ -80,7 +80,7 @@ public abstract class Player : MonoBehaviour
     /// The number of actions remaining for the current player.
     /// </summary>
     public int ActionsRemaining { get { return _actionsRemaining; } set { _actionsRemaining = value; } }
-    
+
 
     #endregion
 
@@ -187,13 +187,11 @@ public abstract class Player : MonoBehaviour
     /// If occupying unit is friendly, units are swapped.
     /// If occupying unit is an enemy unit, conflict occurs.
     /// 
-    /// Upon conflict, if the current unit wins, it takes over the sector,
-    /// destroying the enemy unit. If the enemy unit wins, the current
-    /// unit is destroyed.
+    /// Upon conflict, the current unit attacks the enemy unit. If the attack
+    /// kills the enemy unit, then the current unit moves into the sector.
     /// </summary>
     /// <param name="from">The starting sector.</param>
     /// <param name="target">The target sector.</param>
-    /// <param name="winOverride">If not null, attack calculations are bypassed using the given value.</param>
     internal void AttemptMove(Sector from, Sector target)
     {
         // assert that we can actually do a move
@@ -213,11 +211,8 @@ public abstract class Player : MonoBehaviour
             // move from unit if target was destroyed
             from.Unit.Attack(target.Unit);
 
-            if (target.Unit.Level <= 0)
-            {
-                target.Unit.Kill(this); // destroy enemy unit, making it null
+            if (target.Unit == null) // if unit was destroyed, it will now equal null
                 from.TransferUnits(target); // since target unit is now null,
-            }
         }
 
         // whenever a move it attempted an action is consumed
@@ -233,6 +228,9 @@ public abstract class Player : MonoBehaviour
             SpawnUnitAt(sector);
     }
 
+    /// <summary>
+    /// Levels up all owned units on landmarks.
+    /// </summary>
     public void LevelUpLandmarkedUnits()
     {
         foreach (Unit unit in OwnedLandmarkSectors.Select(s => s.Unit).Where(u => u != null))

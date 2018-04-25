@@ -248,13 +248,15 @@ public class Unit : MonoBehaviour
             Level++;
     }
     /// <summary>
-    /// Decrease this units level and update the unit model to display the new level.
+    /// Damage this unit by decreasing its level by the given amount.
     /// If a unit reaches level 0 or below, it is considered destroyed
     /// </summary>
-	public void LevelDown(int amount)
+    public void Damage(int amount, Player doneBy)
     {
         DestroyedCheck();
-        Level = Level - amount;
+        Level -= amount;
+        if (Level <= 0)
+            Kill(doneBy);
     }
 
     /// <summary>
@@ -271,12 +273,10 @@ public class Unit : MonoBehaviour
         DestroyedCheck();
         // diff = +ve: attacker was stronger so potentially more levels will be reduced
         // diff = 0: defender was stronger so only a single level will be decreased
-        int diff = (TotalAttack > TotalDefence)?
-            TotalAttack - other.TotalDefence :
-            0;
+        int diff = Mathf.Max(TotalAttack - other.TotalDefence, 0);
 
         //apply damage to target
-        other.LevelDown(CalculateAttackDamage(diff));
+        other.Damage(CalculateAttackDamage(diff), Owner);
     }
 
     /// <summary>
