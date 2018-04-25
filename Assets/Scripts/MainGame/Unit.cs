@@ -247,6 +247,15 @@ public class Unit : MonoBehaviour
         if (Level < Stats.LevelCap)
             Level++;
     }
+    /// <summary>
+    /// Decrease this units level and update the unit model to display the new level.
+    /// If a unit reaches level 0 or below, it is considered destroyed
+    /// </summary>
+	public void LevelDown(int amount)
+    {
+        DestroyedCheck();
+        Level = Level - amount;
+    }
 
     /// <summary>
     /// Returns the outcome of a combat encounter between two units.
@@ -257,41 +266,36 @@ public class Unit : MonoBehaviour
     /// </summary>
     /// <returns>The attack.</returns>
     /// <param name="other">The defending unit.</param>
-    public bool Attack(Unit other)
+    public void Attack(Unit other)
     {
         DestroyedCheck();
-        // diff = +ve: attacker advantage 
-        // diff = -ve or 0: defender advantage
-        int diff =
-            TotalAttack - // attacker value
-            other.TotalDefence; // defender value
+        // diff = +ve: attacker was stronger so potentially more levels will be reduced
+        // diff = 0: defender was stronger so only a single level will be decreased
+        int diff = (TotalAttack > TotalDefence)?
+            TotalAttack - other.TotalDefence :
+            0;
 
-        if (UnityEngine.Random.Range(0f, 1f) < CalculateAttackUncertainty(diff))
-            // disadvantaged side won
-            // if diff <= 0, defender had advantage, attack has disadvantage
-            return diff <= 0;
-        // advantaged side won
-        // if diff > 0, attacker had advantage, defender has disadvantage
-        return diff > 0;
+        //apply damage to target
+        other.LevelDown(CalculateAttackDamage(diff));
     }
 
     /// <summary>
-    /// Calculates the attack uncertainty.
+    /// Calculates the levels that are going to be reduced.
     /// Uses the function explained here:
     /// https://www.desmos.com/calculator/taaldm6iod.
     /// </summary>
-    /// <returns>The attack uncertainty.</returns>
+    /// <returns>The attack damage.</returns>
     /// <param name="x">The difference value.</param>
-    float CalculateAttackUncertainty(int x)
+    int CalculateAttackDamage(int x)
     {
         // function parameters
         const float z = 2.5f;
-        const float a = 1f / 12.5f;
-        const float b = 0.4f;
+        const float a = 0.08f;
+        const float b = 0.35f;
         const float c = 2f;
 
         // calculation
-        return a * (Mathf.Pow(z, (-b * Mathf.Abs(x)) + c));
+        return (int)(Mathf.Ceil(a * (Mathf.Pow(z, (b * x) + c))));
     }
 
     public void Kill(Player eliminator)

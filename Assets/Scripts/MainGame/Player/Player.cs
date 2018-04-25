@@ -194,7 +194,7 @@ public abstract class Player : MonoBehaviour
     /// <param name="from">The starting sector.</param>
     /// <param name="target">The target sector.</param>
     /// <param name="winOverride">If not null, attack calculations are bypassed using the given value.</param>
-    internal void AttemptMove(Sector from, Sector target, bool? winOverride = null)
+    internal void AttemptMove(Sector from, Sector target)
     {
         // assert that we can actually do a move
         if (from.Unit?.Owner != this) // if unit is null or not owned, then crash i guess ¯\_(ツ)_/¯
@@ -209,16 +209,15 @@ public abstract class Player : MonoBehaviour
         else // the only other option is that target contains an enemy unit
         {
             // do attack
-            // destroy loser
-            // move from unit if it won
-            bool won = winOverride ?? from.Unit.Attack(target.Unit);
-            if (won)
+            // reduce levels from target
+            // move from unit if target was destroyed
+            from.Unit.Attack(target.Unit);
+
+            if (target.Unit.Level <= 0)
             {
                 target.Unit.Kill(this); // destroy enemy unit, making it null
                 from.TransferUnits(target); // since target unit is now null,
             }
-            else
-                from.Unit.Kill(target.Unit.Owner); // destroy current unit, making it null
         }
 
         // whenever a move it attempted an action is consumed

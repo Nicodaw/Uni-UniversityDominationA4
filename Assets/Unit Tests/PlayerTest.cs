@@ -208,7 +208,7 @@ public class PlayerTest : BaseGameTest
         Assert.That(target.Unit, Is.EqualTo(secondUnit));
 
         // do move
-        Players[0].AttemptMove(origin, target, true);
+        Players[0].AttemptMove(origin, target);
 
         Assert.That(origin.Owner, Is.EqualTo(Players[0]));
         Assert.That(origin.Unit, Is.Null);
@@ -234,7 +234,7 @@ public class PlayerTest : BaseGameTest
         Assert.That(target.Unit, Is.EqualTo(secondUnit));
 
         // do move
-        Players[0].AttemptMove(origin, target, false);
+        Players[0].AttemptMove(origin, target);
 
         Assert.That(origin.Owner, Is.EqualTo(Players[0]));
         Assert.That(origin.Unit, Is.Null);
