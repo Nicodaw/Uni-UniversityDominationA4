@@ -80,13 +80,18 @@ public class BirdController : MonoBehaviour
         switch (collision.transform.tag)
         {
             case "Coin":
+                SoundManager.Instance.PlaySingle(Sound.CoinGainSound);
                 Destroy(collision.gameObject);
                 _score++;
                 if (_score == m_maxScore)
                     EndGame(true);
                 break;
             case "Ground":
+                SoundManager.Instance.PlaySingle(Sound.GroundHitSound);
+                Die();
+                break;
             case "Pillar":
+                SoundManager.Instance.PlaySingle(Sound.PipeHitSound);
                 Die();
                 break;
         }
@@ -107,6 +112,7 @@ public class BirdController : MonoBehaviour
     /// </summary>
     IEnumerator AnimFlap()
     {
+        SoundManager.Instance.PlaySingle(Sound.WingFlapSound);
         _renderer.material = m_states[1];
         yield return new WaitForSeconds(0.1f);
         _renderer.material = m_states[0];

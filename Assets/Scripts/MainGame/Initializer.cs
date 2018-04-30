@@ -9,6 +9,7 @@ public class Initializer : MonoBehaviour
 
     void Start()
     {
+        SoundManager.Instance.PlayMusic(Sound.MainGameMusic);
         if (Game.MementoToRestore == null)
             Game.Instance.Init();
         else

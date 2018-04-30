@@ -9,8 +9,10 @@ public class SoundManager : MonoBehaviour
 {
     #region Unity Bindings
 
-    [SerializeField] AudioSource sfxSource;
+    [SerializeField] AudioSource sfxSource1;
+    [SerializeField] AudioSource sfxSource2;
     [SerializeField] AudioSource musicSource;
+
     [SerializeField] AudioClip unitAttack;
     [SerializeField] AudioClip unitMove;
     [SerializeField] AudioClip unitDie;
@@ -70,49 +72,49 @@ public class SoundManager : MonoBehaviour
     #region Helper Methods
     public void PlaySingle(Sound sound)
     {
-        switch (sound)
+        switch ((int)sound)
         {
-            case Sound.UnitAttackSound:
+            case 0:
                 Play(unitAttack);
                 break;
-            case Sound.UnitDieSound:
+            case 1:
+                Play(unitMove);
+                break;
+            case 2:
                 Play(unitDie);
                 break;
-            case Sound.UIButtonClickSound:
+            case 3:
                 Play(buttonClick);
                 break;
-            case Sound.CardInSound:
+            case 4:
                 Play(cardIn);
                 break;
-            case Sound.CardOutSound:
+            case 5:
                 Play(cardOut);
                 break;
-            case Sound.EnemyEffectSound:
+            case 6:
                 Play(enemyEffect);
                 break;
-            case Sound.FriendlyEffectSound:
+            case 7:
                 Play(friendlyEffect);
                 break;
-            case Sound.SectorEffect:
+            case 8:
                 Play(sectorEffect);
                 break;
-            case Sound.SacrificeSound:
+            case 9:
                 Play(sacrificeEffect);
                 break;
-            case Sound.CoinGainSound:
+            case 10:
                 Play(coinGain);
                 break;
-            case Sound.GroundHitSound:
+            case 11:
                 Play(groundHit);
                 break;
-            case Sound.PipeHitSound:
+            case 12:
                 Play(pipeHit);
                 break;
-            case Sound.WingFlapSound:
+            case 13:
                 Play(wingFlap);
-                break;
-            case Sound.UnitMoveSound:
-                Play(unitMove);
                 break;
             default:
                 throw new InvalidOperationException("Sound clip doesn't exist. If you're trying to play music, use PlayMusic(Sound s)");
@@ -154,14 +156,31 @@ public class SoundManager : MonoBehaviour
 
     void Play(AudioClip clip)
     {
-        sfxSource.clip = clip;
-        sfxSource.Play();
+        if (sfxSource1.isPlaying)
+        {
+            sfxSource2.clip = clip;
+            sfxSource2.Play();
+            StartCoroutine(ClearSoundBuffer(2));
+        }
+        else
+        {
+            sfxSource1.clip = clip;
+            sfxSource1.Play();
+            StartCoroutine(ClearSoundBuffer(1));
+        }
     }
 
     void PlayMusic(AudioClip music)
     {
         musicSource.clip = music;
         musicSource.Play();
+    }
+
+    IEnumerator ClearSoundBuffer(int src)
+    {
+        AudioSource source = (src == 1) ? sfxSource1 : sfxSource2;
+        yield return new WaitWhile(() => source.isPlaying);
+        source.clip = null;
     }
 
     #endregion
