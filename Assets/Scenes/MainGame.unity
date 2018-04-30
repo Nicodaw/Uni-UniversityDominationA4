@@ -474,9 +474,24 @@ Prefab:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 412324434}
+    - target: {fileID: 1523530246732308, guid: 6718e8b32db434b348a02238bec1c372, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114071113539278292, guid: 6718e8b32db434b348a02238bec1c372,
+        type: 2}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6718e8b32db434b348a02238bec1c372, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &1103774468 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114071113539278292, guid: 6718e8b32db434b348a02238bec1c372,
+    type: 2}
+  m_PrefabInternal: {fileID: 1103774467}
+  m_Script: {fileID: 1392445389, guid: f70555f144d8491a825f0804e09c671c, type: 3}
 --- !u!1 &1300657478 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1439237689517294, guid: 6718e8b32db434b348a02238bec1c372,
@@ -533,6 +548,11 @@ Prefab:
       objectReference: {fileID: 771273928}
     - target: {fileID: 114167196417003754, guid: 51e10a00e6473c34e877f29cdbb22425,
         type: 2}
+      propertyPath: m_endTurnButton
+      value: 
+      objectReference: {fileID: 1103774468}
+    - target: {fileID: 114167196417003754, guid: 51e10a00e6473c34e877f29cdbb22425,
+        type: 2}
       propertyPath: m_actionsRemaining
       value: 
       objectReference: {fileID: 203850757}
@@ -548,15 +568,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4378657002764538, guid: c0124bfc0ab99f1478541b246974590a, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 24.948364
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4378657002764538, guid: c0124bfc0ab99f1478541b246974590a, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 85.41528
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4378657002764538, guid: c0124bfc0ab99f1478541b246974590a, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 34.038414
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4378657002764538, guid: c0124bfc0ab99f1478541b246974590a, type: 2}
       propertyPath: m_LocalRotation.x

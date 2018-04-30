@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -19,6 +18,11 @@ public class HumanPlayer : Player
 
     #region Override Methods
 
+    public override void ProcessTurnStart()
+    {
+        StartCoroutine(DoStartTurn());
+    }
+
     public override void ProcessSectorClick(Sector clickedSector)
     {
         base.ProcessSectorClick(clickedSector);
@@ -35,6 +39,11 @@ public class HumanPlayer : Player
         }
     }
 
+    public override void EndTurn()
+    {
+        StartCoroutine(DoEndTurn());
+    }
+
     #endregion
 
     #region Helper Methods
@@ -49,6 +58,27 @@ public class HumanPlayer : Player
     {
         _selectedSector?.ApplyHighlightAdjacent(false);
         _selectedSector = null;
+    }
+
+    IEnumerator DoStartTurn()
+    {
+        base.ProcessTurnStart();
+        Cards.CardEnter();
+        if (Cards.Count > 0)
+            yield return new WaitForSeconds(1.5f);
+        AssignRandomCard();
+        yield return new WaitForSeconds(0.5f);
+        Game.Instance.EndTurnButtonEnabled = true;
+    }
+
+    IEnumerator DoEndTurn()
+    {
+        Game.Instance.EndTurnButtonEnabled = false;
+        Cards.CardExit();
+        if (Cards.Count > 0)
+            yield return new WaitForSeconds(1.5f);
+        Cards.Clickable = true;
+        base.EndTurn();
     }
 
     #endregion

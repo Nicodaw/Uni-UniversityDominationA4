@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(EffectManager))]
+[RequireComponent(typeof(CardManager))]
 public abstract class Player : MonoBehaviour
 {
     #region Unity Bindings
@@ -18,6 +19,7 @@ public abstract class Player : MonoBehaviour
     PlayerUI _gui;
     Color _color;
     EffectManager _effects;
+    CardManager _cardManager;
     int _actionsRemaining;
 
     #endregion
@@ -45,9 +47,13 @@ public abstract class Player : MonoBehaviour
     public EffectManager Stats => _effects;
 
     /// <summary>
+    /// The cards of the current player.
+    /// </summary>
+    public CardManager Cards => _cardManager;
+
+    /// <summary>
     /// The units the player owns.
     /// </summary>
-    /// <value>The units.</value>
     public IEnumerable<Unit> Units => Game.Instance.Map.Sectors.Select(s => s.Unit).Where(u => u != null && u.Owner == this);
 
     /// <summary>
@@ -80,7 +86,6 @@ public abstract class Player : MonoBehaviour
     /// The number of actions remaining for the current player.
     /// </summary>
     public int ActionsRemaining { get { return _actionsRemaining; } set { _actionsRemaining = value; } }
-
 
     #endregion
 
@@ -174,6 +179,7 @@ public abstract class Player : MonoBehaviour
         _effects.Init(this);
         if (!_effects.HasEffect<EffectImpl.LandmarkWrapperEffect>())
             _effects.ApplyEffect(new EffectImpl.LandmarkWrapperEffect());
+        _cardManager = GetComponent<CardManager>();
     }
 
     #endregion
@@ -259,6 +265,8 @@ public abstract class Player : MonoBehaviour
         if (_actionsRemaining == 0)
             EndTurn();
     }
+
+    public void AssignRandomCard() => Cards.AddEffect(CardFactory.GetRandomEffect(CardTier.Tier1));
 
     #endregion
 

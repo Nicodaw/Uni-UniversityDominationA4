@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4453944337022680}
   - component: {fileID: 114581735943391248}
+  - component: {fileID: 114347137362736490}
   - component: {fileID: 114853690800134912}
   m_Layer: 0
   m_Name: AiPlayer
@@ -41,6 +42,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114347137362736490
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1030205965745632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e92ba7920a974d53ac53cd69411ba8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_cardPrefab: {fileID: 1180632245847174, guid: ddc42b03887cb824eaacc063b61e2b9c,
+    type: 2}
 --- !u!114 &114581735943391248
 MonoBehaviour:
   m_ObjectHideFlags: 1

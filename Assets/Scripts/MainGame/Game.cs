@@ -12,6 +12,7 @@ public class Game : MonoBehaviour
 
     [SerializeField] GameObject m_defaultMap;
     [SerializeField] Dialog m_dialog;
+    [SerializeField] Button m_endTurnButton;
     [SerializeField] Text m_actionsRemaining;
 
     #endregion
@@ -102,6 +103,15 @@ public class Game : MonoBehaviour
     /// Gets the current player.
     /// </summary>
     public Player CurrentPlayer => Players[_currentPlayerId];
+
+    /// <summary>
+    /// Whether the End Turn button is enabled.
+    /// </summary>
+    public bool EndTurnButtonEnabled
+    {
+        get { return m_endTurnButton.interactable; }
+        set { m_endTurnButton.interactable = value; }
+    }
 
     #endregion
 
@@ -360,7 +370,7 @@ public class Game : MonoBehaviour
     {
         if (!ProcessEvents)
             return;
-        
+
         OnUnitDeath?.Invoke(sender, e);
         Player owner = ((Unit)sender).Owner;
         if (owner.IsEliminated)
@@ -419,14 +429,7 @@ public class Game : MonoBehaviour
         _eliminatedPlayerRoutineActive = false;
     }
 
-    public void EndCurrentTurn()
-    {
-        if (CurrentPlayer.Kind != PlayerKind.AI)
-        {
-            ((HumanPlayer)CurrentPlayer).DeselectSector();
-            CurrentPlayer.EndTurn();
-        }
-    }
+    public void EndCurrentTurn() => CurrentPlayer.EndTurn();
 
     /// <summary>
     /// Called when the game is over.

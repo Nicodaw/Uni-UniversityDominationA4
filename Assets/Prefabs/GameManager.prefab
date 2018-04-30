@@ -56,6 +56,7 @@ MonoBehaviour:
   m_defaultMap: {fileID: 1690095189100416, guid: 5daf3a014de7b4c978c4340767edc932,
     type: 2}
   m_dialog: {fileID: 0}
+  m_endTurnButton: {fileID: 0}
   m_actionsRemaining: {fileID: 0}
 --- !u!114 &114461168691314766
 MonoBehaviour:

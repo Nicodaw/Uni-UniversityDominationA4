@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4036139247571250}
   - component: {fileID: 114075494484958810}
+  - component: {fileID: 114219376866431160}
   - component: {fileID: 114264409009428430}
   m_Layer: 0
   m_Name: HumanPlayer
@@ -52,6 +53,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7ddd6901c26643f29474ef93db5eb8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114219376866431160
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1405774581787152}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e92ba7920a974d53ac53cd69411ba8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_cardPrefab: {fileID: 1180632245847174, guid: ddc42b03887cb824eaacc063b61e2b9c,
+    type: 2}
 --- !u!114 &114264409009428430
 MonoBehaviour:
   m_ObjectHideFlags: 1
