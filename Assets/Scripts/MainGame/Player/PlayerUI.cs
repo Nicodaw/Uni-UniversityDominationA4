@@ -6,7 +6,7 @@ public class PlayerUI : MonoBehaviour
 {
     #region Unity Bindings
 
-    [SerializeField] Collider background;
+    [SerializeField] Collider m_background;
     [SerializeField] Text m_header;
     [SerializeField] Text m_headerHighlight;
     [SerializeField] Text m_percentOwned;
@@ -43,8 +43,8 @@ public class PlayerUI : MonoBehaviour
     /// </summary>
     public Material PlayerPanelMat
     {
-        get { return background.GetComponent<MeshRenderer>().material; }
-        set { background.GetComponent<MeshRenderer>().material = value; }
+        get { return m_background.GetComponent<MeshRenderer>().material; }
+        set { m_background.GetComponent<MeshRenderer>().material = value; }
     }
 
     /// <summary>

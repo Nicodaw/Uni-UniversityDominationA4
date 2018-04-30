@@ -242,12 +242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bac2ff5c00e9cf44ab6a0445076c24c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  emmisionMaterials:
-  - {fileID: 2100000, guid: 7a43dc5688ead5946ace8537b0af91ce, type: 2}
-  - {fileID: 2100000, guid: 7b8fc1098c6f72b43833e067d9120753, type: 2}
-  - {fileID: 2100000, guid: 019d23410ba9ffc4f8d39b0e79e51315, type: 2}
-  - {fileID: 2100000, guid: 4ff7ad8cf975fc94fb98445f1d9ceeeb, type: 2}
-  background: {fileID: 64848194485171390}
+  m_background: {fileID: 64848194485171390}
   m_header: {fileID: 114909003101201692}
   m_headerHighlight: {fileID: 114620351917805676}
   m_percentOwned: {fileID: 114132135525846442}
