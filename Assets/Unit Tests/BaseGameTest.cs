@@ -127,7 +127,7 @@ public abstract class BaseGameTest
 
         public override EffectAvailableSelection AvailableSelection(Game game)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException();
         }
     }
 
@@ -144,7 +144,7 @@ public abstract class BaseGameTest
 
         public override EffectAvailableSelection AvailableSelection(Game game)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException();
         }
     }
 
