@@ -200,6 +200,7 @@ public abstract class Player : MonoBehaviour
 
         if (target.Unit == null || target.Unit.Owner == this)
         {
+            SoundManager.Instance.PlaySingle(Sound.UnitMoveSound);
             // transfer units between sectors
             // if unit is null, is will be swapped as well
             from.TransferUnits(target);

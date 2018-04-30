@@ -124,6 +124,7 @@ public class Dialog : MonoBehaviour
     public void Show()
     {
         gameObject.SetActive(true);
+        SoundManager.Instance.PlaySingle(Sound.UIButtonClickSound);
     }
 
     /// <summary>
@@ -133,6 +134,7 @@ public class Dialog : MonoBehaviour
     {
         Debug.Log("Closing");
         gameObject.SetActive(false);
+        SoundManager.Instance.PlaySingle(Sound.UIButtonClickSound);
     }
 
     /// <summary>
@@ -140,6 +142,7 @@ public class Dialog : MonoBehaviour
     /// </summary>
     public void Toggle()
     {
+        SoundManager.Instance.ToggleMusic();
         if (IsShown)
             Close();
         else

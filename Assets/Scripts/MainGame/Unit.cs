@@ -257,6 +257,8 @@ public class Unit : MonoBehaviour
         Level -= amount;
         if (Level <= 0)
             Kill(doneBy);
+        else
+            SoundManager.Instance.PlaySingle(Sound.UnitAttackSound);
     }
 
     /// <summary>
@@ -277,6 +279,8 @@ public class Unit : MonoBehaviour
 
         //apply damage to target
         other.Damage(CalculateAttackDamage(diff), Owner);
+
+        //play a sound
     }
 
     /// <summary>
@@ -300,6 +304,7 @@ public class Unit : MonoBehaviour
 
     public void Kill(Player eliminator)
     {
+        SoundManager.Instance.PlaySingle(Sound.UnitDieSound);
         DestroyedCheck();
         Destroy(gameObject);
         _destroyed = true;
