@@ -6,6 +6,8 @@ public class PlayerUI : MonoBehaviour
 {
     #region Unity Bindings
 
+    [SerializeField] Material[] emmisionMaterials;
+    [SerializeField] Collider background;
     [SerializeField] Text m_header;
     [SerializeField] Text m_headerHighlight;
     [SerializeField] Text m_percentOwned;
@@ -33,6 +35,15 @@ public class PlayerUI : MonoBehaviour
     /// The player attatched to this UI.
     /// </summary>
     public Player Player => Game.Instance.Players[_playerId];
+
+    ///<summary>
+    ///The backgorund material for this UI
+    /// </summary>
+    public Material PlayerPanelMat
+    {
+        get { return background.GetComponent<MeshRenderer>().material; }
+        set { background.GetComponent<MeshRenderer>().material = value; }
+    }
 
     /// <summary>
     /// Whether the UI is active or not.
@@ -64,6 +75,8 @@ public class PlayerUI : MonoBehaviour
         m_header.text = string.Format(PlayerNameFormat, playerId + 1);
         m_headerHighlight.text = m_header.text;
         m_headerHighlight.color = player.Color;
+        PlayerPanelMat = emmisionMaterials[_playerId];
+        PlayerPanelMat.color = player.Color; //temporary, this was only to visualise if things are applying properly
 
         // player id specified position of UI
         RectTransform rectTransform = GetComponent<RectTransform>();
