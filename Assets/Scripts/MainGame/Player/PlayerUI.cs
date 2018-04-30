@@ -6,7 +6,6 @@ public class PlayerUI : MonoBehaviour
 {
     #region Unity Bindings
 
-    [SerializeField] Material[] emmisionMaterials;
     [SerializeField] Collider background;
     [SerializeField] Text m_header;
     [SerializeField] Text m_headerHighlight;
@@ -23,9 +22,12 @@ public class PlayerUI : MonoBehaviour
     const string StatsFormat = "{0} / {1}";
     const string PercentOwnedFormat = "Owns: {0:P0}";
     readonly Color DefaultHeaderColor = new Color(0.2f, 0.2f, 0.2f, 1.0f);
+    readonly Color EmissionBaseValue = Color.black;
+    readonly Color EmissionActiveValue = new Color(0.5f, 0.5f, 0.5f);
 
     int _playerId;
     bool _isActive; // default: false
+    bool _highlighted;
 
     #endregion
 
@@ -61,6 +63,16 @@ public class PlayerUI : MonoBehaviour
         }
     }
 
+    public bool Highlighted
+    {
+        get { return _highlighted; }
+        set
+        {
+            PlayerPanelMat.SetColor("_EmissionColor", value ? EmissionActiveValue : EmissionBaseValue);
+            _highlighted = value;
+        }
+    }
+
     #endregion
 
     #region Initialize
@@ -75,7 +87,6 @@ public class PlayerUI : MonoBehaviour
         m_header.text = string.Format(PlayerNameFormat, playerId + 1);
         m_headerHighlight.text = m_header.text;
         m_headerHighlight.color = player.Color;
-        PlayerPanelMat = emmisionMaterials[_playerId];
         PlayerPanelMat.color = player.Color; //temporary, this was only to visualise if things are applying properly
 
         // player id specified position of UI
