@@ -240,16 +240,16 @@ public class Sector : MonoBehaviour
             sector.Highlighted = highlight;
     }
 
-    public Sector[] GetRange (Sector start, int range)
+    public Sector[] GetSectorsInRange(int range)
     {
-        HashSet<Sector> visited = new HashSet<Sector> { start };
-        List<List<Sector>> fringe = new List<List<Sector>> { new List<Sector>() { start } };
+        HashSet<Sector> visited = new HashSet<Sector> { this };
+        List<List<Sector>> fringe = new List<List<Sector>> { new List<Sector> { this } };
         for (int i = 1; i <= range; i++)
         {
             fringe.Add(new List<Sector>());
-            foreach (Sector sect in fringe[i-1])
+            foreach (Sector sector in fringe[i - 1])
             {
-                foreach (Sector adjacent in sect.AdjacentSectors)
+                foreach (Sector adjacent in sector.AdjacentSectors)
                 {
                     Sector neighbour = adjacent;
                     if (!visited.Contains(neighbour) && neighbour.Stats.Traversable)
@@ -260,7 +260,7 @@ public class Sector : MonoBehaviour
                 }
             }
         }
-        return visited.ToArray<Sector>();
+        return visited.ToArray();
     }
 
     /// <summary>

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -79,18 +78,9 @@ public class Unit : MonoBehaviour
     }
 
     ///<summary>
-    ///Gets the Sectors in range
+    /// Gets the Sectors in range
     /// </summary>
-    public Sector[] SectorsInRange
-    {
-        get
-        {
-            if (UsePostGradModel)
-                return Sector.GetRange(Sector, 2);
-            else
-                return Sector.GetRange(Sector, 1);
-        }
-    }
+    public Sector[] SectorsInRange => Sector.GetSectorsInRange(Stats.MoveRange);
 
     /// <summary>
     /// Gets the unit's attack stat from its level.
