@@ -5,7 +5,11 @@ using UnityEngine;
 
 public class SectorTest : BaseGameTest
 {
-    Color SectorColor(Sector sector) => sector.gameObject.GetComponent<Renderer>().material.color;
+    Material SectorMaterial(Sector sector) => sector.gameObject.GetComponent<Renderer>().material;
+
+    Color SectorColor(Sector sector) => SectorMaterial(sector).color;
+
+    Color SectorEmission(Sector sector) => SectorMaterial(sector).GetColor("_EmissionColor");
 
     [SetUp]
     public void SectorTest_SetUp() => DefMapInit();
@@ -116,14 +120,14 @@ public class SectorTest : BaseGameTest
     {
         Sector target = map.Sectors[0];
         Assume.That(target.Highlighted, Is.False);
-        Color originalColor = SectorColor(target);
+        Color originalEmission = new Color(0, 0, 0, 1);
 
         target.Highlighted = true;
         Assert.That(target.Highlighted, Is.True);
-        Assert.That(SectorColor(target), Is.Not.EqualTo(originalColor));
+        Assert.That(SectorEmission(target), Is.Not.EqualTo(originalEmission));
         target.Highlighted = false;
         Assert.That(target.Highlighted, Is.False);
-        Assert.That(SectorColor(target) == originalColor);
+        Assert.That(SectorEmission(target) == originalEmission);
     }
 
     [Test]
@@ -131,17 +135,17 @@ public class SectorTest : BaseGameTest
     {
         Sector target = map.Sectors[0];
         Assume.That(target.Highlighted, Is.False);
-        Color originalColor = SectorColor(target);
+        Color originalEmission = new Color(0, 0, 0, 1);
 
         target.Highlighted = false;
         Assert.That(target.Highlighted, Is.False);
-        Assert.That(SectorColor(target), Is.EqualTo(originalColor));
+        Assert.That(SectorEmission(target), Is.EqualTo(originalEmission));
         target.Highlighted = true;
         Assume.That(target.Highlighted, Is.True);
-        Color newColor = SectorColor(target);
+        Color newColor = SectorEmission(target);
         target.Highlighted = true;
         Assert.That(target.Highlighted, Is.True);
-        Assert.That(SectorColor(target), Is.EqualTo(newColor));
+        Assert.That(SectorEmission(target), Is.EqualTo(newColor));
     }
 
     // adjacent highlight
