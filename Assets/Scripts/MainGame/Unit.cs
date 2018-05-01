@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -74,6 +75,20 @@ public class Unit : MonoBehaviour
                 throw new InvalidOperationException();
             _level = value;
             UpdateStats();
+        }
+    }
+
+    ///<summary>
+    ///Gets the Sectors in range
+    /// </summary>
+    public Sector[] SectorsInRange
+    {
+        get
+        {
+            if (UsePostGradModel)
+                return Sector.GetRange(Sector, 2);
+            else
+                return Sector.GetRange(Sector, 1);
         }
     }
 
