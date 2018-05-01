@@ -85,7 +85,11 @@ public abstract class Player : MonoBehaviour
     /// <summary>
     /// The number of actions remaining for the current player.
     /// </summary>
-    public int ActionsRemaining { get { return _actionsRemaining; } set { _actionsRemaining = value; } }
+    public int ActionsRemaining
+    {
+        get { return _actionsRemaining; }
+        set { _actionsRemaining = value; }
+    }
 
     #endregion
 
@@ -156,7 +160,8 @@ public abstract class Player : MonoBehaviour
             id = _id,
             color = _color,
             effectManager = _effects.CreateMemento(),
-            actionsRemaining = _actionsRemaining
+            actionsRemaining = _actionsRemaining,
+            cards = _cardManager.CreateMemento()
         };
     }
 
@@ -167,6 +172,7 @@ public abstract class Player : MonoBehaviour
         _effects.RemoveEffect<EffectImpl.LandmarkWrapperEffect>();
         _effects.RestoreMemento(memento.effectManager);
         _actionsRemaining = memento.actionsRemaining;
+        _cardManager.RestoreMemento(memento.cards);
     }
 
     #endregion
@@ -266,7 +272,7 @@ public abstract class Player : MonoBehaviour
             EndTurn();
     }
 
-    public void AssignRandomCard() => Cards.AddEffect(CardFactory.GetRandomEffect(CardTier.Tier1));
+    public void AssignRandomCard() => Cards.AddCards(CardFactory.GetRandomEffect(CardTier.Tier1));
 
     #endregion
 

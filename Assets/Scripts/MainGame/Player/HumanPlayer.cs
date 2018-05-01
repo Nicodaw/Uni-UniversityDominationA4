@@ -63,7 +63,7 @@ public class HumanPlayer : Player
     IEnumerator DoStartTurn()
     {
         base.ProcessTurnStart();
-        Cards.CardEnter();
+        Cards.CardsEnter();
         if (Cards.Count > 0)
             yield return new WaitForSeconds(1.5f);
         AssignRandomCard();
@@ -74,7 +74,7 @@ public class HumanPlayer : Player
     IEnumerator DoEndTurn()
     {
         Game.Instance.EndTurnButtonEnabled = false;
-        Cards.CardExit();
+        Cards.CardsExit();
         if (Cards.Count > 0)
             yield return new WaitForSeconds(1.5f);
         Cards.Clickable = true;

@@ -118,6 +118,8 @@ public class CardController : MonoBehaviour
 
     #region Public Properties
 
+    public Effect Effect => _effect;
+
     public Vector3 CardSize => _cardSizeBase * SizePercentLerp;
 
     public Vector3 CardSizeBase => _cardSizeBase;

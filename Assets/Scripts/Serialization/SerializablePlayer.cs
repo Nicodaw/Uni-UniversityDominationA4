@@ -8,4 +8,5 @@ public class SerializablePlayer
     public SerializableColor color;
     public SerializableEffectManager effectManager;
     public int actionsRemaining;
+    public SerializableCardManager cards;
 }

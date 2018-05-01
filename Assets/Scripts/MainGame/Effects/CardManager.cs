@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CardManager : MonoBehaviour
@@ -13,7 +14,8 @@ public class CardManager : MonoBehaviour
     #region Private Fields
 
     readonly List<CardController> _cards = new List<CardController>();
-    bool _clickable;
+    bool _clickable = true;
+    bool _shown;
 
     #endregion
 
@@ -36,6 +38,22 @@ public class CardManager : MonoBehaviour
 
     #region Serialization
 
+    public SerializableCardManager CreateMemento()
+    {
+        return new SerializableCardManager
+        {
+            cards = _cards.Select(c => c.Effect).ToArray(),
+            shown = _shown
+        };
+    }
+
+    public void RestoreMemento(SerializableCardManager memento)
+    {
+        AddCards(memento.cards);
+        if (memento.shown)
+            CardsEnter();
+    }
+
     #endregion
 
     #region Handlers
@@ -46,7 +64,8 @@ public class CardManager : MonoBehaviour
         card.OnConsumed -= Card_OnConsumed;
         if (!_cards.Remove(card))
             throw new InvalidOperationException();
-        SetCardPositions(false);
+        if (_shown)
+            SetCardPositions(false);
     }
 
     #endregion
@@ -69,25 +88,31 @@ public class CardManager : MonoBehaviour
 
     #region Helper Methods
 
-    public void AddEffect(Effect effect)
+    public void AddCards(params Effect[] effects)
     {
-        GameObject gobj = Instantiate(m_cardPrefab, transform);
-        CardController card = gobj.GetComponent<CardController>();
-        card.Init(effect);
-        card.ResetToOuterPosition();
-        card.Clickable = Clickable;
-        card.OnConsumed += Card_OnConsumed;
-        _cards.Add(card);
-        SetCardPositions(false);
+        foreach (Effect effect in effects)
+        {
+            GameObject gobj = Instantiate(m_cardPrefab, transform);
+            CardController card = gobj.GetComponent<CardController>();
+            card.Init(effect);
+            card.ResetToOuterPosition();
+            card.Clickable = Clickable;
+            card.OnConsumed += Card_OnConsumed;
+            _cards.Add(card);
+        }
+        if (_shown)
+            SetCardPositions(false);
     }
 
-    public void CardEnter()
+    public void CardsEnter()
     {
         SetCardPositions(true);
+        _shown = true;
     }
 
-    public void CardExit()
+    public void CardsExit()
     {
+        _shown = false;
         foreach (CardController card in _cards)
             card.Exit();
     }
