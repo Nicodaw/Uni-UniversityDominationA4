@@ -40,7 +40,7 @@ namespace EffectImpl
 
         public override EffectAvailableSelection AvailableSelection(Game game) => new EffectAvailableSelection
         {
-            Sectors = game.Map.Sectors.Where(s => s.AllowPVC) //reuse of the PVC flag as it selects only non-occupied sectors that don't have a landmark
+            Sectors = game.Map.Sectors.Where(s => s.Landmark == null && s.Unit == null && !s.Stats.HasEffect<BlockSectorEffect>())
         };
 
         public override void ProcessEffectRemove() => UnBlock();
