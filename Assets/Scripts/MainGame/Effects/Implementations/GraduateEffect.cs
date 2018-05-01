@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace EffectImpl
 {
@@ -35,7 +36,7 @@ namespace EffectImpl
 
         public override EffectAvailableSelection AvailableSelection(Game game) => new EffectAvailableSelection
         {
-            Units = game.CurrentPlayer.Units
+            Units = game.CurrentPlayer.Units.Where(u => !u.Stats.HasEffect<GraduateEffect>())
         };
 
         #endregion
