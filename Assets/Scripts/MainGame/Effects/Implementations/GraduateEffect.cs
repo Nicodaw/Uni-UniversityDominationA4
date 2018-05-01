@@ -19,7 +19,7 @@ namespace EffectImpl
 
         public override int? DefenceBonus => 2;
 
-        public override int? MoveRangeBonus => 2;
+        public override int? MoveRangeBonus => 1;
 
         public override int? LevelCapBonus => 3;
 
