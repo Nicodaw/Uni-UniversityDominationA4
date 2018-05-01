@@ -159,7 +159,10 @@ public class EffectManager : MonoBehaviour
 
     void InternalHandler(Action<Effect> handler)
     {
-        foreach (Effect effect in _effects.Values)
+        // copy items to allow removes to be processed
+        Effect[] effects = new Effect[_effects.Count];
+        _effects.Values.CopyTo(effects, 0);
+        foreach (Effect effect in effects)
             handler(effect);
     }
 
