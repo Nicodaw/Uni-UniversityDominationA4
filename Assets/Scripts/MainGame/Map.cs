@@ -122,18 +122,13 @@ public class Map : MonoBehaviour
     /// has to complete their turn twice, before it is reallocated. This is to give
     /// an advantage to the other players.
     /// </summary>
-    public void ResetPVCAllocateWait(bool currentPlayerIsRewardee)
+    public void ResetPVCAllocateWait()
     {
         _lastPvcSector = Sectors.First(s => s.HasPVC).Id;
         Sectors[_lastPvcSector.Value].Stats.RemoveEffect<EffectImpl.PVCEffect>();
         Debug.Log("Previous sector de-allocated");
         _pvcAllocateWait = Game.Instance.Players.Count * MaxPVCAllocateWait;
-        // if the minigame was triggered on the player's last action, then
-        // we would have missed the turn start event, so we need to do it manually
-        if (!currentPlayerIsRewardee)
-            ProcessPVCAllocateDec();
-        else
-            Debug.LogFormat("pvc allocate wait set to {0}", _pvcAllocateWait);
+        Debug.LogFormat("pvc allocate wait set to {0}", _pvcAllocateWait);
     }
 
     /// <summary>

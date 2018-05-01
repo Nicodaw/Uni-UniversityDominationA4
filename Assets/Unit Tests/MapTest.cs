@@ -33,7 +33,7 @@ public class MapTest : BaseGameTest
 
         map.AllocatePVC();
         Sector original = map.Sectors.First(s => s.HasPVC);
-        map.ResetPVCAllocateWait(false);
+        map.ResetPVCAllocateWait();
         map.AllocatePVC();
         Assert.That(map.Sectors.Count(s => s.HasPVC), Is.EqualTo(1));
         Assert.That(map.Sectors.First(s => s.HasPVC), Is.Not.EqualTo(original));
