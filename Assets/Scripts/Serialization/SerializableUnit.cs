@@ -7,5 +7,4 @@ public class SerializableUnit
     public int? owner;
     public int sector;
     public int level;
-    public bool usingPostgrad;
 }

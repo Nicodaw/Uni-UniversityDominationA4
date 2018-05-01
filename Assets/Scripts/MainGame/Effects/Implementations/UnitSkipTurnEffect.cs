@@ -40,15 +40,9 @@ namespace EffectImpl
 
         #region Helper Methods
 
-        void EnableHangover()
-        {
-            // set hangover UI state
-        }
+        void EnableHangover() => AppliedUnit.ShowHangover = true;
 
-        void DisableHangover()
-        {
-            // set handover UI state
-        }
+        void DisableHangover() => AppliedUnit.ShowHangover = false;
 
         protected override void ApplyToUnit() => EnableHangover();
 

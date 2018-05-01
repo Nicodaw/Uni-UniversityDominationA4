@@ -11,6 +11,7 @@ public class Unit : MonoBehaviour
     [SerializeField] Text m_levelText;
     [SerializeField] GameObject m_undergrad;
     [SerializeField] GameObject m_postgrad;
+    [SerializeField] GameObject m_hangover;
     [SerializeField] Renderer[] m_renderers;
 
     #endregion
@@ -23,7 +24,9 @@ public class Unit : MonoBehaviour
     int? _owner;
     int _sector;
     int _level;
+
     bool _usingPostgrad;
+    bool _showHangover;
     bool _destroyed;
 
     #endregion
@@ -121,6 +124,16 @@ public class Unit : MonoBehaviour
         }
     }
 
+    public bool ShowHangover
+    {
+        get { return _showHangover; }
+        set
+        {
+            _showHangover = value;
+            m_hangover.SetActive(_showHangover);
+        }
+    }
+
     #endregion
 
     #region Events
@@ -161,8 +174,7 @@ public class Unit : MonoBehaviour
             effectManager = _effects.CreateMemento(),
             owner = _owner,
             sector = _sector,
-            level = Level,
-            usingPostgrad = UsePostGradModel
+            level = Level
         };
     }
 
@@ -172,7 +184,6 @@ public class Unit : MonoBehaviour
         _owner = memento.owner;
         _sector = memento.sector;
         Level = memento.level;
-        UsePostGradModel = memento.usingPostgrad;
         UpdateStats();
     }
 
