@@ -26,14 +26,14 @@ public class HumanPlayer : Player
     public override void ProcessSectorClick(Sector clickedSector)
     {
         base.ProcessSectorClick(clickedSector);
-        if (_selectedSector == null)
+        if (CanPerformActions && _selectedSector == null)
         {
             if (clickedSector.Unit != null && clickedSector.Unit.Owner == this)
                 SelectSector(clickedSector);
         }
         else
         {
-            if (_selectedSector.AdjacentSectors.Contains(clickedSector))
+            if (CanPerformActions && _selectedSector.AdjacentSectors.Contains(clickedSector))
                 AttemptMove(_selectedSector, clickedSector);
             DeselectSector();
         }

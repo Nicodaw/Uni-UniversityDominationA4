@@ -96,7 +96,7 @@ public class PlayerTest : BaseGameTest
         Sector origin = Players[0].Units.First().Sector;
         Sector target = origin.AdjacentSectors.First(s => s.Owner == null);
         Unit unit = origin.Unit;
-        int startActions = Players[0].ActionsRemaining;
+        Assume.That(Players[0].ActionsPerformed, Is.Zero);
 
         Assert.That(origin.Owner, Is.EqualTo(Players[0]));
         Assert.That(origin.Unit, Is.EqualTo(unit));
@@ -110,7 +110,7 @@ public class PlayerTest : BaseGameTest
         Assert.That(origin.Unit, Is.Null);
         Assert.That(target.Owner, Is.EqualTo(Players[0]));
         Assert.That(target.Unit, Is.EqualTo(unit));
-        Assert.That(Players[0].ActionsRemaining, Is.EqualTo(startActions - 1));
+        Assert.That(Players[0].ActionsPerformed, Is.EqualTo(1));
     }
 
     [Test]
@@ -120,7 +120,7 @@ public class PlayerTest : BaseGameTest
         Sector origin = Players[0].Units.First().Sector;
         Sector target = origin.AdjacentSectors.First(s => s.Owner == null);
         Unit unit = origin.Unit;
-        int startActions = Players[0].ActionsRemaining;
+        Assume.That(Players[0].ActionsPerformed, Is.Zero);
 
         // set owner to test player
         target.Owner = Players[0];
@@ -137,7 +137,7 @@ public class PlayerTest : BaseGameTest
         Assert.That(origin.Unit, Is.Null);
         Assert.That(target.Owner, Is.EqualTo(Players[0]));
         Assert.That(target.Unit, Is.EqualTo(unit));
-        Assert.That(Players[0].ActionsRemaining, Is.EqualTo(startActions - 1));
+        Assert.That(Players[0].ActionsPerformed, Is.EqualTo(1));
     }
 
     [Test]
@@ -147,7 +147,7 @@ public class PlayerTest : BaseGameTest
         Sector origin = Players[0].Units.First().Sector;
         Sector target = origin.AdjacentSectors.First(s => s.Owner == null);
         Unit unit = origin.Unit;
-        int startActions = Players[0].ActionsRemaining;
+        Assume.That(Players[0].ActionsPerformed, Is.Zero);
 
         // set owner to secondary test player
         target.Owner = Players[1];
@@ -164,7 +164,7 @@ public class PlayerTest : BaseGameTest
         Assert.That(origin.Unit, Is.Null);
         Assert.That(target.Owner, Is.EqualTo(Players[0]));
         Assert.That(target.Unit, Is.EqualTo(unit));
-        Assert.That(Players[0].ActionsRemaining, Is.EqualTo(startActions - 1));
+        Assert.That(Players[0].ActionsPerformed, Is.EqualTo(1));
     }
 
     [Test]
@@ -175,7 +175,7 @@ public class PlayerTest : BaseGameTest
         Sector target = origin.AdjacentSectors.First(s => s.Owner == null);
         Unit firstUnit = origin.Unit;
         Unit secondUnit = InitUnit(target, 0);
-        int startActions = Players[0].ActionsRemaining;
+        Assume.That(Players[0].ActionsPerformed, Is.Zero);
 
         Assert.That(origin.Owner, Is.EqualTo(Players[0]));
         Assert.That(origin.Unit, Is.EqualTo(firstUnit));
@@ -189,7 +189,7 @@ public class PlayerTest : BaseGameTest
         Assert.That(origin.Unit, Is.EqualTo(secondUnit));
         Assert.That(target.Owner, Is.EqualTo(Players[0]));
         Assert.That(target.Unit, Is.EqualTo(firstUnit));
-        Assert.That(Players[0].ActionsRemaining, Is.EqualTo(startActions - 1));
+        Assert.That(Players[0].ActionsPerformed, Is.EqualTo(1));
     }
 
     [Test]
@@ -200,7 +200,7 @@ public class PlayerTest : BaseGameTest
         Sector target = origin.AdjacentSectors.First(s => s.Owner == null);
         Unit firstUnit = origin.Unit;
         Unit secondUnit = InitUnit(target, 1);
-        int startActions = Players[0].ActionsRemaining;
+        Assume.That(Players[0].ActionsPerformed, Is.Zero);
 
         Assert.That(origin.Owner, Is.EqualTo(Players[0]));
         Assert.That(origin.Unit, Is.EqualTo(firstUnit));
@@ -214,7 +214,7 @@ public class PlayerTest : BaseGameTest
         Assert.That(origin.Unit, Is.Null);
         Assert.That(target.Owner, Is.EqualTo(Players[0]));
         Assert.That(target.Unit, Is.EqualTo(firstUnit));
-        Assert.That(Players[0].ActionsRemaining, Is.EqualTo(startActions - 1));
+        Assert.That(Players[0].ActionsPerformed, Is.EqualTo(1));
         Assert.That(secondUnit == null); // force usage on overridden operator
     }
 
@@ -226,7 +226,7 @@ public class PlayerTest : BaseGameTest
         Sector target = origin.AdjacentSectors.First(s => s.Owner == null);
         Unit firstUnit = origin.Unit;
         Unit secondUnit = InitUnit(target, 1);
-        int startActions = Players[0].ActionsRemaining;
+        Assume.That(Players[0].ActionsPerformed, Is.Zero);
 
         Assert.That(origin.Owner, Is.EqualTo(Players[0]));
         Assert.That(origin.Unit, Is.EqualTo(firstUnit));
@@ -240,7 +240,7 @@ public class PlayerTest : BaseGameTest
         Assert.That(origin.Unit, Is.Null);
         Assert.That(target.Owner, Is.EqualTo(Players[1]));
         Assert.That(target.Unit, Is.EqualTo(secondUnit));
-        Assert.That(Players[0].ActionsRemaining, Is.EqualTo(startActions - 1));
+        Assert.That(Players[0].ActionsPerformed, Is.EqualTo(1));
         Assert.That(firstUnit == null); // force usage on overridden operator
     }
 
@@ -251,7 +251,7 @@ public class PlayerTest : BaseGameTest
         Sector origin = Players[0].Units.First().Sector;
         Sector target = origin.AdjacentSectors.First(s => s.Owner == null);
         Unit unit = origin.Unit;
-        int startActions = Players[0].ActionsRemaining;
+        Assume.That(Players[0].ActionsPerformed, Is.Zero);
         bool onActionPerformedFired = false;
 
         Players[0].OnActionPerformed += (sender, e) => onActionPerformedFired = true;

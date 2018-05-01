@@ -7,7 +7,7 @@ public class SerializablePlayer
     public int id;
     public SerializableColor color;
     public SerializableEffectManager effectManager;
-    public int actionsRemaining;
     public SerializableCardManager cards;
+    public int actionsPerformed;
     public bool hasHadTurn;
 }

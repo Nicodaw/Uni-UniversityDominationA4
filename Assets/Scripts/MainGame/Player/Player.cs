@@ -20,7 +20,7 @@ public abstract class Player : MonoBehaviour
     Color _color;
     EffectManager _effects;
     CardManager _cardManager;
-    int _actionsRemaining;
+    int _actionsPerformed;
     bool _hasHadTurn;
 
     #endregion
@@ -86,12 +86,20 @@ public abstract class Player : MonoBehaviour
     /// <summary>
     /// The number of actions remaining for the current player.
     /// </summary>
-    public int ActionsRemaining
+    public int ActionsPerformed
     {
-        get { return _actionsRemaining; }
-        set { _actionsRemaining = value; }
+        get { return _actionsPerformed; }
+        set { _actionsPerformed = value; }
     }
 
+    /// <summary>
+    /// Whether the player can perform an action.
+    /// </summary>
+    public bool CanPerformActions => ActionsPerformed < Stats.Actions;
+
+    /// <summary>
+    /// Whether the player has had at least 1 turn.
+    /// </summary>
     public bool HasHadTurn => _hasHadTurn;
 
     #endregion
@@ -126,7 +134,7 @@ public abstract class Player : MonoBehaviour
 
     public virtual void ProcessTurnStart()
     {
-        _actionsRemaining = Stats.Actions;
+        ActionsPerformed = 0;
         LevelUpLandmarkedUnits();
         SpawnUnits();
         OnTurnStart?.Invoke(this, new EventArgs());
@@ -164,8 +172,8 @@ public abstract class Player : MonoBehaviour
             id = _id,
             color = _color,
             effectManager = _effects.CreateMemento(),
-            actionsRemaining = _actionsRemaining,
             cards = _cardManager.CreateMemento(),
+            actionsPerformed = _actionsPerformed,
             hasHadTurn = _hasHadTurn
         };
     }
@@ -174,9 +182,11 @@ public abstract class Player : MonoBehaviour
     {
         // kind is used for instantiation
         // id, color and gui are set on Init()
+        OnDisable(); // stop events from being picked up
         _effects.RemoveEffect<EffectImpl.LandmarkWrapperEffect>();
         _effects.RestoreMemento(memento.effectManager);
-        _actionsRemaining = memento.actionsRemaining;
+        OnEnable(); // start events being picked up
+        _actionsPerformed = memento.actionsPerformed;
         _cardManager.RestoreMemento(memento.cards);
         _hasHadTurn = memento.hasHadTurn;
     }
@@ -193,6 +203,24 @@ public abstract class Player : MonoBehaviour
             _effects.ApplyEffect(new EffectImpl.LandmarkWrapperEffect());
         _cardManager = GetComponent<CardManager>();
     }
+
+    void OnEnable()
+    {
+        Stats.OnEffectAdd += EffectManager_OnEffectChange;
+        Stats.OnEffectRemove += EffectManager_OnEffectChange;
+    }
+
+    void OnDisable()
+    {
+        Stats.OnEffectAdd -= EffectManager_OnEffectChange;
+        Stats.OnEffectRemove -= EffectManager_OnEffectChange;
+    }
+
+    #endregion
+
+    #region Handlers
+
+    void EffectManager_OnEffectChange(object sender, EventArgs e) => Game.Instance.UpdateGUI();
 
     #endregion
 
@@ -212,6 +240,10 @@ public abstract class Player : MonoBehaviour
     /// <param name="target">The target sector.</param>
     internal void AttemptMove(Sector from, Sector target)
     {
+        // ensure that we have an action available
+        if (!CanPerformActions)
+            throw new InvalidOperationException();
+
         // assert that we can actually do a move
         if (from.Unit?.Owner != this) // if unit is null or not owned, then crash i guess ¯\_(ツ)_/¯
             throw new InvalidOperationException();
@@ -272,10 +304,8 @@ public abstract class Player : MonoBehaviour
     /// </summary>
     protected void ConsumeAction()
     {
-        _actionsRemaining--;
+        ActionsPerformed++;
         OnActionPerformed?.Invoke(this, new EventArgs());
-        if (_actionsRemaining == 0)
-            EndTurn();
     }
 
     public void AssignRandomCard() => Cards.AddCards(CardFactory.GetRandomEffect(CardTier.Tier1));

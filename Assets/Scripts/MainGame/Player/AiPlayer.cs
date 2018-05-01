@@ -51,11 +51,12 @@ public class AiPlayer : Player
 
     IEnumerator PerformTurn()
     {
-        for (; ActionsRemaining > 0;)
+        for (; CanPerformActions;)
         {
             yield return new WaitForSeconds(MoveWaitTime);
             DoUnitMove();
         }
+        EndTurn();
     }
 
     void DoUnitMove()

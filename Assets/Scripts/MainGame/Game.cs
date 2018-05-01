@@ -452,7 +452,7 @@ public class Game : MonoBehaviour
 	public void UpdateGUI()
     {
         Players.UpdateGUIs();
-        m_actionsRemaining.text = CurrentPlayer.ActionsRemaining.ToString();
+        m_actionsRemaining.text = (CurrentPlayer.Stats.Actions - CurrentPlayer.ActionsPerformed).ToString();
     }
 
     /// <summary>
