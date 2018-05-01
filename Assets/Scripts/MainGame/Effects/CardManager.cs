@@ -58,7 +58,32 @@ public class CardManager : MonoBehaviour
 
     #region Handlers
 
-    void Card_OnConsumed(object sender, EventArgs e) => RemoveCard((CardController)sender);
+    void Card_OnConsumed(object sender, EventArgs e)
+    {
+        CardController card = (CardController)sender;
+        RemoveCard(card);
+        Sound toPlay;
+        switch (card.Effect.CardCornerIcon)
+        {
+            case CardCornerIcon.SelfPlayer:
+            case CardCornerIcon.SelfUnit:
+                toPlay = Sound.FriendlyEffectSound;
+                break;
+            case CardCornerIcon.EnemyPlayer:
+            case CardCornerIcon.EnemyUnit:
+                toPlay = Sound.EnemyEffectSound;
+                break;
+            case CardCornerIcon.Sector:
+                toPlay = Sound.SectorEffect;
+                break;
+            case CardCornerIcon.Sacrifice:
+                toPlay = Sound.SacrificeSound;
+                break;
+            default:
+                throw new InvalidOperationException();
+        }
+        SoundManager.Instance.PlaySingle(toPlay);
+    }
 
     #endregion
 
@@ -94,6 +119,8 @@ public class CardManager : MonoBehaviour
         }
         if (_shown)
             SetCardPositions(false);
+        if (Count > 0)
+            SoundManager.Instance.PlaySingle(Sound.CardInSound);
     }
 
     public Effect RemoveRandomCard()
@@ -120,10 +147,14 @@ public class CardManager : MonoBehaviour
     {
         SetCardPositions(true);
         _shown = true;
+        if (Count > 0)
+            SoundManager.Instance.PlaySingle(Sound.CardInSound);
     }
 
     public void CardsExit()
     {
+        if (Count > 0)
+            SoundManager.Instance.PlaySingle(Sound.CardOutSound);
         _shown = false;
         foreach (CardController card in _cards)
             card.Exit();
