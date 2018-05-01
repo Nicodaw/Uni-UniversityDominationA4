@@ -10,8 +10,6 @@ namespace EffectImpl
         #region Private Fields
 
         int _playedBy;
-        [NonSerialized]
-        GameObject _barricadeModel; //tbd: add barricade model
 
         #endregion
 
@@ -24,6 +22,8 @@ namespace EffectImpl
         #region Override Properties
 
         protected override int TurnsLeft { get; set; } = 2;
+
+        protected override Player TurnedPlayer => PlayedBy;
 
         public override string CardName => "Industrial action";
 
@@ -44,20 +44,15 @@ namespace EffectImpl
             Sectors = game.Map.Sectors.Where(s => s.AllowPVC) //reuse of the PVC flag as it selects only non-occupied sectors that don't have a landmark
         };
 
+        public override void ProcessEffectRemove() => UnBlock();
+
         #endregion
 
         #region Helper Methods
 
-        void Block()
-        {
-            UnityEngine.Object.Instantiate(_barricadeModel, AppliedSector.Unit.transform); //append the barricade as a child element on the Unit placeholder
-        }
+        void Block() => AppliedSector.BlockPrefabActive = true;
 
-        void UnBlock()
-        {
-            UnityEngine.Object.Destroy(AppliedSector.Unit.transform.GetChild(0)); //remove the barricade
-            RemoveSelf();
-        }
+        void UnBlock() => AppliedSector.BlockPrefabActive = false;
 
         protected override void ApplyToSector()
         {

@@ -11,6 +11,7 @@ public class Map : MonoBehaviour
     #region Unity Bindings
 
     [SerializeField] Sector[] m_sectors;
+    [SerializeField] GameObject m_blockSectorPrefab;
 
     #endregion
 
@@ -34,6 +35,8 @@ public class Map : MonoBehaviour
     /// The sectors that contain landmarks.
     /// </summary>
     public IEnumerable<Sector> LandmarkedSectors => Sectors.Where(s => s.Landmark != null);
+
+    public GameObject BlockSectorPrefab => m_blockSectorPrefab;
 
     public int PVCAllocateWait => _pvcAllocateWait;
 

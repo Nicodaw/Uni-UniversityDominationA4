@@ -23661,6 +23661,8 @@ MonoBehaviour:
   - {fileID: 114983587108774296}
   - {fileID: 114498210668691096}
   - {fileID: 114066804128543026}
+  m_blockSectorPrefab: {fileID: 1081797273693298, guid: 9683c3d8735d44d44881ee240a8c06de,
+    type: 2}
 --- !u!114 &114622699298749278
 MonoBehaviour:
   m_ObjectHideFlags: 1

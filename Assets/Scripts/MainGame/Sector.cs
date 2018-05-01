@@ -24,7 +24,9 @@ public class Sector : MonoBehaviour
     EffectManager _effects;
     Unit _unit;
     int? _owner;
-    bool _highlighed; // default: false
+    bool _highlighed;
+    bool _blockPrefabActive;
+    GameObject _blockObject;
 
     #endregion
 
@@ -130,6 +132,26 @@ public class Sector : MonoBehaviour
         }
     }
 
+    public bool BlockPrefabActive
+    {
+        get { return _blockPrefabActive; }
+        set
+        {
+            if (value != _blockPrefabActive)
+            {
+                if (value)
+                {
+                    _blockObject = Instantiate(Game.Instance.Map.BlockSectorPrefab);
+                    _blockObject.transform.parent = _unitStore.transform;
+                    _blockObject.transform.localPosition = Vector3.zero;
+                }
+                else
+                    Destroy(_blockObject);
+                _blockPrefabActive = value;
+            }
+        }
+    }
+
     #endregion
 
     #region Events
@@ -175,7 +197,8 @@ public class Sector : MonoBehaviour
         {
             effectManager = _effects.CreateMemento(),
             unit = Unit?.CreateMemento(),
-            owner = _owner
+            owner = _owner,
+            blockPrefabActive = _blockPrefabActive
         };
     }
 
@@ -191,6 +214,7 @@ public class Sector : MonoBehaviour
             Unit.RestoreMemento(memento.unit); // restore unit
         }
         _effects.RestoreMemento(memento.effectManager);
+        BlockPrefabActive = memento.blockPrefabActive;
     }
 
     #endregion
