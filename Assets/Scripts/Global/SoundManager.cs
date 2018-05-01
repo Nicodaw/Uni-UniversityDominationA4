@@ -1,52 +1,58 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class SoundManager : MonoBehaviour
 {
     #region Unity Bindings
 
-    //AudioSources part of our buffer for sfx
-    [SerializeField] AudioSource sfxSource;
-    //AudioSource for music
-    [SerializeField] AudioSource musicSource;
+    [Header("Sources")]
+    [SerializeField] AudioSource m_sfxSource;
+    [SerializeField] AudioSource m_musicSource;
 
-    [SerializeField] AudioClip unitAttack;
-    [SerializeField] AudioClip unitMove;
-    [SerializeField] AudioClip unitDie;
-    [SerializeField] AudioClip buttonClick;
-    [SerializeField] AudioClip winSound;
-    [SerializeField] AudioClip defeatSound;
-    [SerializeField] AudioClip cardIn;
-    [SerializeField] AudioClip cardOut;
-    [SerializeField] AudioClip enemyEffect;
-    [SerializeField] AudioClip friendlyEffect;
-    [SerializeField] AudioClip sectorEffect;
-    [SerializeField] AudioClip sacrificeEffect;
-    [SerializeField] AudioClip coinGain;
-    [SerializeField] AudioClip groundHit;
-    [SerializeField] AudioClip pipeHit;
-    [SerializeField] AudioClip wingFlap;
-    [SerializeField] AudioClip menuMusic;
-    [SerializeField] AudioClip gameMusic;
-    [SerializeField] AudioClip minigameMusic;
+    [Header("Clips")]
+    [SerializeField] AudioClip m_unitAttack;
+    [SerializeField] AudioClip m_unitMove;
+    [SerializeField] AudioClip m_unitDie;
+    [SerializeField] AudioClip m_buttonClick;
+    [SerializeField] AudioClip m_winSound;
+    [SerializeField] AudioClip m_defeatSound;
+    [SerializeField] AudioClip m_cardIn;
+    [SerializeField] AudioClip m_cardOut;
+    [SerializeField] AudioClip m_enemyEffect;
+    [SerializeField] AudioClip m_friendlyEffect;
+    [SerializeField] AudioClip m_sectorEffect;
+    [SerializeField] AudioClip m_sacrificeEffect;
+    [SerializeField] AudioClip m_coinGain;
+    [SerializeField] AudioClip m_groundHit;
+    [SerializeField] AudioClip m_pipeHit;
+    [SerializeField] AudioClip m_wingFlap;
+    [SerializeField] AudioClip m_menuMusic;
+    [SerializeField] AudioClip m_gameMusic;
+    [SerializeField] AudioClip m_minigameMusic;
 
     #endregion
 
     #region Private Fields
 
     static SoundManager _instance;
-    bool _musicIsPlaying = true;
-
+    bool _musicPlaying = true;
 
     #endregion
 
-    #region Private Properties
+    #region Public Properties
+
+    public bool MusicPlaying
+    {
+        get { return _musicPlaying; }
+        set
+        {
+            _musicPlaying = value;
+            if (_musicPlaying)
+                m_musicSource.UnPause();
+            else
+                m_musicSource.Pause();
+        }
+    }
 
     #endregion
 
@@ -57,7 +63,7 @@ public class SoundManager : MonoBehaviour
     /// </summary>
     public static SoundManager Instance => _instance;
 
-    public bool IsMusicOn => _musicIsPlaying;
+    public bool IsMusicOn => _musicPlaying;
 
     #endregion
 
@@ -70,63 +76,65 @@ public class SoundManager : MonoBehaviour
         else if (_instance != this)
             Destroy(gameObject);
     }
+
     #endregion
 
     #region Helper Methods
+
     public void PlaySingle(Sound sound)
     {
         switch (sound)
         {
             case Sound.UnitAttackSound:
-                Play(unitAttack);
+                Play(m_unitAttack);
                 break;
             case Sound.UnitMoveSound:
-                Play(unitMove);
+                Play(m_unitMove);
                 break;
             case Sound.UnitDieSound:
-                Play(unitDie);
+                Play(m_unitDie);
                 break;
             case Sound.UIButtonClickSound:
-                Play(buttonClick);
+                Play(m_buttonClick);
                 break;
             case Sound.WinnerSound:
-                Play(winSound);
+                Play(m_winSound);
                 break;
             case Sound.PlayerDefeatSound:
-                Play(defeatSound);
+                Play(m_defeatSound);
                 break;
             case Sound.CardInSound:
-                Play(cardIn);
+                Play(m_cardIn);
                 break;
             case Sound.CardOutSound:
-                Play(cardOut);
+                Play(m_cardOut);
                 break;
             case Sound.EnemyEffectSound:
-                Play(enemyEffect);
+                Play(m_enemyEffect);
                 break;
             case Sound.FriendlyEffectSound:
-                Play(friendlyEffect);
+                Play(m_friendlyEffect);
                 break;
             case Sound.SectorEffect:
-                Play(sectorEffect);
+                Play(m_sectorEffect);
                 break;
             case Sound.SacrificeSound:
-                Play(sacrificeEffect);
+                Play(m_sacrificeEffect);
                 break;
             case Sound.CoinGainSound:
-                Play(coinGain);
+                Play(m_coinGain);
                 break;
             case Sound.GroundHitSound:
-                Play(groundHit);
+                Play(m_groundHit);
                 break;
             case Sound.PipeHitSound:
-                Play(pipeHit);
+                Play(m_pipeHit);
                 break;
             case Sound.WingFlapSound:
-                Play(wingFlap);
+                Play(m_wingFlap);
                 break;
             default:
-                throw new InvalidOperationException("Sound clip doesn't exist. If you're trying to play music, use PlayMusic(Sound s)");
+                throw new InvalidOperationException();
         }
     }
 
@@ -136,51 +144,29 @@ public class SoundManager : MonoBehaviour
         {
 
             case Sound.MainMenuMusic:
-                PlayMusic(menuMusic);
+                PlayMusic(m_menuMusic);
                 break;
             case Sound.MainGameMusic:
-                PlayMusic(gameMusic);
+                PlayMusic(m_gameMusic);
                 break;
             case Sound.MiniGameMusic:
-                PlayMusic(minigameMusic);
+                PlayMusic(m_minigameMusic);
                 break;
             default:
-                throw new InvalidOperationException("Music clip doesn't exist. If you're trying to play a sound, use PlaySingle(Sound s)");
+                throw new InvalidOperationException();
         }
     }
 
-    public void ToggleMusic()
+    void Play(AudioClip clip)
     {
-        if (_musicIsPlaying)
-        {
-            musicSource.Pause();
-            _musicIsPlaying = false;
-        }
-        else
-        {
-            musicSource.UnPause();
-            _musicIsPlaying = true;
-        }
-    }
-
-    void Play(AudioClip clip, float delay = 0)
-    {
-        sfxSource.PlayOneShot(clip);
+        m_sfxSource.PlayOneShot(clip);
     }
 
     void PlayMusic(AudioClip music)
     {
-        musicSource.clip = music;
-        musicSource.Play();
+        m_musicSource.clip = music;
+        m_musicSource.Play();
     }
 
-    void StopAllMusic()
-    {
-        musicSource.volume = 0f;
-    }
-    void StopAllsfx()
-    {
-        sfxSource.volume = 0f;
-    }
     #endregion
 }
