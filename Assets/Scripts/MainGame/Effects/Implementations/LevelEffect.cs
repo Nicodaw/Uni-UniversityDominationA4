@@ -10,7 +10,7 @@ namespace EffectImpl
 
         public override string CardName => "Resits";
 
-        public override string CardDescription => "Permanently reduce enemy unit's level by 2";
+        public override string CardDescription => "Permanently reduce enemy unit's level cap by 2";
 
         public override CardCornerIcon CardCornerIcon => CardCornerIcon.EnemyUnit;
 
