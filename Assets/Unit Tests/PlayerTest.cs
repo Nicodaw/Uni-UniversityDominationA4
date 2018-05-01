@@ -64,11 +64,11 @@ public class PlayerTest : BaseGameTest
     [Test]
     public void OwnsLandmark_Correct()
     {
-        Assume.That(map.LandmarkedSectors.Where(s => s.Owner == Players[0]).Count(), Is.EqualTo(1));
+        Assume.That(map.LandmarkedSectors.Count(s => s.Owner == Players[0]), Is.EqualTo(1));
         Assert.That(Players[0].OwnsLandmark, Is.True);
         foreach (Sector sector in map.LandmarkedSectors.Where(s => s.Owner == Players[0]))
             sector.Owner = null;
-        Assume.That(map.LandmarkedSectors.Where(s => s.Owner == Players[0]).Any(), Is.False);
+        Assume.That(map.LandmarkedSectors.Any(s => s.Owner == Players[0]), Is.False);
         Assert.That(Players[0].OwnsLandmark, Is.False);
         Assert.That(Players[1].OwnsLandmark, Is.True);
     }
@@ -83,8 +83,8 @@ public class PlayerTest : BaseGameTest
             sector.Unit?.Kill(Players[1]);
             sector.Owner = null;
         }
-        Assume.That(map.Sectors.Where(s => s.Owner == Players[0]).Any(), Is.False);
-        Assume.That(map.Sectors.Where(s => s.Unit?.Owner == Players[0]).Any(), Is.False);
+        Assume.That(map.Sectors.Any(s => s.Owner == Players[0]), Is.False);
+        Assume.That(map.Sectors.Any(s => s.Unit?.Owner == Players[0]), Is.False);
         Assert.That(Players[0].IsEliminated, Is.True);
         Assert.That(Players[1].IsEliminated, Is.False);
     }
@@ -193,13 +193,16 @@ public class PlayerTest : BaseGameTest
     }
 
     [Test]
-    public void AttemptMove_OtherOwnedSectorUnitWin()
+    public void AttemptMove_OtherOwnedSectorUnitKill()
     {
         // set up move
         Sector origin = Players[0].Units.First().Sector;
         Sector target = origin.AdjacentSectors.First(s => s.Owner == null);
         Unit firstUnit = origin.Unit;
+        Assume.That(firstUnit.Level, Is.EqualTo(1));
         Unit secondUnit = InitUnit(target, 1);
+        secondUnit.Damage(1, Players[0]);
+        Assume.That(secondUnit.Level, Is.EqualTo(1));
         Assume.That(Players[0].ActionsPerformed, Is.Zero);
 
         Assert.That(origin.Owner, Is.EqualTo(Players[0]));
@@ -219,13 +222,17 @@ public class PlayerTest : BaseGameTest
     }
 
     [Test]
-    public void AttemptMove_OtherOwnedSectorUnitLose()
+    public void AttemptMove_OtherOwnedSectorUnitDamage()
     {
         // set up move
         Sector origin = Players[0].Units.First().Sector;
         Sector target = origin.AdjacentSectors.First(s => s.Owner == null);
         Unit firstUnit = origin.Unit;
+        int firstLevel = firstUnit.Level;
+        Assume.That(firstLevel, Is.EqualTo(1));
         Unit secondUnit = InitUnit(target, 1);
+        int secondLevel = secondUnit.Level;
+        Assume.That(secondLevel, Is.EqualTo(2));
         Assume.That(Players[0].ActionsPerformed, Is.Zero);
 
         Assert.That(origin.Owner, Is.EqualTo(Players[0]));
@@ -237,11 +244,12 @@ public class PlayerTest : BaseGameTest
         Players[0].AttemptMove(origin, target);
 
         Assert.That(origin.Owner, Is.EqualTo(Players[0]));
-        Assert.That(origin.Unit, Is.Null);
+        Assert.That(origin.Unit, Is.EqualTo(firstUnit));
+        Assert.That(firstUnit.Level, Is.EqualTo(1));
         Assert.That(target.Owner, Is.EqualTo(Players[1]));
         Assert.That(target.Unit, Is.EqualTo(secondUnit));
+        Assert.That(secondUnit.Level, Is.EqualTo(1));
         Assert.That(Players[0].ActionsPerformed, Is.EqualTo(1));
-        Assert.That(firstUnit == null); // force usage on overridden operator
     }
 
     [Test]
@@ -267,7 +275,7 @@ public class PlayerTest : BaseGameTest
     {
         foreach (Unit unit in Players[0].Units)
             unit.Kill(Players[1]); // remove all units
-        Assume.That(map.Sectors.Where(s => s.Unit?.Owner == Players[0]).Any(), Is.False);
+        Assume.That(map.Sectors.Any(s => s.Unit?.Owner == Players[0]), Is.False);
 
         var availableSectors = Players[0].OwnedLandmarkSectors.Where(s => s.Unit == null).ToArray();
         Players[0].SpawnUnits();
