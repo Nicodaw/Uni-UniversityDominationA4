@@ -4,6 +4,7 @@ using System;
 /// The base for turn-based effects. It will automatically remove itself
 /// from the manager when the turn ends with TurnsLeft at 0.
 /// </summary>
+[Serializable]
 public abstract class TurnedEffect : Effect
 {
     #region Abstract Properties
@@ -24,7 +25,7 @@ public abstract class TurnedEffect : Effect
     /// The main purpose of this property is to allow both player turns and
     /// turn cycles to be used for the turn-based effect.
     /// </remarks>
-    protected virtual Player TurnedPlayer { get; } = null;
+    protected abstract Player TurnedPlayer { get; }
 
     #endregion
 
