@@ -26,7 +26,9 @@ public class Sector : MonoBehaviour
     int? _owner;
     bool _highlighed;
     bool _blockPrefabActive;
+    bool _leafletGuyPrefabActive;
     GameObject _blockObject;
+    GameObject _leafletGuyObject;
 
     #endregion
 
@@ -152,6 +154,26 @@ public class Sector : MonoBehaviour
         }
     }
 
+    public bool LeafletGuyPrefabActive
+    {
+        get { return _leafletGuyPrefabActive; }
+        set
+        {
+            if (value != _leafletGuyPrefabActive)
+            {
+                if (value)
+                {
+                    _leafletGuyObject = Instantiate(Game.Instance.Map.LeafletGuyPrefab);
+                    _leafletGuyObject.transform.parent = _unitStore.transform;
+                    _leafletGuyObject.transform.localPosition = Vector3.zero;
+                }
+                else
+                    Destroy(_leafletGuyObject);
+                _leafletGuyPrefabActive = value;
+            }
+        }
+    }
+
     #endregion
 
     #region Events
@@ -198,7 +220,8 @@ public class Sector : MonoBehaviour
             effectManager = _effects.CreateMemento(),
             unit = Unit?.CreateMemento(),
             owner = _owner,
-            blockPrefabActive = _blockPrefabActive
+            blockPrefabActive = _blockPrefabActive,
+            leafletGuyPrefabActive = _leafletGuyPrefabActive
         };
     }
 
@@ -215,6 +238,7 @@ public class Sector : MonoBehaviour
         }
         _effects.RestoreMemento(memento.effectManager);
         BlockPrefabActive = memento.blockPrefabActive;
+        LeafletGuyPrefabActive = memento.leafletGuyPrefabActive;
     }
 
     #endregion

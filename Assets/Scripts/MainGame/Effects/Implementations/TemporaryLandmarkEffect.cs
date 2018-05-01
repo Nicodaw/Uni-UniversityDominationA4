@@ -10,8 +10,6 @@ namespace EffectImpl
         #region Private Fields
 
         int _playedBy;
-        [NonSerialized]
-        GameObject _landmarkModel;
 
         #endregion
 
@@ -43,25 +41,18 @@ namespace EffectImpl
 
         public override EffectAvailableSelection AvailableSelection(Game game) => new EffectAvailableSelection
         {
-            Sectors = game.Map.Sectors.Where(s => s.Landmark == null && s.Unit == null && !s.Stats.HasEffect<TemporaryLandmarkEffect>())
+            Sectors = game.Map.Sectors.Where(s => s.Landmark == null && s.Unit == null &&
+                                             !s.Stats.HasEffect<TemporaryLandmarkEffect>() &&
+                                             !s.Stats.HasEffect<BlockSectorEffect>())
         };
 
         #endregion
 
         #region Helper Methods
 
-        void PutLandmark()
-        {
-            //LandmarkEffect tempEffect = new LandmarkEffect(_sector.Id, (int)AttackBonus, (int)DefenceBonus);
-            //_sector.Landmark.RegisterPlayerEffect(tempEffect);
-            UnityEngine.Object.Instantiate(_landmarkModel, AppliedSector.transform);
-        }
+        void PutLandmark() => AppliedSector.LeafletGuyPrefabActive = true;
 
-        void RemoveLandmark()
-        {
-            UnityEngine.Object.Destroy(AppliedSector.transform.GetChild(0));
-            RemoveSelf();
-        }
+        void RemoveLandmark() => AppliedSector.LeafletGuyPrefabActive = false;
 
         protected override void ApplyToSector()
         {

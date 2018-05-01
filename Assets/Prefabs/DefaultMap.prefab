@@ -23663,6 +23663,8 @@ MonoBehaviour:
   - {fileID: 114066804128543026}
   m_blockSectorPrefab: {fileID: 1081797273693298, guid: 9683c3d8735d44d44881ee240a8c06de,
     type: 2}
+  m_leafletGuyPrefab: {fileID: 1808365347081548, guid: 742e9e996268a4e48a54196756d0c5ae,
+    type: 2}
 --- !u!114 &114622699298749278
 MonoBehaviour:
   m_ObjectHideFlags: 1

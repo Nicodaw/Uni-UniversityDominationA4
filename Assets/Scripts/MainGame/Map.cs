@@ -12,6 +12,7 @@ public class Map : MonoBehaviour
 
     [SerializeField] Sector[] m_sectors;
     [SerializeField] GameObject m_blockSectorPrefab;
+    [SerializeField] GameObject m_leafletGuyPrefab;
 
     #endregion
 
@@ -37,6 +38,8 @@ public class Map : MonoBehaviour
     public IEnumerable<Sector> LandmarkedSectors => Sectors.Where(s => s.Landmark != null);
 
     public GameObject BlockSectorPrefab => m_blockSectorPrefab;
+
+    public GameObject LeafletGuyPrefab => m_leafletGuyPrefab;
 
     public int PVCAllocateWait => _pvcAllocateWait;
 

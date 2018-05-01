@@ -7,4 +7,5 @@ public class SerializableSector
     public SerializableUnit unit;
     public int? owner;
     public bool blockPrefabActive;
+    public bool leafletGuyPrefabActive;
 }
