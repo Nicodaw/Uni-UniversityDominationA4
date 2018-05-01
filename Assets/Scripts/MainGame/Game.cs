@@ -87,7 +87,7 @@ public class Game : MonoBehaviour
     /// the system will assume that a minigame justs occured, and will act
     /// accordingly.
     /// </remarks>
-    public static EffectImpl.MinigameRewardEffect MinigameReward { get; set; } = null;
+    public static Action<Game, Dialog> MinigameRewardApply { get; set; } = null;
 
     /// <summary>
     /// The current game map.
@@ -247,9 +247,9 @@ public class Game : MonoBehaviour
         enabled = true;
         EndTurnButtonEnabled = true;
 
-        if (MinigameReward != null)
+        if (MinigameRewardApply != null)
             // if a minigame reward exists, then apply it to the player
-            ApplyReward();
+            StartCoroutine(ApplyReward());
 
         CurrentPlayer.Gui.IsActive = true;
         UpdateGUI();
@@ -459,16 +459,14 @@ public class Game : MonoBehaviour
     /// <summary>
     /// Triggers the minigame with the given player who will receive the reward.
     /// </summary>
-    /// <param name="minigamePlayer">The player who will receive the reward.</param>
-    public void TriggerMinigame(Player minigamePlayer) => StartCoroutine(TriggerMinigameInternal(minigamePlayer));
+    public void TriggerMinigame() => StartCoroutine(TriggerMinigameInternal());
 
-    IEnumerator TriggerMinigameInternal(Player minigamePlayer)
+    IEnumerator TriggerMinigameInternal()
     {
         yield return null; // allow events to propagate
         if (!_processEvents)
             yield break; // if process events is disabled, then we don't want to trigger the minigame
-        MementoToRestore = Instance.CreateMemento(); // save game into static var
-        MinigameManager.CurrentPlayerId = minigamePlayer.Id; // store the ID of the player who will get the reward
+        MementoToRestore = CreateMemento(); // save game into static var
         AsyncOperation asyncOp = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("Minigame"); // trigger scene change
         while (!asyncOp.isDone)
             // wait for scene change completion
@@ -478,20 +476,13 @@ public class Game : MonoBehaviour
     /// <summary>
     /// Allocates a reward to the player when they complete the mini game.
     /// </summary>
-    internal void ApplyReward()
+    internal IEnumerator ApplyReward()
     {
-        Players[MinigameReward.ApplyPlayer].Stats.ApplyEffect(MinigameReward); // apply reward
-
-        // set up UI
-        m_dialog.SetDialogType(DialogType.ShowText);
-        m_dialog.SetDialogData("REWARD!", string.Format("Well done, you have gained:\n+{0} Attack\n+{1} Defence",
-                                                        MinigameReward.AttackBonus.Value,
-                                                        MinigameReward.DefenceBonus.Value));
-        m_dialog.Show();
-        UpdateGUI(); // update GUI with new bonuses
+        yield return new WaitForSeconds(1.5f);
+        MinigameRewardApply(this, m_dialog); // apply reward
+        UpdateGUI(); // update GUI
         Debug.Log(string.Format("{0} won the minigame, effect was applied", CurrentPlayer));
-
-        MinigameReward = null; // clear reward
+        MinigameRewardApply = null; // clear reward
 
         // reset PVC allocation
         Map.ResetPVCAllocateWait();

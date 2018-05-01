@@ -1,4 +1,5 @@
 ﻿#if UNITY_EDITOR
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,8 +63,16 @@ public class GameTest_GameInit : BaseGameTest
 
 public class GameTest_MapInit : BaseGameTest
 {
+    bool rewardActionFired;
+    Action<Game, Dialog> rewardTestAction;
+
     [SetUp]
-    public void MapInit_SetUp() => DefMapInit();
+    public void MapInit_SetUp()
+    {
+        DefMapInit();
+        rewardActionFired = true;
+        rewardTestAction = (game, dialog) => rewardActionFired = true;
+    }
 
     Dialog GetGameDialog() => GameObject.Find("Scene").transform.Find("GUI").Find("Dialog").gameObject.GetComponent<Dialog>();
 
@@ -144,49 +153,31 @@ public class GameTest_MapInit : BaseGameTest
         Assert.That(dialog.IsShown, Is.True);
     }
 
-    [Test]
-    public void ApplyReward_RewardApplied()
+    [UnityTest]
+    public IEnumerator ApplyReward_RewardActionCalled()
     {
-        int prevAtt = Players[0].Stats.Attack;
-        int prevDef = Players[0].Stats.Defence;
-        Game.MinigameReward = new EffectImpl.MinigameRewardEffect(0, 6, 8);
-        game.ApplyReward();
-        Assert.That(Players[0].Stats.HasEffect<EffectImpl.MinigameRewardEffect>(), Is.True);
-        Assert.That(Players[0].Stats.Attack, Is.EqualTo(prevAtt + 6));
-        Assert.That(Players[0].Stats.Defence, Is.EqualTo(prevDef + 8));
-
-        map.AllocatePVC();
-        prevAtt = Players[2].Stats.Attack;
-        prevDef = Players[2].Stats.Defence;
-        Game.MinigameReward = new EffectImpl.MinigameRewardEffect(2, 4, 3);
-        game.ApplyReward();
-        Assert.That(Players[2].Stats.HasEffect<EffectImpl.MinigameRewardEffect>(), Is.True);
-        Assert.That(Players[2].Stats.Attack, Is.EqualTo(prevAtt + 4));
-        Assert.That(Players[2].Stats.Defence, Is.EqualTo(prevDef + 3));
+        Game.MinigameRewardApply = rewardTestAction;
+        game.StartCoroutine(game.ApplyReward());
+        yield return new WaitForSeconds(1.6f);
+        Assert.That(rewardActionFired);
     }
 
-    [Test]
-    public void ApplyReward_DialogShown()
+    [UnityTest]
+    public IEnumerator ApplyReward_RewardCleared()
     {
-        Game.MinigameReward = new EffectImpl.MinigameRewardEffect(0, 1, 1);
-        game.ApplyReward();
-        Assert.That(GetGameDialog().IsShown, Is.True);
+        Game.MinigameRewardApply = rewardTestAction;
+        game.StartCoroutine(game.ApplyReward());
+        yield return new WaitForSeconds(1.6f);
+        Assert.That(Game.MinigameRewardApply, Is.Null);
     }
 
-    [Test]
-    public void ApplyReward_RewardCleared()
-    {
-        Game.MinigameReward = new EffectImpl.MinigameRewardEffect(0, 1, 1);
-        game.ApplyReward();
-        Assert.That(Game.MinigameReward, Is.Null);
-    }
-
-    [Test]
-    public void ApplyReward_PvcAllocateWaitReset()
+    [UnityTest]
+    public IEnumerator ApplyReward_PvcAllocateWaitReset()
     {
         Sector allocatedSector = map.Sectors.First(s => s.HasPVC);
-        Game.MinigameReward = new EffectImpl.MinigameRewardEffect(0, 1, 1);
-        game.ApplyReward();
+        Game.MinigameRewardApply = rewardTestAction;
+        game.StartCoroutine(game.ApplyReward());
+        yield return new WaitForSeconds(1.6f);
         Assert.That(map.Sectors.Any(s => s.HasPVC), Is.False);
         Assert.That(map.PVCAllocateWait, Is.GreaterThan(0));
     }

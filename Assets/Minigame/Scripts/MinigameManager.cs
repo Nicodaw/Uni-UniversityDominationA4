@@ -50,8 +50,6 @@ public class MinigameManager : MonoBehaviour
 
     public static MinigameManager Instance => _instance;
 
-    public static int CurrentPlayerId { get; set; }
-
     #endregion
 
     #region MonoBehaviour
@@ -100,8 +98,20 @@ public class MinigameManager : MonoBehaviour
         _active = false;
         m_loseOverlay.SetActive(true);
         m_loseUiText.text = string.Format(won ? m_winText : m_loseText, score);
-        int reward = Mathf.FloorToInt((score + 1f) / 2f);
-        Game.MinigameReward = new EffectImpl.MinigameRewardEffect(CurrentPlayerId, reward, reward);
+        int cardCount = Mathf.FloorToInt((score + 2f) / 4f);
+        Game.MinigameRewardApply = (game, dialog) =>
+        {
+            // apply reward
+            Effect[] cards = new Effect[cardCount];
+            for (int i = 0; i < cardCount; i++)
+                cards[i] = CardFactory.GetRandomEffect(CardTier.Tier1);
+            game.CurrentPlayer.Cards.AddCards(cards);
+
+            // display dialog
+            dialog.SetDialogType(DialogType.ShowText);
+            dialog.SetDialogData("REWARD!", string.Format("Well done, you have\naquired {0} cards", cardCount));
+            dialog.Show();
+        };
         yield return new WaitForSeconds(3);
         Debug.Log("Switching back to main game");
         SceneManager.LoadScene("MainGame");

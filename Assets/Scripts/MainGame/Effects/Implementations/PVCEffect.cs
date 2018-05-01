@@ -10,7 +10,7 @@ namespace EffectImpl
         public override void ProcessSectorCaptured(object sender, UpdateEventArgs<Player> e)
         {
             if ((Sector)sender == AppliedSector)
-                Game.Instance.TriggerMinigame(e.NewValue);
+                Game.Instance.TriggerMinigame();
         }
 
         #endregion
