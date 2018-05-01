@@ -231,15 +231,6 @@ public class Sector : MonoBehaviour
 
     #region Helper Methods
 
-    /// <summary>
-    /// Set the highlight of all the sectors in range sectors.
-    /// </summary>
-    public void ApplyHighlight(Sector[] highlightedSectors, bool highlight)
-    {
-        foreach (Sector sector in highlightedSectors)
-            sector.Highlighted = highlight;
-    }
-
     public Sector[] GetSectorsInRange(int range)
     {
         HashSet<Sector> visited = new HashSet<Sector> { this };

@@ -91,6 +91,15 @@ public class Map : MonoBehaviour
 
     #region Helper Methods
 
+    /// <summary>
+    /// Set the highlight of all given sectors.
+    /// </summary>
+    public void ApplySectorHighlight(bool highlight, params Sector[] sectors)
+    {
+        foreach (Sector sector in sectors)
+            sector.Highlighted = highlight;
+    }
+
     void ProcessPVCAllocateDec()
     {
         if (_pvcAllocateWait == 0)

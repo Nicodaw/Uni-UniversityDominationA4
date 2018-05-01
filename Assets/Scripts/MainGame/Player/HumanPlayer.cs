@@ -53,12 +53,12 @@ public class HumanPlayer : Player
     {
         _selectedSector = sector;
         _sectorsInSelectedRange = _selectedSector.Unit.SectorsInRange;
-        _selectedSector.ApplyHighlight(_sectorsInSelectedRange, true);
+        Game.Instance.Map.ApplySectorHighlight(true, _sectorsInSelectedRange);
     }
 
     public void DeselectSector()
     {
-        _selectedSector?.ApplyHighlight(Game.Instance.Map.Sectors, false);
+        Game.Instance.Map.ApplySectorHighlight(false, Game.Instance.Map.Sectors);
         _selectedSector = null;
     }
 
