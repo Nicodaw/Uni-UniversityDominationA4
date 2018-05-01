@@ -13,6 +13,7 @@ public class PlayerUI : MonoBehaviour
     [SerializeField] Text m_stats;
     [SerializeField] Vector2 m_edgeOffset = new Vector2(10f, 10f);
     [SerializeField] float m_betweenGap = 10f;
+    [SerializeField] Image m_arrowOfCurrentPlayer;
 
     #endregion
 
@@ -57,9 +58,16 @@ public class PlayerUI : MonoBehaviour
         {
             _isActive = value;
             if (_isActive)
+            {
+                m_arrowOfCurrentPlayer.CrossFadeAlpha(1f, 0.5f, true);
                 m_header.color = Player.Color;
+            }
             else
+            {
+                m_arrowOfCurrentPlayer.CrossFadeAlpha(0f, 0f, true);
                 m_header.color = DefaultHeaderColor;
+            }
+                
         }
     }
 
@@ -87,7 +95,8 @@ public class PlayerUI : MonoBehaviour
         m_header.text = string.Format(PlayerNameFormat, playerId + 1);
         m_headerHighlight.text = m_header.text;
         m_headerHighlight.color = player.Color;
-        PlayerPanelMat.color = player.Color; //temporary, this was only to visualise if things are applying properly
+        m_arrowOfCurrentPlayer.color = player.Color;
+        m_arrowOfCurrentPlayer.CrossFadeAlpha(0f, 0f, true);
 
         // player id specified position of UI
         RectTransform rectTransform = GetComponent<RectTransform>();
