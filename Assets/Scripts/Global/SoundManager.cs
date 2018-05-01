@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,14 +11,17 @@ public class SoundManager : MonoBehaviour
 {
     #region Unity Bindings
 
-    [SerializeField] AudioSource sfxSource1;
-    [SerializeField] AudioSource sfxSource2;
+    //AudioSources part of our buffer for sfx
+    [SerializeField] AudioSource sfxSource;
+    //AudioSource for music
     [SerializeField] AudioSource musicSource;
 
     [SerializeField] AudioClip unitAttack;
     [SerializeField] AudioClip unitMove;
     [SerializeField] AudioClip unitDie;
     [SerializeField] AudioClip buttonClick;
+    [SerializeField] AudioClip winSound;
+    [SerializeField] AudioClip defeatSound;
     [SerializeField] AudioClip cardIn;
     [SerializeField] AudioClip cardOut;
     [SerializeField] AudioClip enemyEffect;
@@ -72,48 +77,54 @@ public class SoundManager : MonoBehaviour
     #region Helper Methods
     public void PlaySingle(Sound sound)
     {
-        switch ((int)sound)
+        switch (sound)
         {
-            case 0:
+            case Sound.UnitAttackSound:
                 Play(unitAttack);
                 break;
-            case 1:
+            case Sound.UnitMoveSound:
                 Play(unitMove);
                 break;
-            case 2:
+            case Sound.UnitDieSound:
                 Play(unitDie);
                 break;
-            case 3:
+            case Sound.UIButtonClickSound:
                 Play(buttonClick);
                 break;
-            case 4:
+            case Sound.WinnerSound:
+                Play(winSound);
+                break;
+            case Sound.PlayerDefeatSound:
+                Play(defeatSound);
+                break;
+            case Sound.CardInSound:
                 Play(cardIn);
                 break;
-            case 5:
+            case Sound.CardOutSound:
                 Play(cardOut);
                 break;
-            case 6:
+            case Sound.EnemyEffectSound:
                 Play(enemyEffect);
                 break;
-            case 7:
+            case Sound.FriendlyEffectSound:
                 Play(friendlyEffect);
                 break;
-            case 8:
+            case Sound.SectorEffect:
                 Play(sectorEffect);
                 break;
-            case 9:
+            case Sound.SacrificeSound:
                 Play(sacrificeEffect);
                 break;
-            case 10:
+            case Sound.CoinGainSound:
                 Play(coinGain);
                 break;
-            case 11:
+            case Sound.GroundHitSound:
                 Play(groundHit);
                 break;
-            case 12:
+            case Sound.PipeHitSound:
                 Play(pipeHit);
                 break;
-            case 13:
+            case Sound.WingFlapSound:
                 Play(wingFlap);
                 break;
             default:
@@ -154,20 +165,9 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    void Play(AudioClip clip)
+    void Play(AudioClip clip, float delay = 0)
     {
-        if (sfxSource1.isPlaying)
-        {
-            sfxSource2.clip = clip;
-            sfxSource2.Play();
-            StartCoroutine(ClearSoundBuffer(2));
-        }
-        else
-        {
-            sfxSource1.clip = clip;
-            sfxSource1.Play();
-            StartCoroutine(ClearSoundBuffer(1));
-        }
+        sfxSource.PlayOneShot(clip);
     }
 
     void PlayMusic(AudioClip music)
@@ -175,13 +175,5 @@ public class SoundManager : MonoBehaviour
         musicSource.clip = music;
         musicSource.Play();
     }
-
-    IEnumerator ClearSoundBuffer(int src)
-    {
-        AudioSource source = (src == 1) ? sfxSource1 : sfxSource2;
-        yield return new WaitWhile(() => source.isPlaying);
-        source.clip = null;
-    }
-
     #endregion
 }

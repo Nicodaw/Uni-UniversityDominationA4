@@ -10,6 +10,8 @@ public enum Sound
 
     //UI interaction
     UIButtonClickSound,
+    WinnerSound,
+    PlayerDefeatSound,
 
     //Cards and effects
     CardInSound,

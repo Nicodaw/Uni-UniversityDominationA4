@@ -19,10 +19,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4378657002764538}
-  - component: {fileID: 82345317267114536}
-  - component: {fileID: 82999834359565248}
   - component: {fileID: 114831144853389498}
-  - component: {fileID: 82184608369986242}
+  - component: {fileID: 82219031230425090}
+  - component: {fileID: 82904272732874262}
   m_Layer: 0
   m_Name: SoundManager
   m_TagString: Untagged
@@ -37,13 +36,13 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1249481608858994}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 24.948364, y: 85.41528, z: 34.038414}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!82 &82184608369986242
+--- !u!82 &82219031230425090
 AudioSource:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -123,7 +122,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!82 &82345317267114536
+--- !u!82 &82904272732874262
 AudioSource:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -134,89 +133,9 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.1
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 1
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
---- !u!82 &82999834359565248
-AudioSource:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1249481608858994}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
@@ -294,13 +213,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dee0b6e1ce29f86469ee4f7759ea0612, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sfxSource1: {fileID: 82999834359565248}
-  sfxSource2: {fileID: 82184608369986242}
-  musicSource: {fileID: 82345317267114536}
+  sfxSource: {fileID: 82219031230425090}
+  musicSource: {fileID: 82904272732874262}
   unitAttack: {fileID: 8300000, guid: 0bb2ceb385ad91f4199142bd5fb48e2e, type: 3}
   unitMove: {fileID: 8300000, guid: 11c884964f05ffd42bfea3e6e2190ff7, type: 3}
   unitDie: {fileID: 8300000, guid: e871c112f6f46ff419f3b709527d88f1, type: 3}
   buttonClick: {fileID: 8300000, guid: 418e1937771570c489e96eae7599a7c4, type: 3}
+  winSound: {fileID: 8300000, guid: e80245cca935f5947835fd870d503a93, type: 3}
+  defeatSound: {fileID: 8300000, guid: bb71b97e9f5278248acec230a215fbb2, type: 3}
   cardIn: {fileID: 8300000, guid: 080935b143355d14f89ff8c3bf358c8c, type: 3}
   cardOut: {fileID: 8300000, guid: de076cf85a6c8894f956e35cfd6eb2ad, type: 3}
   enemyEffect: {fileID: 8300000, guid: f94fbdcab34739543ab989b6eec7e22c, type: 3}

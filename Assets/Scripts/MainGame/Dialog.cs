@@ -95,9 +95,12 @@ public class Dialog : MonoBehaviour
         {
             case DialogType.EndGame:
                 m_dialogInfo.GetComponent<Text>().text = player + " WON!";
+                SoundManager.Instance.ToggleMusic();
+                SoundManager.Instance.PlaySingle(Sound.WinnerSound);
                 break;
             case DialogType.PlayerEliminated:
                 m_dialogInfo.GetComponent<Text>().text = player + "\n was eliminated";
+                SoundManager.Instance.PlaySingle(Sound.PlayerDefeatSound);
                 break;
         }
     }

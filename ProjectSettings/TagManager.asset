@@ -8,6 +8,7 @@ TagManager:
   - Ground
   - Pillar
   - Unit
+  - IndustrialAction
   layers:
   - Default
   - TransparentFX
