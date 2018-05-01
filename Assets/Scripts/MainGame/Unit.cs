@@ -80,7 +80,7 @@ public class Unit : MonoBehaviour
     ///<summary>
     /// Gets the Sectors in range
     /// </summary>
-    public Sector[] SectorsInRange => Sector.GetSectorsInRange(Stats.MoveRange);
+    public Sector[] SectorsInRange => Stats.CanMove ? Sector.GetSectorsInRange(Stats.MoveRange) : new Sector[0];
 
     /// <summary>
     /// Gets the unit's attack stat from its level.

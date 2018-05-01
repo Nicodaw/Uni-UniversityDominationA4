@@ -29,7 +29,7 @@ public class HumanPlayer : Player
         base.ProcessSectorClick(clickedSector);
         if (CanPerformActions && _selectedSector == null)
         {
-            if (clickedSector.Unit != null && clickedSector.Unit.Owner == this)
+            if (clickedSector.Unit != null && clickedSector.Unit.Owner == this && clickedSector.Unit.Stats.CanMove)
                 SelectSector(clickedSector);
         }
         else
