@@ -224,23 +224,18 @@ public class Sector : MonoBehaviour
 
     public Sector[] GetSectorsInRange(int range)
     {
-        HashSet<Sector> visited = new HashSet<Sector> { this };
+        HashSet<Sector> visited = new HashSet<Sector>();
         List<List<Sector>> fringe = new List<List<Sector>> { new List<Sector> { this } };
         for (int i = 1; i <= range; i++)
         {
             fringe.Add(new List<Sector>());
             foreach (Sector sector in fringe[i - 1])
-            {
                 foreach (Sector adjacent in sector.AdjacentSectors)
-                {
-                    Sector neighbour = adjacent;
-                    if (!visited.Contains(neighbour) && neighbour.Stats.Traversable)
+                    if (adjacent != this && !visited.Contains(adjacent) && adjacent.Stats.Traversable)
                     {
-                        visited.Add(neighbour);
-                        fringe[i].Add(neighbour);
+                        visited.Add(adjacent);
+                        fringe[i].Add(adjacent);
                     }
-                }
-            }
         }
         return visited.ToArray();
     }
