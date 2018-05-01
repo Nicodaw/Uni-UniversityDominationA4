@@ -66,8 +66,11 @@ public class HumanPlayer : Player
         Cards.CardsEnter();
         if (Cards.Count > 0)
             yield return new WaitForSeconds(1.5f);
-        AssignRandomCard();
-        yield return new WaitForSeconds(0.5f);
+        if (HasHadTurn)
+        {
+            AssignRandomCard();
+            yield return new WaitForSeconds(0.5f);
+        }
         Game.Instance.EndTurnButtonEnabled = true;
     }
 
@@ -77,7 +80,6 @@ public class HumanPlayer : Player
         Cards.CardsExit();
         if (Cards.Count > 0)
             yield return new WaitForSeconds(1.5f);
-        Cards.Clickable = true;
         base.EndTurn();
     }
 

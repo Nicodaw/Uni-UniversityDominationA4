@@ -21,6 +21,7 @@ public abstract class Player : MonoBehaviour
     EffectManager _effects;
     CardManager _cardManager;
     int _actionsRemaining;
+    bool _hasHadTurn;
 
     #endregion
 
@@ -91,6 +92,8 @@ public abstract class Player : MonoBehaviour
         set { _actionsRemaining = value; }
     }
 
+    public bool HasHadTurn => _hasHadTurn;
+
     #endregion
 
     #region Abstract Properties
@@ -134,6 +137,7 @@ public abstract class Player : MonoBehaviour
 
     public virtual void EndTurn()
     {
+        _hasHadTurn = true;
         OnTurnEnd?.Invoke(this, new EventArgs());
     }
 
@@ -161,7 +165,8 @@ public abstract class Player : MonoBehaviour
             color = _color,
             effectManager = _effects.CreateMemento(),
             actionsRemaining = _actionsRemaining,
-            cards = _cardManager.CreateMemento()
+            cards = _cardManager.CreateMemento(),
+            hasHadTurn = _hasHadTurn
         };
     }
 
@@ -173,6 +178,7 @@ public abstract class Player : MonoBehaviour
         _effects.RestoreMemento(memento.effectManager);
         _actionsRemaining = memento.actionsRemaining;
         _cardManager.RestoreMemento(memento.cards);
+        _hasHadTurn = memento.hasHadTurn;
     }
 
     #endregion

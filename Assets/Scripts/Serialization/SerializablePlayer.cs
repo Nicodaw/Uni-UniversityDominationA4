@@ -9,4 +9,5 @@ public class SerializablePlayer
     public SerializableEffectManager effectManager;
     public int actionsRemaining;
     public SerializableCardManager cards;
+    public bool hasHadTurn;
 }
