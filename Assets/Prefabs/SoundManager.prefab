@@ -131,7 +131,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: fa34bf982ceef9a4088ec8ba175b0b68, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.2
   m_Pitch: 1
@@ -231,6 +231,6 @@ MonoBehaviour:
   groundHit: {fileID: 8300000, guid: 26fe84887aa188a4782a2b6e8b93522a, type: 3}
   pipeHit: {fileID: 8300000, guid: 3c570b3b8e6585342b281f50c5eeb643, type: 3}
   wingFlap: {fileID: 8300000, guid: e2816cdf2b428e54f9f8cdc08c88b317, type: 3}
-  menuMusic: {fileID: 0}
+  menuMusic: {fileID: 8300000, guid: fa34bf982ceef9a4088ec8ba175b0b68, type: 3}
   gameMusic: {fileID: 8300000, guid: 29724d15b3e72d345a8d8a571454fc20, type: 3}
   minigameMusic: {fileID: 8300000, guid: bbabe81dce4cc0443b195e37000ebfb2, type: 3}

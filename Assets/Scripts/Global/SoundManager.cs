@@ -175,5 +175,14 @@ public class SoundManager : MonoBehaviour
         musicSource.clip = music;
         musicSource.Play();
     }
+
+    void StopAllMusic()
+    {
+        musicSource.volume = 0f;
+    }
+    void StopAllsfx()
+    {
+        sfxSource.volume = 0f;
+    }
     #endregion
 }

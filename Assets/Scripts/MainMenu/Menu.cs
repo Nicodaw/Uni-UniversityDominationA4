@@ -14,6 +14,8 @@ public class Menu : MonoBehaviour
     public void Play()
     {
         SceneManager.LoadScene("MainGame");
+        SoundManager.Instance.PlaySingle(Sound.UIButtonClickSound);
+        SoundManager.Instance.ToggleMusic();
     }
 
     public void PlaySecondary()
@@ -33,6 +35,8 @@ public class Menu : MonoBehaviour
             return;
         Game.MementoToRestore = SaveManager.LoadGame(0);
         SceneManager.LoadScene("MainGame");
+        SoundManager.Instance.PlaySingle(Sound.UIButtonClickSound);
+        SoundManager.Instance.ToggleMusic();
     }
 
     /// <summary>
@@ -41,6 +45,7 @@ public class Menu : MonoBehaviour
 	public void Quit()
     {
         Application.Quit();
+        SoundManager.Instance.PlaySingle(Sound.UIButtonClickSound);
     }
 
     #endregion

@@ -158,6 +158,7 @@ public class Dialog : MonoBehaviour
     public void Exit()
     {
         SceneManager.LoadScene("MainMenu");
+        SoundManager.Instance.PlayMusic(Sound.MainMenuMusic);
     }
 
     public void SaveExit()
@@ -173,6 +174,7 @@ public class Dialog : MonoBehaviour
     public void Restart()
     {
         SceneManager.LoadScene("MainMenu");
+        SoundManager.Instance.PlayMusic(Sound.MainMenuMusic);
     }
 
     #endregion

@@ -28,7 +28,7 @@ public enum Sound
     WingFlapSound,
 
     //Music
-    MainMenuMusic, //FIND APPROPRIATE HEARTHSTONE BANGER
+    MainMenuMusic,
     MainGameMusic,
     MiniGameMusic
 }
