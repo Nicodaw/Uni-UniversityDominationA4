@@ -232,13 +232,35 @@ public class Sector : MonoBehaviour
     #region Helper Methods
 
     /// <summary>
-    /// Set the highlight of all the adjacent sectors.
+    /// Set the highlight of all the sectors in range sectors.
     /// </summary>
-    [Obsolete("Will remove in favour of range-based highlighting")]
-    public void ApplyHighlightAdjacent(bool highlight)
+    public void ApplyHighlight(Sector[] highlightedSectors, bool highlight)
     {
-        foreach (Sector adjacentSector in AdjacentSectors)
-            adjacentSector.Highlighted = highlight;
+        foreach (Sector sector in highlightedSectors)
+            sector.Highlighted = highlight;
+    }
+
+    public Sector[] GetRange (Sector start, int range)
+    {
+        HashSet<Sector> visited = new HashSet<Sector> { start };
+        List<List<Sector>> fringe = new List<List<Sector>> { new List<Sector>() { start } };
+        for (int i = 1; i <= range; i++)
+        {
+            fringe.Add(new List<Sector>());
+            foreach (Sector sect in fringe[i-1])
+            {
+                foreach (Sector adjacent in sect.AdjacentSectors)
+                {
+                    Sector neighbour = adjacent;
+                    if (!visited.Contains(neighbour) && neighbour.Stats.Traversable)
+                    {
+                        visited.Add(neighbour);
+                        fringe[i].Add(neighbour);
+                    }
+                }
+            }
+        }
+        return visited.ToArray<Sector>();
     }
 
     /// <summary>

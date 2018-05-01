@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public class HumanPlayer : Player
     #region Private Fields
 
     Sector _selectedSector;
+    Sector[] _sectorsInSelectedRange;
 
     #endregion
 
@@ -33,7 +35,7 @@ public class HumanPlayer : Player
         }
         else
         {
-            if (CanPerformActions && _selectedSector.AdjacentSectors.Contains(clickedSector))
+            if (CanPerformActions && _selectedSector.Unit.SectorsInRange.Contains(clickedSector))
                 AttemptMove(_selectedSector, clickedSector);
             DeselectSector();
         }
@@ -51,12 +53,13 @@ public class HumanPlayer : Player
     void SelectSector(Sector sector)
     {
         _selectedSector = sector;
-        _selectedSector.ApplyHighlightAdjacent(true);
+        _sectorsInSelectedRange = _selectedSector.Unit.SectorsInRange;
+        _selectedSector.ApplyHighlight(_sectorsInSelectedRange, true);
     }
 
     public void DeselectSector()
     {
-        _selectedSector?.ApplyHighlightAdjacent(false);
+        _selectedSector?.ApplyHighlight(Game.Instance.Map.Sectors, false);
         _selectedSector = null;
     }
 
