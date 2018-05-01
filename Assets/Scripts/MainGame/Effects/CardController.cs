@@ -314,7 +314,7 @@ public class CardController : MonoBehaviour
                 }
             }
             triggerCollider.enabled = true;
-            SetSelectedHighlight(false, selection);
+            ClearHighlights();
             CardHeld = _held = false;
             PositionPercent = PositionPercent;
         }
@@ -338,6 +338,14 @@ public class CardController : MonoBehaviour
         if (selection.Players != null)
             foreach (PlayerUI playerUI in selection.Players.Select(p => p.Gui))
                 playerUI.Highlighted = highlighted;
+    }
+
+    void ClearHighlights()
+    {
+        foreach (Sector sector in Game.Instance.Map.Sectors)
+            sector.Highlighted = false;
+        foreach (PlayerUI playerUI in Game.Instance.Players.Select(p => p.Gui))
+            playerUI.Highlighted = false;
     }
 
     void ConsumeEffect(EffectManager effectManager)
