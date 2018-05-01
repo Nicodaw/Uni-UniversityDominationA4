@@ -58,15 +58,7 @@ public class CardManager : MonoBehaviour
 
     #region Handlers
 
-    void Card_OnConsumed(object sender, EventArgs e)
-    {
-        CardController card = (CardController)sender;
-        card.OnConsumed -= Card_OnConsumed;
-        if (!_cards.Remove(card))
-            throw new InvalidOperationException();
-        if (_shown)
-            SetCardPositions(false);
-    }
+    void Card_OnConsumed(object sender, EventArgs e) => RemoveCard((CardController)sender);
 
     #endregion
 
@@ -100,6 +92,26 @@ public class CardManager : MonoBehaviour
             card.OnConsumed += Card_OnConsumed;
             _cards.Add(card);
         }
+        if (_shown)
+            SetCardPositions(false);
+    }
+
+    public Effect RemoveRandomCard()
+    {
+        CardController card = _cards.RandomOrDefault();
+        if (card != null)
+        {
+            RemoveCard(card);
+            return card.Effect;
+        }
+        return null;
+    }
+
+    void RemoveCard(CardController card)
+    {
+        card.OnConsumed -= Card_OnConsumed;
+        if (!_cards.Remove(card))
+            throw new InvalidOperationException();
         if (_shown)
             SetCardPositions(false);
     }

@@ -26,15 +26,16 @@ namespace EffectImpl
 
         public override EffectAvailableSelection AvailableSelection(Game game) => new EffectAvailableSelection
         {
-            Players = game.Players.Where(p => p != game.CurrentPlayer)
+            Players = game.Players.Where(p => p != game.CurrentPlayer && p.Cards.Count > 0)
         };
 
         #endregion
 
         #region Helper Methods
 
-        protected override void ApplyToPlayer()
-        { }
+        void TakeCard() => Game.Instance.CurrentPlayer.Cards.AddCards(AppliedPlayer.Cards.RemoveRandomCard());
+
+        protected override void ApplyToPlayer() => TakeCard();
 
         #endregion
     }
