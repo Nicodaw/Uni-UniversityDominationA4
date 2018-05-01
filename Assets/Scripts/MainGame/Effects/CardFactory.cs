@@ -19,7 +19,6 @@ public static class CardFactory
         { CardType.Kuda,                  data => new UnitStatsEffect(CardType.Kuda) },
         { CardType.Breadcrumbs,           data => new UnitStatsEffect(CardType.Breadcrumbs) },
         { CardType.FirstYearInTheLibrary, data => new UnitStatsEffect(CardType.FirstYearInTheLibrary) },
-        { CardType.IndustrialAction,      data => new BlockSectorEffect() },
         { CardType.Hangover,              data => new UnitSkipTurnEffect() },
         { CardType.CopyNotes,             data => new TakeCardEffect()},
         { CardType.DropOut,               data => new SacrificeEffect()},
@@ -32,6 +31,7 @@ public static class CardFactory
         { CardType.Resits,                data => new LevelEffect() },
         { CardType.SummerBreak,           data => new PlayerSkipTurnEffect()},
         { CardType.ChristianUnionLeaflet, data => new TemporaryLandmarkEffect()},
+        { CardType.IndustrialAction,      data => new BlockSectorEffect() },
         // tier 3
         { CardType.StudentDebt,           data => new DestroyUnitsEffect() }
     };
@@ -50,10 +50,9 @@ public static class CardFactory
                 CardType.Breadcrumbs,
                 CardType.FirstYearInTheLibrary,
                 CardType.NightBeforeExams,
-                CardType.IndustrialAction,
                 CardType.Hangover,
                 CardType.CopyNotes,
-                CardType.DropOut,
+                CardType.DropOut
             }
         },
         { CardTier.Tier2,
@@ -66,6 +65,7 @@ public static class CardFactory
                 CardType.Resits,
                 CardType.SummerBreak,
                 CardType.ChristianUnionLeaflet,
+                CardType.IndustrialAction
             }
         },
         { CardTier.Tier3,
