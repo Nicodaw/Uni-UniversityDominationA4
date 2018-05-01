@@ -125,25 +125,8 @@ public class Sector : MonoBehaviour
         get { return _highlighed; }
         set
         {
-
             GetComponent<Renderer>().material.SetColor("_EmissionColor", value ? EmissionActiveValue : EmissionBaseValue);
             _highlighed = value;
-
-
-
-            //if (value != _highlighed)
-            //{
-            //    Renderer rend = GetComponent<Renderer>();
-            //    Color currentColor = rend.material.color;
-            //    Color offset = new Color(DefaultHighlightAmount, DefaultHighlightAmount, DefaultHighlightAmount);
-            //    Color newColor;
-            //    if (value)
-            //        newColor = currentColor + offset;
-            //    else
-            //        newColor = currentColor - offset;
-            //    rend.material.color = newColor;
-            //}
-            //_highlighed = value;
         }
     }
 
