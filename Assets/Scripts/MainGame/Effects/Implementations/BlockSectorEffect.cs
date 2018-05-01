@@ -40,7 +40,9 @@ namespace EffectImpl
 
         public override EffectAvailableSelection AvailableSelection(Game game) => new EffectAvailableSelection
         {
-            Sectors = game.Map.Sectors.Where(s => s.Landmark == null && s.Unit == null && !s.Stats.HasEffect<BlockSectorEffect>())
+            Sectors = game.Map.Sectors.Where(s => s.Landmark == null && s.Unit == null &&
+                                             !s.Stats.HasEffect<BlockSectorEffect>() &&
+                                             !s.Stats.HasEffect<TemporaryLandmarkEffect>())
         };
 
         public override void ProcessEffectRemove() => UnBlock();
