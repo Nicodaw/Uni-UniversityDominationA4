@@ -20,6 +20,7 @@ public class BirdController : MonoBehaviour
     Rigidbody _rigidbody;
     float _rotX;
     int _score;
+    bool _canStart;
     bool _started;
     bool _active;
     bool _done;
@@ -66,9 +67,14 @@ public class BirdController : MonoBehaviour
         _rotX = m_defaultRotation.x;
     }
 
+    void Start()
+    {
+        StartCoroutine(WaitForGameStart());
+    }
+
     void Update()
     {
-        if ((_active || !_started) && JumpFired && !_done)
+        if (_canStart && (_active || !_started) && JumpFired && !_done)
         {
             if (!_started)
                 StartGame();
@@ -136,6 +142,12 @@ public class BirdController : MonoBehaviour
         _active = false;
         StartCoroutine(DeathTurn());
         EndGame(false);
+    }
+
+    IEnumerator WaitForGameStart()
+    {
+        yield return new WaitForSeconds(0.5f);
+        _canStart = true;
     }
 
     /// <summary>
