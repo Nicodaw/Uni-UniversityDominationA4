@@ -35,8 +35,8 @@ public class SoundManager : MonoBehaviour
     #region Private Fields
 
     static SoundManager _instance;
-    bool _musicPlaying = true;
-    bool _soundEffectsPlaying = true;
+    bool _musicPlaying;
+    bool _soundEffectsPlaying;
 
     #endregion
 
@@ -48,6 +48,8 @@ public class SoundManager : MonoBehaviour
         set
         {
             _musicPlaying = value;
+            PlayerPrefs.SetInt("_musicPlaying", (value) ? 1 : 0);
+
             if (_musicPlaying)
                 m_musicSource.UnPause();
             else
@@ -61,6 +63,7 @@ public class SoundManager : MonoBehaviour
         set
         {
             _soundEffectsPlaying = value;
+            PlayerPrefs.SetInt("_soundEffectsPlaying", (value) ? 1 : 0);
             if (_soundEffectsPlaying)
                 m_sfxSource.volume = 1f;
             else
@@ -85,6 +88,11 @@ public class SoundManager : MonoBehaviour
 
     void Awake()
     {
+        _musicPlaying = (PlayerPrefs.GetInt("_musicPlaying") == 1);
+        _soundEffectsPlaying = (PlayerPrefs.GetInt("_soundEffectsPlaying") == 1);
+        MusicPlaying = _musicPlaying;
+        SoundEffectsPlaying = _soundEffectsPlaying;
+
         if (_instance == null)
             _instance = this;
         else if (_instance != this)
