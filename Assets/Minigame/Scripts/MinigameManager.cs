@@ -58,7 +58,6 @@ public class MinigameManager : MonoBehaviour
 
     void Awake()
     {
-        SoundManager.Instance.PlayMusic(Sound.MiniGameMusic);
         if (_instance == null)
         {
             _instance = this;
@@ -67,6 +66,11 @@ public class MinigameManager : MonoBehaviour
         }
         else if (_instance != this)
             Destroy(this);
+    }
+
+    void Start()
+    {
+        SoundManager.Instance.PlayMusic(Sound.MiniGameMusic);
     }
 
     void Update()
