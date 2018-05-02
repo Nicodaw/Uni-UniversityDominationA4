@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 public class SoundManager : MonoBehaviour
@@ -48,12 +48,12 @@ public class SoundManager : MonoBehaviour
         set
         {
             _musicPlaying = value;
-            PlayerPrefs.SetInt("_musicPlaying", (value) ? 1 : 0);
-
+            PlayerPrefs.SetInt("_musicPlaying", _musicPlaying ? 1 : 0);
+            PlayerPrefs.Save();
             if (_musicPlaying)
-                m_musicSource.UnPause();
+                m_musicSource.volume = 1f;
             else
-                m_musicSource.Pause();
+                m_musicSource.volume = 0f;
         }
     }
 
@@ -63,7 +63,8 @@ public class SoundManager : MonoBehaviour
         set
         {
             _soundEffectsPlaying = value;
-            PlayerPrefs.SetInt("_soundEffectsPlaying", (value) ? 1 : 0);
+            PlayerPrefs.SetInt("_soundEffectsPlaying", _soundEffectsPlaying ? 1 : 0);
+            PlayerPrefs.Save();
             if (_soundEffectsPlaying)
                 m_sfxSource.volume = 1f;
             else
@@ -88,13 +89,12 @@ public class SoundManager : MonoBehaviour
 
     void Awake()
     {
-        _musicPlaying = (PlayerPrefs.GetInt("_musicPlaying") == 1);
-        _soundEffectsPlaying = (PlayerPrefs.GetInt("_soundEffectsPlaying") == 1);
-        MusicPlaying = _musicPlaying;
-        SoundEffectsPlaying = _soundEffectsPlaying;
-
         if (_instance == null)
+        {
             _instance = this;
+            MusicPlaying = PlayerPrefs.GetInt("_musicPlaying", 1) == 1;
+            SoundEffectsPlaying = PlayerPrefs.GetInt("_soundEffectsPlaying", 1) == 1;
+        }
         else if (_instance != this)
             Destroy(gameObject);
     }
@@ -181,6 +181,7 @@ public class SoundManager : MonoBehaviour
 
     void Play(AudioClip clip)
     {
+        if (SoundEffectsPlaying)
         m_sfxSource.PlayOneShot(clip);
     }
 

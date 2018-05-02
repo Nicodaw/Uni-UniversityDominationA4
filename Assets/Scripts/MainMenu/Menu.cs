@@ -1,11 +1,33 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Menu : MonoBehaviour
 {
+    #region Unity Bindings
+
+    [SerializeField] Toggle m_musicToggle;
+    [SerializeField] Toggle m_soundToggle;
+
+    #endregion
+
+    #region MonoBehaviour
+
+    void Start()
+    {
+        // we have to do all this switching around because the 'isOn' property
+        // fired the 'on changed' event, causing the click sound to play
+        bool sfxOn = SoundManager.Instance.SoundEffectsPlaying;
+        SoundManager.Instance.SoundEffectsPlaying = false;
+        m_musicToggle.isOn = SoundManager.Instance.MusicPlaying;
+        SoundManager.Instance.SoundEffectsPlaying = sfxOn;
+        if (!SoundManager.Instance.SoundEffectsPlaying)
+            m_soundToggle.isOn = false;
+    }
+
+    #endregion
+
     #region Helper Methods
 
     /// <summary>
