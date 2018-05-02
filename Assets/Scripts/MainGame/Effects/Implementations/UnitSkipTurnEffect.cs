@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Linq;
-using UnityEngine;
 
 namespace EffectImpl
 {
     [Serializable]
-    public class UnitSkipTurnEffect : Effect
+    public class UnitSkipTurnEffect : TurnedEffect
     {
         #region Private Fields
 
         int _playedBy;
-        [NonSerialized]
-        GameObject _hangoverModel; //tbd: add UI indication for locked unit
 
         #endregion
 
         #region Override Properties
+
+        protected override int TurnsLeft { get; set; } = 1;
+
+        protected override Player TurnedPlayer => Game.Instance.Players[_playedBy];
 
         public override string CardName => "Hangover";
 
@@ -36,6 +37,8 @@ namespace EffectImpl
             Units = game.Map.Sectors.Select(s => s.Unit).Where(u => u != null && u.Owner != game.CurrentPlayer)
         };
 
+        public override void ProcessEffectRemove() => DisableHangover();
+
         #endregion
 
         #region Helper Methods
@@ -44,7 +47,11 @@ namespace EffectImpl
 
         void DisableHangover() => AppliedUnit.ShowHangover = false;
 
-        protected override void ApplyToUnit() => EnableHangover();
+        protected override void ApplyToUnit()
+        {
+            _playedBy = Game.Instance.CurrentPlayer.Id;
+            EnableHangover();
+        }
 
         protected override void RestoreUnit() => EnableHangover();
 
