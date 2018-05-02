@@ -304,7 +304,7 @@ public class CardController : MonoBehaviour
             {
                 // scale size by how close the mouse is to the card
                 float mouseDistance = aimedPosition.x - mousePos.x;
-                float mouseDirection = mouseDistance < 0 ? -1f : 1f;
+                //float mouseDirection = mouseDistance < 0 ? -1f : 1f;
                 mouseDistance = Mathf.Abs(mouseDistance);
                 SizePercent = 1 - (mouseDistance / MouseMinDistance);
                 // adjust position away from mouse to make it properly visible when overlapping

@@ -174,7 +174,6 @@ public class GameTest_MapInit : BaseGameTest
     [UnityTest]
     public IEnumerator ApplyReward_PvcAllocateWaitReset()
     {
-        Sector allocatedSector = map.Sectors.First(s => s.HasPVC);
         Game.MinigameRewardApply = rewardTestAction;
         game.StartCoroutine(game.ApplyReward());
         yield return new WaitForSeconds(1.6f);
