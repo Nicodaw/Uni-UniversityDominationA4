@@ -24,6 +24,7 @@ public class Menu : MonoBehaviour
         SoundManager.Instance.SoundEffectsPlaying = sfxOn;
         if (!SoundManager.Instance.SoundEffectsPlaying)
             m_soundToggle.isOn = false;
+        SoundManager.Instance.PlayMusic(Sound.MainMenuMusic);
     }
 
     #endregion
