@@ -58,15 +58,9 @@ public class PlayerUI : MonoBehaviour
         {
             _isActive = value;
             if (_isActive)
-            {
                 m_arrowOfCurrentPlayer.CrossFadeAlpha(1f, 0.5f, true);
-                m_header.color = Player.Color;
-            }
             else
-            {
                 m_arrowOfCurrentPlayer.CrossFadeAlpha(0f, 0f, true);
-                m_header.color = DefaultHeaderColor;
-            }
 
         }
     }
@@ -86,7 +80,7 @@ public class PlayerUI : MonoBehaviour
 
     #endregion
 
-    #region Initialize
+    #region Initialization
 
     /// <summary>
     /// Loads all the components for a PlayerUI.
@@ -97,7 +91,6 @@ public class PlayerUI : MonoBehaviour
         _playerId = playerId;
         m_header.text = string.Format(PlayerNameFormat, playerId + 1);
         m_headerHighlight.text = m_header.text;
-        m_headerHighlight.color = player.Color;
         PlayerPanelMat.color = player.Color;
         m_arrowOfCurrentPlayer.color = player.Color;
         m_arrowOfCurrentPlayer.CrossFadeAlpha(0f, 0f, true);
