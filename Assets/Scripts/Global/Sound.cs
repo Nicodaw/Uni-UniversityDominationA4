@@ -20,7 +20,7 @@ public enum Sound
     FriendlyEffectSound,
     SectorEffect,
     SacrificeSound,
-    
+
     //Minigame
     CoinGainSound,
     GroundHitSound,

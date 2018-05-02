@@ -270,8 +270,6 @@ public class Game : MonoBehaviour
             Destroy(gameObject);
     }
 
-    // event handling
-
     void OnEnable()
     {
         foreach (Player player in Players)
@@ -391,6 +389,11 @@ public class Game : MonoBehaviour
         m_dialog.Toggle();
     }
 
+    /// <summary>
+    /// Attempts to queue up the player elimination to show the dialog.
+    /// </summary>
+    /// <param name="eliminated">Eliminated player.</param>
+    /// <param name="eliminator">Player did the elimination.</param>
     internal void PlayerEliminated(Player eliminated, Player eliminator)
     {
         if (!_eliminatedPlayers.Select(p => p.Item1).Contains(eliminated))
@@ -399,6 +402,13 @@ public class Game : MonoBehaviour
             StartCoroutine(PlayerEliminatedInternal());
     }
 
+    /// <summary>
+    /// Used to display the elimination dialog.
+    /// </summary>
+    /// <remarks>
+    /// This is a coroutine in order to prevent the same player from being
+    /// displayed twice in a row.
+    /// </remarks>
     IEnumerator PlayerEliminatedInternal()
     {
         _eliminatedPlayerRoutineActive = true;
@@ -430,6 +440,9 @@ public class Game : MonoBehaviour
         _eliminatedPlayerRoutineActive = false;
     }
 
+    /// <summary>
+    /// Ends the current player's turn.
+    /// </summary>
     public void EndCurrentTurn() => CurrentPlayer.EndTurn();
 
     /// <summary>

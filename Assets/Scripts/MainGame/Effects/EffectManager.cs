@@ -18,6 +18,9 @@ public class EffectManager : MonoBehaviour
 
     #region Public Properties
 
+    /// <summary>
+    /// The number of effects in the manager.
+    /// </summary>
     public int EffectCount => _effects.Count;
 
     #region Property Helpers
@@ -78,6 +81,10 @@ public class EffectManager : MonoBehaviour
 
     #region Initialization
 
+    /// <summary>
+    /// Initializes the manager with the given owner.
+    /// </summary>
+    /// <param name="owner">The owner of the manager.</param>
     public void Init(object owner)
     {
         Type ownerType = owner.GetType();
@@ -170,8 +177,17 @@ public class EffectManager : MonoBehaviour
 
     #region Helper Methods
 
+    /// <summary>
+    /// Gets all effects of the given type.
+    /// </summary>
+    /// <returns>The effects of the given type in the manager.</returns>
+    /// <typeparam name="T">The type of the effects to get.</typeparam>
     public IEnumerable<T> GetEffects<T>() where T : Effect => _effects.Values.Where(ef => typeof(T).IsAssignableFrom(ef.GetType())).Select(ef => (T)ef);
 
+    /// <summary>
+    /// Applies the given effect to the manager.
+    /// </summary>
+    /// <param name="effect">The effect to apply.</param>
     public void ApplyEffect(Effect effect)
     {
         _effects.Add(_nextEffectId, effect);
@@ -180,8 +196,17 @@ public class EffectManager : MonoBehaviour
         OnEffectAdd?.Invoke(this, new EventArgs());
     }
 
+    /// <summary>
+    /// Whether the manager has an effect of the given type.
+    /// </summary>
+    /// <returns>Whether an effect of the given type has been applied.</returns>
+    /// <typeparam name="T">The effect type to look for.</typeparam>
     public bool HasEffect<T>() where T : Effect => GetEffects<T>().Any();
 
+    /// <summary>
+    /// Removes the given effect from the manager.
+    /// </summary>
+    /// <param name="effect">The effect to remove.</param>
     public void RemoveEffect(Effect effect)
     {
         if (!_effects.ContainsKey(effect.Id) ||
@@ -193,6 +218,10 @@ public class EffectManager : MonoBehaviour
         OnEffectRemove?.Invoke(this, new EventArgs());
     }
 
+    /// <summary>
+    /// Removes all effect in the manager of the given type.
+    /// </summary>
+    /// <typeparam name="T">The type of the effects to remove.</typeparam>
     public void RemoveEffect<T>() where T : Effect
     {
         Stack<Effect> toRemove = new Stack<Effect>();
@@ -202,6 +231,9 @@ public class EffectManager : MonoBehaviour
             RemoveEffect(toRemove.Pop());
     }
 
+    /// <summary>
+    /// Removes all effects from the manager.
+    /// </summary>
     public void RemoveAllEffects() => RemoveEffect<Effect>();
 
     #endregion

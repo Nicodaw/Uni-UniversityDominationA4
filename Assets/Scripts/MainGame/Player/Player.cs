@@ -132,6 +132,9 @@ public abstract class Player : MonoBehaviour
 
     #region Base Methods
 
+    /// <summary>
+    /// Processes the players turn start.
+    /// </summary>
     public virtual void ProcessTurnStart()
     {
         ActionsPerformed = 0;
@@ -140,9 +143,16 @@ public abstract class Player : MonoBehaviour
         OnTurnStart?.Invoke(this, new EventArgs());
     }
 
+    /// <summary>
+    /// Processes a sector click.
+    /// </summary>
+    /// <param name="clickedSector">The clicked sector.</param>
     public virtual void ProcessSectorClick(Sector clickedSector)
     { }
 
+    /// <summary>
+    /// Ends the player's turn.
+    /// </summary>
     public virtual void EndTurn()
     {
         _hasHadTurn = true;
@@ -153,6 +163,12 @@ public abstract class Player : MonoBehaviour
 
     #region Initialization
 
+    /// <summary>
+    /// Initializes the player with its ID, color and GUI object.
+    /// </summary>
+    /// <param name="id">The ID of the player.</param>
+    /// <param name="color">The colour of the player.</param>
+    /// <param name="gui">The GUI object of the player.</param>
     public void Init(int id, Color color, PlayerUI gui)
     {
         _id = id;

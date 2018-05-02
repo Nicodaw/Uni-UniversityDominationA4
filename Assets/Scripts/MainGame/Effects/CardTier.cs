@@ -1,5 +1,5 @@
 /// <summary>
-/// Specifies the border that the card will display.
+/// The tier that the card is.
 /// </summary>
 public enum CardTier
 {

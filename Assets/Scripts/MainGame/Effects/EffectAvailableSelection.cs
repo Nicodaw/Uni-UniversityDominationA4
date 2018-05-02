@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 
+/// <summary>
+/// Used to store the available selection of the effect.
+/// </summary>
 public class EffectAvailableSelection
 {
     public IEnumerable<Player> Players { get; set; }

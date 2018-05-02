@@ -21,8 +21,14 @@ public class CardManager : MonoBehaviour
 
     #region Public Properties
 
+    /// <summary>
+    /// The number of cards in the manager.
+    /// </summary>
     public int Count => _cards.Count;
 
+    /// <summary>
+    /// Whether the cards are clickable or not.
+    /// </summary>
     public bool Clickable
     {
         get { return _clickable; }
@@ -105,6 +111,10 @@ public class CardManager : MonoBehaviour
 
     #region Helper Methods
 
+    /// <summary>
+    /// Adds the given cards to the manager.
+    /// </summary>
+    /// <param name="effects">The effects to add.</param>
     public void AddCards(params Effect[] effects)
     {
         foreach (Effect effect in effects)
@@ -123,6 +133,10 @@ public class CardManager : MonoBehaviour
             SoundManager.Instance.PlaySingle(Sound.CardInSound);
     }
 
+    /// <summary>
+    /// Removes a random card from the manager and returns the effect it had.
+    /// </summary>
+    /// <returns>The random card's effect.</returns>
     public Effect RemoveRandomCard()
     {
         CardController card = _cards.RandomOrDefault();
@@ -134,6 +148,10 @@ public class CardManager : MonoBehaviour
         return null;
     }
 
+    /// <summary>
+    /// Removes the card from the manager.
+    /// </summary>
+    /// <param name="card">The card to remove.</param>
     void RemoveCard(CardController card)
     {
         card.OnConsumed -= Card_OnConsumed;
@@ -143,6 +161,9 @@ public class CardManager : MonoBehaviour
             SetCardPositions(false);
     }
 
+    /// <summary>
+    /// Plays the card enter animations.
+    /// </summary>
     public void CardsEnter()
     {
         SetCardPositions(true);
@@ -151,6 +172,9 @@ public class CardManager : MonoBehaviour
             SoundManager.Instance.PlaySingle(Sound.CardInSound);
     }
 
+    /// <summary>
+    /// Plays the card exit animations.
+    /// </summary>
     public void CardsExit()
     {
         if (Count > 0)
@@ -160,6 +184,13 @@ public class CardManager : MonoBehaviour
             card.Exit();
     }
 
+    /// <summary>
+    /// Sets the card positions.
+    /// </summary>
+    /// <param name="enter">
+    /// Whether to use the enter animation (<c>true</c>), or the adjust
+    /// animation (<c>false</c>).
+    /// </param>
     void SetCardPositions(bool enter)
     {
         float[] positions = GetPositions();
@@ -172,14 +203,28 @@ public class CardManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Gets the positions that the cards should go to.
+    /// </summary>
+    /// <returns>The positions of the cards.</returns>
     float[] GetPositions()
     {
+        // return empty array for no cards
         if (_cards.Count == 0)
             return new float[0];
+        // we get the percentage of the percentage that the width of each card
+        // will take up
         Vector3[] corners = _cards[0].GetCornerVectors();
         float sizePerc = _cards[0].CardSizeBase.x / Mathf.Abs(corners[0].x - corners[1].x);
+        // we then get the space that we will use between each card
+        // (we account for if don't have enough space, and require cards overlapping)
         float space = Mathf.Min(sizePerc, 1f / _cards.Count);
+        // since we want to centre the cards on the screen, we get the offset
+        // on the left that would push all the cards to be on each side of the
+        // screen evenly
         float offset = (1 - (space * (_cards.Count - 1f))) / 2f;
+        // we then just calculate each position in turn using the offset to
+        // start, and then the space between for each next position
         float[] positions = new float[_cards.Count];
         positions[0] = offset;
         for (int i = 1; i < positions.Length; i++)

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PillarController : MonoBehaviour
 {
@@ -55,11 +53,17 @@ public class PillarController : MonoBehaviour
 
     #region Helper Methods
 
+    /// <summary>
+    /// Stops the pillars from moving.
+    /// </summary>
     public static void Stop()
     {
         _stopped = true;
     }
 
+    /// <summary>
+    /// Resets the pillar global state.
+    /// </summary>
     public static void Reset()
     {
         _stopped = false;

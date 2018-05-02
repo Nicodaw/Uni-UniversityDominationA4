@@ -1,6 +1,9 @@
-using System;
+﻿using System;
 using UnityEngine;
 
+/// <summary>
+/// The main sound manager for the game.
+/// </summary>
 public class SoundManager : MonoBehaviour
 {
     #region Unity Bindings
@@ -42,6 +45,9 @@ public class SoundManager : MonoBehaviour
 
     #region Public Properties
 
+    /// <summary>
+    /// Whether music is playing or not.
+    /// </summary>
     public bool MusicPlaying
     {
         get { return _musicPlaying; }
@@ -81,8 +87,6 @@ public class SoundManager : MonoBehaviour
     /// </summary>
     public static SoundManager Instance => _instance;
 
-    public bool IsMusicOn => _musicPlaying;
-
     #endregion
 
     #region MonoBehaviour
@@ -103,6 +107,9 @@ public class SoundManager : MonoBehaviour
 
     #region Helper Methods
 
+    /// <summary>
+    /// Plays a single sound effect.
+    /// </summary>
     public void PlaySingle(Sound sound)
     {
         switch (sound)
@@ -156,10 +163,13 @@ public class SoundManager : MonoBehaviour
                 Play(m_wingFlap);
                 break;
             default:
-                throw new InvalidOperationException();
+                throw new ArgumentException();
         }
     }
 
+    /// <summary>
+    /// Starts playing the given music.
+    /// </summary>
     public void PlayMusic(Sound sound)
     {
         switch (sound)
@@ -175,14 +185,14 @@ public class SoundManager : MonoBehaviour
                 PlayMusic(m_minigameMusic);
                 break;
             default:
-                throw new InvalidOperationException();
+                throw new ArgumentException();
         }
     }
 
     void Play(AudioClip clip)
     {
         if (SoundEffectsPlaying)
-        m_sfxSource.PlayOneShot(clip);
+            m_sfxSource.PlayOneShot(clip);
     }
 
     void PlayMusic(AudioClip music)

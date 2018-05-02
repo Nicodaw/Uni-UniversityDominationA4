@@ -1,8 +1,8 @@
 using System;
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 /// <summary>
 /// A dual function class.
@@ -54,6 +54,10 @@ public class PlayerManager : MonoBehaviour, ICollection<Player>
 
     #region Initialization
 
+    /// <summary>
+    /// Initializes the players with the given setup.
+    /// </summary>
+    /// <param name="playerSetup">The player setup data.</param>
     public void InitPlayers(IEnumerable<Tuple<PlayerKind, Color>> playerSetup)
     {
         if (_players != null)
@@ -65,6 +69,13 @@ public class PlayerManager : MonoBehaviour, ICollection<Player>
         _players = newPlayers.ToArray();
     }
 
+    /// <summary>
+    /// Initializes the player.
+    /// </summary>
+    /// <returns>The initialized player.</returns>
+    /// <param name="kind">The kind of player to initialize.</param>
+    /// <param name="id">The ID of the player.</param>
+    /// <param name="color">The colour of the player.</param>
     Player InitPlayer(PlayerKind kind, int id, Color color)
     {
         GameObject go;

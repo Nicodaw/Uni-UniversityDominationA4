@@ -95,7 +95,7 @@ public class Dialog : MonoBehaviour
         {
             case DialogType.EndGame:
                 m_dialogInfo.GetComponent<Text>().text = player + " WON!";
-                SoundManager.Instance.MusicPlaying = false;
+                //SoundManager.Instance.MusicPlaying = false;
                 SoundManager.Instance.PlaySingle(Sound.WinnerSound);
                 break;
             case DialogType.PlayerEliminated:
@@ -128,7 +128,7 @@ public class Dialog : MonoBehaviour
     {
         gameObject.SetActive(true);
         SoundManager.Instance.PlaySingle(Sound.UIButtonClickSound);
-        SoundManager.Instance.MusicPlaying = false;
+        //SoundManager.Instance.MusicPlaying = false;
     }
 
     /// <summary>
@@ -139,7 +139,7 @@ public class Dialog : MonoBehaviour
         Debug.Log("Closing");
         gameObject.SetActive(false);
         SoundManager.Instance.PlaySingle(Sound.UIButtonClickSound);
-        SoundManager.Instance.MusicPlaying = true;
+        //SoundManager.Instance.MusicPlaying = true;
     }
 
     /// <summary>
@@ -154,14 +154,16 @@ public class Dialog : MonoBehaviour
     }
 
     /// <summary>
-    /// Changes to the previous scene
+    /// Exits to the main menu.
     /// </summary>
     public void Exit()
     {
         SceneManager.LoadScene("MainMenu");
-        SoundManager.Instance.PlayMusic(Sound.MainMenuMusic);
     }
 
+    /// <summary>
+    /// Saves & exits to the main menu.
+    /// </summary>
     public void SaveExit()
     {
         // assume slot 0 for now
@@ -175,7 +177,6 @@ public class Dialog : MonoBehaviour
     public void Restart()
     {
         SceneManager.LoadScene("MainMenu");
-        SoundManager.Instance.PlayMusic(Sound.MainMenuMusic);
     }
 
     #endregion

@@ -1,3 +1,6 @@
+/// <summary>
+/// The actual cards in the game.
+/// </summary>
 public enum CardType
 {
     Graduate,

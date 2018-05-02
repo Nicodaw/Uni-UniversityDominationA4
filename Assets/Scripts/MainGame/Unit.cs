@@ -124,6 +124,9 @@ public class Unit : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Whether the hangover UI is shown.
+    /// </summary>
     public bool ShowHangover
     {
         get { return _showHangover; }
@@ -225,18 +228,28 @@ public class Unit : MonoBehaviour
 
     #region Helper Methods
 
+    /// <summary>
+    /// Checks if the unit is destroyed. If so, throws an exception.
+    /// </summary>
+    /// <exception cref="T:NullReferenceException"/>
     void DestroyedCheck()
     {
         if (_destroyed)
             throw new NullReferenceException("Unit already destoryed");
     }
 
+    /// <summary>
+    /// Updates the unit's stat UI.
+    /// </summary>
     void UpdateStats()
     {
         m_levelText.text = _level.ToString();
         m_statText.text = string.Format(StatsFormat, TotalAttack, TotalDefence);
     }
 
+    /// <summary>
+    /// Handles binding &amp; unbinding from the owner's events.
+    /// </summary>
     void EventOwnerBinder(bool bind)
     {
         if (Owner == null)
@@ -331,7 +344,7 @@ public class Unit : MonoBehaviour
 
     #region Operators
 
-    // allows for immediate null checking
+    // these allows for immediate null checking
 
     static UnityEngine.Object[] ActualObjects(Unit x, Unit y)
     {

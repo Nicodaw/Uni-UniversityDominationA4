@@ -1,8 +1,9 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Concrete AI player implementation.
+/// </summary>
 public class AiPlayer : Player
 {
     #region Private Fields
@@ -39,6 +40,9 @@ public class AiPlayer : Player
 
     #region Helper Methods
 
+    /// <summary>
+    /// Called when the player is retored (to allow user to save during AI turn).
+    /// </summary>
     IEnumerator OnRestoreCheck()
     {
         // wait until end of frame
@@ -49,9 +53,12 @@ public class AiPlayer : Player
         StartCoroutine(PerformTurn());
     }
 
+    /// <summary>
+    /// Performs the AI player's turn.
+    /// </summary>
     IEnumerator PerformTurn()
     {
-        for (; CanPerformActions;)
+        while (CanPerformActions)
         {
             yield return new WaitForSeconds(MoveWaitTime);
             DoUnitMove();
@@ -59,6 +66,9 @@ public class AiPlayer : Player
         EndTurn();
     }
 
+    /// <summary>
+    /// Does the actual movement logic.
+    /// </summary>
     void DoUnitMove()
     {
         Sector selection = Units.Random().Sector; // select random unit

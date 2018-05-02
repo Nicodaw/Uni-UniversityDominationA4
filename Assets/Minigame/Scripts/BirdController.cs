@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
-//Added by Jack
 [RequireComponent(typeof(Rigidbody))]
 public class BirdController : MonoBehaviour
 {
@@ -30,8 +28,14 @@ public class BirdController : MonoBehaviour
 
     #region Private Properties
 
+    /// <summary>
+    /// Whether the jump key was pressed.
+    /// </summary>
     bool JumpFired => Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0);
 
+    /// <summary>
+    /// The X rotation of the GameObject.
+    /// </summary>
     float XRotation
     {
         get { return _rotX; }
@@ -46,6 +50,9 @@ public class BirdController : MonoBehaviour
 
     #region Public Properties
 
+    /// <summary>
+    /// Gets the maximum minigame score.
+    /// </summary>
     public int MaxScore => m_maxScore;
 
     #endregion
@@ -101,6 +108,9 @@ public class BirdController : MonoBehaviour
 
     #region Helper Methods
 
+    /// <summary>
+    /// Starts the flap animation.
+    /// </summary>
     void DoFlap()
     {
         _rigidbody.velocity = new Vector3(0, m_jumpForce);
@@ -108,7 +118,7 @@ public class BirdController : MonoBehaviour
     }
 
     /// <summary>
-    /// Sets up bird from scene components
+    /// Processes the flap animation.
     /// </summary>
     IEnumerator AnimFlap()
     {
@@ -118,6 +128,9 @@ public class BirdController : MonoBehaviour
         _renderer.material = m_states[0];
     }
 
+    /// <summary>
+    /// Starts the death animation.
+    /// </summary>
     void Die()
     {
         _active = false;
@@ -125,6 +138,9 @@ public class BirdController : MonoBehaviour
         EndGame(false);
     }
 
+    /// <summary>
+    /// Starts the game running.
+    /// </summary>
     void StartGame()
     {
         _started = true;
@@ -134,6 +150,10 @@ public class BirdController : MonoBehaviour
         MinigameManager.Instance.StartGame();
     }
 
+    /// <summary>
+    /// Ends the game.
+    /// </summary>
+    /// <param name="won">Whether the player won.</param>
     void EndGame(bool won)
     {
         if (won)
@@ -146,6 +166,9 @@ public class BirdController : MonoBehaviour
         MinigameManager.Instance.EndGame(won, _score);
     }
 
+    /// <summary>
+    /// Processes the death turn animation.
+    /// </summary>
     IEnumerator DeathTurn()
     {
         float startRot = XRotation;

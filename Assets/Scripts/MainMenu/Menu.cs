@@ -39,6 +39,9 @@ public class Menu : MonoBehaviour
         SoundManager.Instance.PlaySingle(Sound.UIButtonClickSound);
     }
 
+    /// <summary>
+    /// Starts a new game with 3 human and 1 AI player.
+    /// </summary>
     public void PlaySecondary()
     {
         // tmp method to support 3 player start game

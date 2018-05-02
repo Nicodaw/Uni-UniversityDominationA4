@@ -1,6 +1,4 @@
-﻿using System;
-using EffectImpl;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Landmark : MonoBehaviour
 {
@@ -13,7 +11,13 @@ public class Landmark : MonoBehaviour
 
     #region Public Properties
 
+    /// <summary>
+    /// The resource this landmark provides.
+    /// </summary>
     public ResourceType Resource => m_resourceType;
+    /// <summary>
+    /// The amount of the resource the landmark provides.
+    /// </summary>
     public int Amount => m_amount;
 
     #endregion

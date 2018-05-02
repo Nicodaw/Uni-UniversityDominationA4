@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -48,6 +47,9 @@ public class MinigameManager : MonoBehaviour
 
     #region Public Properties
 
+    /// <summary>
+    /// The current instance.
+    /// </summary>
     public static MinigameManager Instance => _instance;
 
     #endregion
@@ -78,6 +80,9 @@ public class MinigameManager : MonoBehaviour
 
     #region Helper Methods
 
+    /// <summary>
+    /// Starts the game running.
+    /// </summary>
     public void StartGame()
     {
         m_startOverlay.SetActive(false);

@@ -39,10 +39,19 @@ public abstract class Effect
     /// </summary>
     protected EffectManager Manager => _manager;
 
+    /// <summary>
+    /// The player the effect was applied to.
+    /// </summary>
     protected Player AppliedPlayer => _appliedPlayer;
 
+    /// <summary>
+    /// The sector the effect was applied to.
+    /// </summary>
     protected Sector AppliedSector => _appliedSector;
 
+    /// <summary>
+    /// The unit the effect was applied to.
+    /// </summary>
     protected Unit AppliedUnit => _appliedUnit;
 
     #endregion
@@ -140,6 +149,11 @@ public abstract class Effect
 
     #region Helper Methods
 
+    /// <summary>
+    /// Initializes the effect.
+    /// </summary>
+    /// <param name="manager">The manager the effect is in.</param>
+    /// <param name="id">The ID of the effect in the manager.</param>
     void Init(EffectManager manager, int id)
     {
         if (_manager != null)
@@ -148,6 +162,19 @@ public abstract class Effect
         _id = id;
     }
 
+    /// <summary>
+    /// Calls a given function depending on the type of the object.
+    /// </summary>
+    /// <param name="obj">The object to switch with.</param>
+    /// <param name="playerAction">
+    /// Called if <paramref name="obj"/> is of type <see cref="T:Player"/>.
+    /// </param>
+    /// <param name="sectorAction">
+    /// Called if <paramref name="obj"/> is of type <see cref="T:Sector"/>.
+    /// </param>
+    /// <param name="unitAction">
+    /// Called if <paramref name="obj"/> is of type <see cref="T:Unit"/>.
+    /// </param>
     void SwitchObjectType(object obj,
                           Action playerAction,
                           Action sectorAction,

@@ -37,10 +37,20 @@ public class Map : MonoBehaviour
     /// </summary>
     public IEnumerable<Sector> LandmarkedSectors => Sectors.Where(s => s.Landmark != null);
 
+    /// <summary>
+    /// The sector block prefab.
+    /// </summary>
     public GameObject BlockSectorPrefab => m_blockSectorPrefab;
 
+    /// <summary>
+    /// The leaflet guy prefab.
+    /// </summary>
     public GameObject LeafletGuyPrefab => m_leafletGuyPrefab;
 
+    /// <summary>
+    /// The number of player turns the PVC allocation still has to wait until
+    /// it is reallocated.
+    /// </summary>
     public int PVCAllocateWait => _pvcAllocateWait;
 
     #endregion
@@ -106,6 +116,10 @@ public class Map : MonoBehaviour
             sector.Highlighted = highlight;
     }
 
+    /// <summary>
+    /// Processes the PVC allocation decrement. When it reaches 0, the PVC is
+    /// reallocated.
+    /// </summary>
     void ProcessPVCAllocateDec()
     {
         if (_pvcAllocateWait == 0)

@@ -49,6 +49,10 @@ public class HumanPlayer : Player
 
     #region Helper Methods
 
+    /// <summary>
+    /// Selects &amp; highlights the given sector.
+    /// </summary>
+    /// <param name="sector">The sector to select.</param>
     void SelectSector(Sector sector)
     {
         _selectedSector = sector;
@@ -56,18 +60,26 @@ public class HumanPlayer : Player
         Game.Instance.Map.ApplySectorHighlight(true, _sectorsInSelectedRange);
     }
 
+    /// <summary>
+    /// Deselects the currently selected sector and removes all highlights.
+    /// </summary>
     public void DeselectSector()
     {
         Game.Instance.Map.ApplySectorHighlight(false, Game.Instance.Map.Sectors);
         _selectedSector = null;
     }
 
+    /// <summary>
+    /// Does the turn start logic.
+    /// </summary>
     IEnumerator DoStartTurn()
     {
         base.ProcessTurnStart();
+        // do card enter animation
         Cards.CardsEnter();
         if (Cards.Count > 0)
             yield return new WaitForSeconds(1.5f);
+        // assign card if at least 1 turn cycle has passed
         if (HasHadTurn)
         {
             AssignRandomCard();
@@ -76,9 +88,13 @@ public class HumanPlayer : Player
         Game.Instance.EndTurnButtonEnabled = true;
     }
 
+    /// <summary>
+    /// Does the turn end logic
+    /// </summary>
     IEnumerator DoEndTurn()
     {
         Game.Instance.EndTurnButtonEnabled = false;
+        // do card exit animation
         Cards.CardsExit();
         if (Cards.Count > 0)
             yield return new WaitForSeconds(1.5f);

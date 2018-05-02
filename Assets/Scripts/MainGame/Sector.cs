@@ -25,6 +25,7 @@ public class Sector : MonoBehaviour
     Unit _unit;
     int? _owner;
     bool _highlighed;
+
     bool _blockPrefabActive;
     bool _leafletGuyPrefabActive;
     GameObject _blockObject;
@@ -134,6 +135,9 @@ public class Sector : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Whether the sector block prefab is active.
+    /// </summary>
     public bool BlockPrefabActive
     {
         get { return _blockPrefabActive; }
@@ -154,6 +158,9 @@ public class Sector : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Whether the leaflet guy prefab is active.
+    /// </summary>
     public bool LeafletGuyPrefabActive
     {
         get { return _leafletGuyPrefabActive; }
@@ -204,6 +211,10 @@ public class Sector : MonoBehaviour
 
     #region Initialization
 
+    /// <summary>
+    /// Initializes the sector with the given ID.
+    /// </summary>
+    /// <param name="id">The ID of the sector.</param>
     public void Init(int id)
     {
         _id = id;
@@ -219,9 +230,7 @@ public class Sector : MonoBehaviour
         {
             effectManager = _effects.CreateMemento(),
             unit = Unit?.CreateMemento(),
-            owner = _owner,
-            blockPrefabActive = _blockPrefabActive,
-            leafletGuyPrefabActive = _leafletGuyPrefabActive
+            owner = _owner
         };
     }
 
@@ -237,8 +246,6 @@ public class Sector : MonoBehaviour
             Unit.RestoreMemento(memento.unit); // restore unit
         }
         _effects.RestoreMemento(memento.effectManager);
-        BlockPrefabActive = memento.blockPrefabActive;
-        LeafletGuyPrefabActive = memento.leafletGuyPrefabActive;
     }
 
     #endregion
@@ -270,6 +277,12 @@ public class Sector : MonoBehaviour
 
     #region Helper Methods
 
+    /// <summary>
+    /// Gets all the sectors around this one in the given range. Excludes the
+    /// current sector.
+    /// </summary>
+    /// <returns>The sectors in range.</returns>
+    /// <param name="range">The range to search.</param>
     public Sector[] GetSectorsInRange(int range)
     {
         HashSet<Sector> visited = new HashSet<Sector>();

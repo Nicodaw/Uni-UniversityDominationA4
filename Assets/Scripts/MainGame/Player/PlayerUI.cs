@@ -67,10 +67,13 @@ public class PlayerUI : MonoBehaviour
                 m_arrowOfCurrentPlayer.CrossFadeAlpha(0f, 0f, true);
                 m_header.color = DefaultHeaderColor;
             }
-                
+
         }
     }
 
+    /// <summary>
+    /// Whether the UI is highlighted or not.
+    /// </summary>
     public bool Highlighted
     {
         get { return _highlighted; }
