@@ -36,6 +36,7 @@ public class SoundManager : MonoBehaviour
 
     static SoundManager _instance;
     bool _musicPlaying = true;
+    bool _soundEffectsPlaying = true;
 
     #endregion
 
@@ -51,6 +52,19 @@ public class SoundManager : MonoBehaviour
                 m_musicSource.UnPause();
             else
                 m_musicSource.Pause();
+        }
+    }
+
+    public bool SoundEffectsPlaying
+    {
+        get { return _soundEffectsPlaying; }
+        set
+        {
+            _soundEffectsPlaying = value;
+            if (_soundEffectsPlaying)
+                m_sfxSource.volume = 1f;
+            else
+                m_sfxSource.volume = 0f;
         }
     }
 
@@ -167,6 +181,8 @@ public class SoundManager : MonoBehaviour
         m_musicSource.clip = music;
         m_musicSource.Play();
     }
+
+    public void UIClick() => PlaySingle(Sound.UIButtonClickSound);
 
     #endregion
 }
